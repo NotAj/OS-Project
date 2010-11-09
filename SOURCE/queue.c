@@ -1,3 +1,5 @@
+#include "queue.h"
+
 /****************************************************************
  Queue Data structure
  ----------------------------------------------------------------
@@ -8,8 +10,6 @@
  these. 
 
 *****************************************************************/
-
-#include "queue.h"
 
 /****************************************************************************
 * Function      : k_queue_is_empty 
@@ -25,10 +25,7 @@ int k_queue_is_empty(k_queue_ptr Q)
 {
 	// If no items in queue, both head and tail will point to NULL
 	// The result will be 1 if true, signifying an empty queue
-	if (Q->head == NULL)
-		return 1;
-	else
-		return 0;
+	return (Q->head == NULL)
 }
 
 /****************************************************************************
