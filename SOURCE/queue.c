@@ -25,7 +25,7 @@ int k_queue_is_empty(k_queue_ptr Q)
 {
 	// If no items in queue, both head and tail will point to NULL
 	// The result will be 1 if true, signifying an empty queue
-	return (Q->head == NULL)
+	return (Q->head == NULL);
 }
 
 /****************************************************************************
