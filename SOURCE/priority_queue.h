@@ -1,6 +1,8 @@
 #ifndef PRIORITY_QUEUE_H
 #define PRIORITY_QUEUE_H
 
+#include <stdlib.h>
+#include "pcb.h"
 #include "queue.h"
 
 /****************************************************************

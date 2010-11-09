@@ -1,8 +1,8 @@
 #ifndef MESSAGE_QUEUE_H
 #define MESSAGE_QUEUE_H
 
-#include "message.h"
 #include <stdlib.h>
+#include "message.h"
 
 /****************************************************************
  Message Queue Data Structure 

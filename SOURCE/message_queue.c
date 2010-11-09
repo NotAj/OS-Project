@@ -1,5 +1,4 @@
 #include "message_queue.h"
-#include <stdlib.h>
 
 /****************************************************************
  Message Queue Data Structure 

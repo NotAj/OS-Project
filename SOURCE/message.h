@@ -1,6 +1,8 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
+#include "globals.h"
+
 /****************************************************************
  Message Envelope Data structure
  ----------------------------------------------------------------
@@ -17,8 +19,6 @@
  which are stored in an array of characters.
 
 *****************************************************************/
-
-#define MSG_ENV_SIZE 256
 
 /*************************
 * Type Declarations

@@ -2,6 +2,9 @@
 #define PCB_H
 
 #include <stdlib.h>
+#include <setjmp.h>
+#include "message.h"
+#include "message_queue.h"
 
 /****************************************************************
  PCB Data structure
@@ -26,12 +29,13 @@ typedef struct k_PCB_struct
 {
 	k_PCB_ptr k_queue_next;
 	k_PCB_ptr k_all_queue_next;
-	//MsgEnvQ p_received_MsgEnvQ;
+	k_message_queue_ptr k_received_message_queue;
 	int p_pid ;
 	int p_priority;
 	int p_status;
-	//void *p_sp;
-	//jmp_buf *p_jmpbuf;
+	void *k_stack_pointer;
+	jmp_buf *k_jmpbuf;
+	void *k_start_address;
 } k_PCB;
 
 #endif
