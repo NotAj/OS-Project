@@ -1,5 +1,25 @@
 #include "priority_queue.h"
 
+/****************************************************************
+ Priority Queue Data structure
+ ----------------------------------------------------------------
+ This structure is used for the scheduling queues readyQ and 
+ blockedQ. The structure is an array of queues, with each element
+ in the array holding a queue for the corresponding priority. 
+ PCBs are added and removed from the queue based on this priority value. 
+
+*****************************************************************/
+
+/****************************************************************************
+* Function      : k_priority_queue_is_empty 
+******************************************************************************
+* Description   : This function determines if the priority queue specified is 
+*				: empty.
+* 				: If it is empty it returns 1, allowing it to be used in 
+*				: conditional statements.
+*           
+* Assumptions   : Assumes a valid priority queue is specified. 
+*****************************************************************************/
 int k_priority_queue_is_empty(k_priority_queue_ptr PQ) 
 {
 	// The priority queue must have an array of 4 queues, so check if these queues are empty or not
@@ -13,6 +33,20 @@ int k_priority_queue_is_empty(k_priority_queue_ptr PQ)
 	return 1;
 }
 
+/****************************************************************************
+* Function      : k_priority_queue_enqueue 
+******************************************************************************
+* Description   : This function enqueues a PCB to the queue corresponding to 
+*				: the process' priority. This function is used to enqueue to 
+*				: the readyQ and blockedQ so there is no need to specify the
+*				: allQ parameter. 
+*           
+* Assumptions   : Will do nothing if attempting to enqueue a NULL pointer
+*				: If a PCB is enqueued with an invalid priority, it will be
+*				: changed to the lowest priority and enqueued.
+*				: Assumes the PCB pointer given points to a valid PCB.
+*				: Assumes a valid priority queue is specified. 
+*****************************************************************************/
 void k_priority_queue_enqueue(k_PCB_ptr process, k_priority_queue_ptr PQ)
 {
 	if (process == NULL)
@@ -28,17 +62,29 @@ void k_priority_queue_enqueue(k_PCB_ptr process, k_priority_queue_ptr PQ)
 	k_queue_enqueue(process, 0, PQ->array[process->p_priority]);	
 }
 
+/****************************************************************************
+* Function      : k_priority_queue_dequeue 
+******************************************************************************
+* Description   : This function dequeues the first pcb in the priority queue 
+*				: with the highest priority.This function is only used to 
+*				: dequeue from the readyQ and blockedQ. Because of this, 
+*				: the allQ parameter is not necessary.
+*              
+* Assumptions   : Will return NULL if dequeueing from an empty priority queue.
+*				: Assumes a valid priority queue is specified.
+****************************************************************************/
 k_PCB_ptr k_priority_queue_dequeue(k_priority_queue_ptr PQ) 
 {
+	// If priority queue is empty, return NULL.
+	if (k_priority_queue_is_empty(PQ))
+		return NULL;
+
 	int i = 0;
 	
-	// Will iterate through PQ starting from highest priority until a non-empty queue is found. Remember to stop before trying to access invalid array index in case of empty PQ. 
-	while (i<3 && k_queue_is_empty(PQ->array[i]))
+	// Will iterate through PQ starting from highest priority until a non-empty queue is found. 
+	// i will always contain a valid index, because empty queue case has already been handled. 
+	while (k_queue_is_empty(PQ->array[i]))
 		i++;
-	
-	// If i > 3, then entire queue is empty, so return NULL.
-	if(i>3)
-		return NULL;
 	
 	// Here i is index of highest priority non-empty queue, so dequeue from there.	
 	return (k_queue_dequeue(PQ->array[i])); 

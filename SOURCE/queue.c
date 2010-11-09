@@ -1,5 +1,26 @@
+/****************************************************************
+ Queue Data structure
+ ----------------------------------------------------------------
+ This structure is used for the allQ which contains all processes 
+ in the RTX.
+ It is also used inside the Priority Queue structure, which is an
+ array of these queues. The readyQ and blockedQ are examples of 
+ these. 
+
+*****************************************************************/
+
 #include "queue.h"
 
+/****************************************************************************
+* Function      : k_queue_is_empty 
+******************************************************************************
+* Description   : This function determines if the queue specified is empty
+* 				: If it is empty it returns 1, allowing it to be used in 
+*				: conditional statements. This function is used by all other
+*				: queue functions. 	
+*           
+* Assumptions   : Assumes a valid queue is specified. 
+*****************************************************************************/
 int k_queue_is_empty(k_queue_ptr Q) 
 {
 	// If no items in queue, both head and tail will point to NULL
@@ -9,6 +30,20 @@ int k_queue_is_empty(k_queue_ptr Q)
 	else
 		return 0;
 }
+
+/****************************************************************************
+* Function      : k_queue_enqueue 
+******************************************************************************
+* Description   : This function takes a pointer to a PCB and enqueues it to
+* 				: the queue specified by a pointer to a queue. This function
+*				: is used to enqueue to the allQ on initialization, and 
+*				: enqueueing to the readyQ and blockedQ. To specify which 
+*				: queue pointer to modify, the allQ parameter is used.				   
+*              
+* Assumptions   : Will do nothing in the case of enqueueing a NULL pointer.
+*				: Assumes the PCB pointer given points to a valid PCB. 
+*				: Assumes a valid queue is specified.
+*****************************************************************************/
 void k_queue_enqueue(k_PCB_ptr process, int all_Q, k_queue_ptr Q)
 {
 	if (process == NULL)
@@ -36,6 +71,17 @@ void k_queue_enqueue(k_PCB_ptr process, int all_Q, k_queue_ptr Q)
 	Q->tail = process;
 }
 
+/****************************************************************************
+* Function      : k_queue_dequeue 
+******************************************************************************
+* Description   : This function dequeues the first pcb in the queue and returns 
+* 				: a pointer to it. This function is only used to dequeue from 
+*				: the readyQ and blockedQ. Because of this, the allQ parameter
+*				: is not necessary.
+*              
+* Assumptions   : Will return NULL if dequeueing from an empty queue.
+*				: Assumes a valid queue is specified.
+*****************************************************************************/
 k_PCB_ptr k_queue_dequeue(k_queue_ptr Q) 
 {
 	// Return NULL if Q is empty
@@ -59,6 +105,18 @@ k_PCB_ptr k_queue_dequeue(k_queue_ptr Q)
 	return return_pcb;
 }
 
+/****************************************************************************
+* Function      : k_queue_remove
+******************************************************************************
+* Description   : This function removes a PCB from a queue with the PID 
+*				: specified. This function is used on the readyQ when changing 
+*				: the priority of a process. Because of this the allQ parameter
+*				: is not necessary.
+*              
+* Assumptions   : Will return NULL if trying to remove from an empty queue or
+*				: if no PCB on the queue has the PID specified.  
+*				: Assumes a valid queue is specified.
+*****************************************************************************/
 k_PCB_ptr k_queue_remove(int PID, k_queue_ptr Q)
 {
 	// Initialize local variables

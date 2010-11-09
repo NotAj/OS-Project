@@ -3,13 +3,20 @@
 
 #include "pcb.h"
 
-/***************************************************
- * This is the header file for the base queue struct
-***************************************************/
+/****************************************************************
+ Queue Data structure
+ ----------------------------------------------------------------
+ This structure is used for the allQ which contains all processes 
+ in the RTX.
+ It is also used inside the Priority Queue structure, which is an
+ array of these queues. The readyQ and blockedQ are examples of 
+ these. 
 
-/* Type Declarations
- *---------------------- */
+*****************************************************************/
 
+/*************************
+* Type Declarations
+*************************/
 typedef struct k_queue_struct *k_queue_ptr;
 
 typedef struct k_queue_struct
@@ -18,9 +25,9 @@ typedef struct k_queue_struct
 	k_PCB_ptr tail;
 } k_queue;
 
-
-/* Function Declarations
- *---------------------- */
+/*************************
+* Function Declarations
+*************************/
 int k_queue_is_empty (k_queue_ptr Q);
 
 void k_queue_enqueue (k_PCB_ptr process, int all_Q, k_queue_ptr Q);
