@@ -19,7 +19,9 @@ queue.o test_queue.o priority_queue.o : queue.h pcb.h
 
 test_priority_queue.o: test_priority_queue.h
 
-message.o: message.h
+message.o: message.h defines.h
+
+globals.h: pcb.h message.h queue.h priority_queue.h message_queue.h
 
 message_queue.o : message_queue.h message.h
 

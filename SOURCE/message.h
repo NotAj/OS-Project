@@ -1,7 +1,7 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
-#include "globals.h"
+#include "defines.h"
 
 /****************************************************************
  Message Envelope Data structure
