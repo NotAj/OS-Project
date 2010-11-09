@@ -1,5 +1,5 @@
 *.o
 *.out
-*.swp
 *.bak
+*.swp
 *.gch
