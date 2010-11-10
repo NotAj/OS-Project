@@ -3,3 +3,6 @@
 *.bak
 *.swp
 *.gch
+*.out
+RTX
+TEST_*

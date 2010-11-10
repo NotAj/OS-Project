@@ -182,6 +182,8 @@ int main()
 	printf("Removed PCB = (%d,%d) || next = %p\n", pcb->p_pid, pcb->p_priority, pcb->k_queue_next);
 	test_priority_queue_print(PQ);
 	printf("\n\n");
+
+
 	printf("TESTING MESSAGE QUEUE\n\n");
 
 	// Initializing queue
