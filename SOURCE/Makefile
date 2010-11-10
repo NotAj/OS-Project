@@ -4,7 +4,7 @@ LDFLAGS = -g -I./$(INC_DIR)
 
 INC_DIR = inc/
 
-SOURCES = pcb.h message.h queue.h priority_queue.h message_queue.h tracebuffer.h globals.h defines.h 
+SOURCES = k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h globals.h defines.h 
 TEST_SOURCES = test_queue.h test_priority_queue.h test_message_queue.h test_tracebuffer.h
 
 # TODO Figure out proper way of linking using o files in obj/
@@ -52,21 +52,21 @@ $(OBJ_DIR):
 .c.o:
 	$(CC) $(CFLAGS) -c -o $(OBJ_DIR)$@ $<
 
-pcb.o: pcb.h
-message.o: message.h defines.h
+k_pcb.o: k_pcb.h
+k_message.o: k_message.h defines.h
 
-queue.o: queue.h pcb.h
-priority_queue.o : queue.h pcb.h
-message_queue.o: message_queue.h message.h
-tracebuffer.o: tracebuffer.h
+k_queue.o: k_queue.h k_pcb.h
+k_priority_queue.o : k_queue.h k_pcb.h
+k_message_queue.o: k_message_queue.h k_message.h
+k_tracebuffer.o: k_tracebuffer.h
 
-globals.o: globals.h pcb.h message.h queue.h priority_queue.h message_queue.h
+globals.o: globals.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h
 defines.o: defines.h 
 
-test_queue.o: queue.h pcb.h
-test_priority_queue.o: test_priority_queue.h priority_queue.h
-test_message_queue.o: test_message_queue.h message_queue.h
-test_tracebuffer.o: test_tracebuffer.h tracebuffer.h
+test_queue.o: k_queue.h k_pcb.h
+test_priority_queue.o: test_priority_queue.h k_priority_queue.h
+test_message_queue.o: test_message_queue.h k_message_queue.h
+test_tracebuffer.o: test_tracebuffer.h k_tracebuffer.h
 
 .PHONY: clean
 

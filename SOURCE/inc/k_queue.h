@@ -2,7 +2,7 @@
 #define QUEUE_H
 
 #include "stdlib.h"
-#include "pcb.h"
+#include "k_pcb.h"
 
 /****************************************************************
  Queue Data structure

@@ -1,4 +1,4 @@
-#include "priority_queue.h"
+#include "k_priority_queue.h"
 
 /****************************************************************
  Priority Queue Data structure

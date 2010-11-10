@@ -1,4 +1,4 @@
-#include "message.h"
+#include "k_message.h"
 
 /****************************************************************
  Message Envelope Data structure

@@ -1,4 +1,4 @@
-#include "tracebuffer.h"
+#include "k_tracebuffer.h"
 #include "test_tracebuffer.h"
 #include <stdio.h>
 #include <stdlib.h>

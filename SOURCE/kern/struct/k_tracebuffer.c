@@ -1,4 +1,4 @@
-#include "tracebuffer.h"
+#include "k_tracebuffer.h"
 
 /****************************************************************
  Tracebuffer Data Structure 

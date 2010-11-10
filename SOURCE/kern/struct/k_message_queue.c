@@ -1,4 +1,4 @@
-#include "message_queue.h"
+#include "k_message_queue.h"
 
 /****************************************************************
  Message Queue Data Structure 

@@ -1,4 +1,4 @@
-#include "queue.h"
+#include "k_queue.h"
 
 /****************************************************************
  Queue Data structure

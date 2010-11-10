@@ -1,6 +1,6 @@
-#include "queue.h"
-#include "pcb.h"
-#include "priority_queue.h"
+#include "k_queue.h"
+#include "k_pcb.h"
+#include "k_priority_queue.h"
 #include "test_queue.h"
 #include "test_priority_queue.h"
 #include <stdio.h>

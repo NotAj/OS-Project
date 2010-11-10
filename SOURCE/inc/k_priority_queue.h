@@ -2,8 +2,8 @@
 #define PRIORITY_QUEUE_H
 
 #include <stdlib.h>
-#include "pcb.h"
-#include "queue.h"
+#include "k_pcb.h"
+#include "k_queue.h"
 
 /****************************************************************
  Priority Queue Data structure

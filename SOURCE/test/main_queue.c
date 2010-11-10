@@ -1,5 +1,5 @@
-#include "queue.h"
-#include "pcb.h"
+#include "k_queue.h"
+#include "k_pcb.h"
 #include "test_queue.h"
 #include <stdio.h>
 #include <stdlib.h>

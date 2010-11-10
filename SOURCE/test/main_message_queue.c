@@ -1,5 +1,5 @@
-#include "message.h"
-#include "message_queue.h"
+#include "k_message.h"
+#include "k_message_queue.h"
 #include "test_message_queue.h"
 #include <stdio.h>
 #include <stdlib.h>

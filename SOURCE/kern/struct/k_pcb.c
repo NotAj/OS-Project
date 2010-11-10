@@ -1,4 +1,4 @@
-#include "pcb.h"
+#include "k_pcb.h"
 
 /****************************************************************
  PCB Data structure

@@ -3,11 +3,11 @@
 
 #include <stdlib.h>
 
-#include "pcb.h"
-#include "message.h"
-#include "queue.h"
-#include "priority_queue.h"
-#include "message_queue.h"
+#include "k_pcb.h"
+#include "k_message.h"
+#include "k_queue.h"
+#include "k_priority_queue.h"
+#include "k_message_queue.h"
 
 /***************************************
  Global Variables

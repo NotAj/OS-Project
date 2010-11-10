@@ -2,7 +2,7 @@
 #define MESSAGE_QUEUE_H
 
 #include <stdlib.h>
-#include "message.h"
+#include "k_message.h"
 
 /****************************************************************
  Message Queue Data Structure 
