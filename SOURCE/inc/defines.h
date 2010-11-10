@@ -19,6 +19,12 @@
 #define BUFFER_SIZE 512		// Size of the shared IO buffers
 
 /***************************************
+ Tracebuffer Defines
+****************************************/
+#define TRACEBUFFER_SIZE 16 // Number of traces
+
+
+/***************************************
  PID Defines
 ****************************************/
 #define PID_NULL 0 			// PID of NULL process
