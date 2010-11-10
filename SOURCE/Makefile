@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -g  -I./$(INC_DIR)
+CFLAGS = -Wall -g  -I./$(INC_DIR) 
 LDFLAGS = -g -I./$(INC_DIR) 
 
 INC_DIR = inc/
@@ -20,7 +20,7 @@ TEST_PQ_MAIN = test/main_priority_queue.c
 TEST_MQ_MAIN = test/main_message_queue.c
 TEST_TB_MAIN = test/main_tracebuffer.c 
 
-VPATH = inc:test:struct:obj
+VPATH = inc:kern:test:kern/struct:obj
 
 EXE = RTX 
 TEST_Q_EXE = TEST_Q
