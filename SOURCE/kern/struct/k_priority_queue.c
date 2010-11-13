@@ -22,9 +22,12 @@
 *****************************************************************************/
 int k_priority_queue_is_empty(k_priority_queue_ptr PQ) 
 {
+	if (PQ == NULL)
+		return 1; // Return empty code if invalid pointer passed
+
 	// The priority queue must have an array of 4 queues, so check if these queues are empty or not
 	int i;
-	for (i=0; i<4; i++) // For the 4 priority levels
+	for (i=0; i< PRIORITY_NUM; i++) // For the 4 priority levels
 	{
 		if (PQ->array[i]->head != NULL)
 			return 0; // Will return as soon as one process found
@@ -49,10 +52,13 @@ int k_priority_queue_is_empty(k_priority_queue_ptr PQ)
 *****************************************************************************/
 void k_priority_queue_enqueue(k_PCB_ptr process, k_priority_queue_ptr PQ)
 {
+	if (PQ == NULL)
+		return; // Do nothing if invalid pointer passed
+
 	if (process == NULL)
 		return; // Trying to enqueue a NULL pointer, do nothing.
 	
-	if (process->p_priority < 0 || process->p_priority > 3)
+	if (process->p_priority < 0 || process->p_priority >=  PRIORITY_NUM)
 		// Trying to enqueue a process with an invalid priority
 		// Change the priority field to the lowest priority, and enqueue.
 		process->p_priority = 3; 
@@ -61,7 +67,6 @@ void k_priority_queue_enqueue(k_PCB_ptr process, k_priority_queue_ptr PQ)
 	// Only the readyQ uses this function so always specify 0 for allQ parameter
 	k_queue_enqueue(process, 0, PQ->array[process->p_priority]);	
 }
-
 /****************************************************************************
 * Function      : k_priority_queue_dequeue 
 ******************************************************************************
@@ -75,6 +80,9 @@ void k_priority_queue_enqueue(k_PCB_ptr process, k_priority_queue_ptr PQ)
 ****************************************************************************/
 k_PCB_ptr k_priority_queue_dequeue(k_priority_queue_ptr PQ) 
 {
+	if (PQ == NULL)
+		return NULL; // Do nothing if invalid pointer passed
+
 	// If priority queue is empty, return NULL.
 	if (k_priority_queue_is_empty(PQ))
 		return NULL;
@@ -88,5 +96,34 @@ k_PCB_ptr k_priority_queue_dequeue(k_priority_queue_ptr PQ)
 	
 	// Here i is index of highest priority non-empty queue, so dequeue from there.	
 	return (k_queue_dequeue(PQ->array[i])); 
+}
+
+/****************************************************************************
+* Function      : k_priority_queue_remove
+******************************************************************************
+* Description   : This function removes a PCB from a queue with the PID 
+*				: specified. This function is used on the readyQ when changing 
+*				: the priority of a process. Because of this the allQ parameter
+*				: is not necessary.
+*              
+* Assumptions   : Will return NULL if trying to remove from an empty queue or
+*				: if no PCB on the queue has the PID specified.  
+*				: Assumes a valid queue is specified.
+*****************************************************************************/
+k_PCB_ptr k_priority_queue_remove(int pid, k_priority_queue_ptr PQ)
+{
+	if (PQ == NULL)
+		return NULL; // Do nothing if invalid pointer passed
+	
+	k_PCB_ptr removed_pcb;	
+	removed_pcb = k_pid_to_PCB_ptr(pid);
+	if (removed_pcb == NULL)
+		return NULL; // If specified PID is invalid, do nothing
+	
+	// Check if PCB has valid priority, if invalid do nothing
+	if (removed_pcb->p_priority < 0 || removed_pcb->p_priority >= PRIORITY_NUM)
+		return NULL;	
+
+	return k_queue_remove(pid, PQ->array[removed_pcb->p_priority]);
 }
 

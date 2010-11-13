@@ -23,6 +23,9 @@
 *****************************************************************************/
 int k_queue_is_empty(k_queue_ptr Q) 
 {
+	if (Q == NULL)
+		return 1; // Return empty code if invalid pointer passed
+
 	// If no items in queue, both head and tail will point to NULL
 	// The result will be 1 if true, signifying an empty queue
 	return (Q->head == NULL);
@@ -43,6 +46,9 @@ int k_queue_is_empty(k_queue_ptr Q)
 *****************************************************************************/
 void k_queue_enqueue(k_PCB_ptr process, int all_Q, k_queue_ptr Q)
 {
+	if (Q == NULL)
+		return; // Do nothing if invalid pointer passed
+
 	if (process == NULL)
 		return; // Trying to enqueue a NULL pointer, do nothing
 	
@@ -81,6 +87,9 @@ void k_queue_enqueue(k_PCB_ptr process, int all_Q, k_queue_ptr Q)
 *****************************************************************************/
 k_PCB_ptr k_queue_dequeue(k_queue_ptr Q) 
 {
+	if (Q == NULL)
+		return NULL; // Do nothing if invalid pointer passed
+
 	// Return NULL if Q is empty
 	if(k_queue_is_empty(Q))
 		return NULL;	
@@ -114,8 +123,11 @@ k_PCB_ptr k_queue_dequeue(k_queue_ptr Q)
 *				: if no PCB on the queue has the PID specified.  
 *				: Assumes a valid queue is specified.
 *****************************************************************************/
-k_PCB_ptr k_queue_remove(int PID, k_queue_ptr Q)
+k_PCB_ptr k_queue_remove(int pid, k_queue_ptr Q)
 {
+	if (Q == NULL)
+		return NULL; // Do nothing if invalid pointer passed
+
 	// Initialize local variables
 	k_PCB_ptr prev_pcb;
 	k_PCB_ptr current_pcb;
@@ -128,7 +140,7 @@ k_PCB_ptr k_queue_remove(int PID, k_queue_ptr Q)
 		return NULL;
 
 	// Iterate through queue, and stop when current_pcb holds PCB to be removed
-	while(current_pcb->p_pid != PID) 
+	while(current_pcb->p_pid != pid) 
 	{
 		prev_pcb = current_pcb; 
 		current_pcb = current_pcb->k_queue_next;
@@ -144,6 +156,7 @@ k_PCB_ptr k_queue_remove(int PID, k_queue_ptr Q)
 	prev_pcb->k_queue_next = current_pcb->k_queue_next;
 	if (current_pcb == Q->tail) // Check if removing tail
 		Q->tail = prev_pcb;	
-	
+
+	current_pcb->k_queue_next = NULL; // Set pointer to NULL since removing from Q
 	return current_pcb;
 }

@@ -1,7 +1,7 @@
-#ifndef MESSAGE_H
-#define MESSAGE_H
+#ifndef K_MESSAGE_H
+#define K_MESSAGE_H
 
-#include "defines.h"
+#include "k_defines.h"
 
 /****************************************************************
  Message Envelope Data structure
@@ -23,11 +23,11 @@
 /*************************
 * Type Declarations
 *************************/
-typedef struct message_envelope *MsgEnv_ptr;
+typedef struct k_message_struct *k_message_ptr;
 
-typedef struct message_envelope
+typedef struct k_message_struct
 {	
-	MsgEnv_ptr k_queue_next;
+	k_message_ptr k_queue_next;
 	int sender_pid;
 	int receiver_pid;
 	int msg_type;
@@ -36,8 +36,9 @@ typedef struct message_envelope
 	char msg_text[MSG_ENV_SIZE];
 } MsgEnv;
 
+typedef struct k_message_struct k_message;
+
 /*************************
 * Function Declarations
 *************************/
-
 #endif

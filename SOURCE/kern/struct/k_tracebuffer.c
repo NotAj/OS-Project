@@ -18,39 +18,24 @@
 * Description   : This function updates the tracebuffer with the information
 *				: provided. It is implemented as a circular array of 16
 *				: traces, so that the oldest trace in the buffer is always 
-*				: overwritten when the buffer is full. 
+*				: overwritten when the buffer is full. This function will 
+*				: always print the entire tracebuffer, even if it is empty
 *				
-* Assumptions   : TB->head is initialized to 1, TB->tail to 0 
+* Assumptions   : TB->head can be initialized to any value 
 *****************************************************************************/
 void k_tracebuffer_update (int sender_pid, int receiver_pid, int msg_type, k_tracebuffer_ptr TB)
 {
-	int timestamp = 0; //k_clock_tick; // Get system time first
-	
-	// TODO Decide which scheme to use, head and tail or just head
-	// Handling the initial case, By setting head 1 greater. This will make tail always 1 less than head, and print all items in the array.
-	// This can be improved by using only head and size of tracebuffer.
-/*	if (TB->head == TB->tail)
-		TB->head++;
-*/	
+	extern int k_clock_tick; // Get system time first
 
-	// Increment head, rolling over if it goes negative
+	// Decrement head, rolling over if it goes negative
+	// This sets the new head to the oldest entry in the TB
 	TB->head--;
 	if (TB->head < 0)
 		TB->head = TRACEBUFFER_SIZE - 1;
 
-// TODO Decide which scheme to use
-/*
-	if (TB->head == TB->tail) // Means the buffer is full, so overwrite oldest entry
-		// Increment tail, rolling over if it goes negative
-		TB->tail--;
-		if (TB->tail < 0)
-			TB->tail = TRACEBUFFER_SIZE - 1;
-*/
-
-	// Populate fields of trace wil supplied info
- 	// NOTE: Since array is initialized by calling malloc on struct, use . to dereference as each element in the array holds the struct itself
-	TB->buffer[TB->head].sender_pid = sender_pid;
-	TB->buffer[TB->head].receiver_pid = receiver_pid;
-	TB->buffer[TB->head].msg_type = msg_type;
-	TB->buffer[TB->head].timestamp = timestamp;
+	// Populate fields of trace with supplied info
+ 	TB->buffer[TB->head]->sender_pid = sender_pid;
+	TB->buffer[TB->head]->receiver_pid = receiver_pid;
+	TB->buffer[TB->head]->msg_type = msg_type;
+	TB->buffer[TB->head]->timestamp = k_clock_tick;
 }

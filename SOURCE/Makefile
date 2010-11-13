@@ -4,7 +4,7 @@ LDFLAGS = -g -I./$(INC_DIR)
 
 INC_DIR = inc/
 
-SOURCES = k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h globals.h defines.h 
+SOURCES = k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_utility.h k_scheduler.h k_init_struct.h k_globals.h k_defines.h 
 TEST_SOURCES = test_queue.h test_priority_queue.h test_message_queue.h test_tracebuffer.h
 
 # TODO Figure out proper way of linking using o files in obj/
@@ -20,7 +20,7 @@ TEST_PQ_MAIN = test/main_priority_queue.c
 TEST_MQ_MAIN = test/main_message_queue.c
 TEST_TB_MAIN = test/main_tracebuffer.c 
 
-VPATH = inc:kern:test:kern/struct:obj
+VPATH = inc:kern:test:kern/struct:init:obj
 
 EXE = RTX 
 TEST_Q_EXE = TEST_Q
@@ -52,21 +52,26 @@ $(OBJ_DIR):
 .c.o:
 	$(CC) $(CFLAGS) -c -o $(OBJ_DIR)$@ $<
 
-k_pcb.o: k_pcb.h
-k_message.o: k_message.h defines.h
+k_pcb.o: k_pcb.h k_defines.h
+k_message.o: k_message.h k_defines.h
 
-k_queue.o: k_queue.h k_pcb.h
-k_priority_queue.o : k_queue.h k_pcb.h
+k_queue.o: k_queue.h k_pcb.h 
+k_priority_queue.o : k_priority_queue.h k_queue.h k_pcb.h k_utility.h k_defines.h
 k_message_queue.o: k_message_queue.h k_message.h
-k_tracebuffer.o: k_tracebuffer.h
+k_tracebuffer.o: k_tracebuffer.h k_defines.h
 
-globals.o: globals.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h
-defines.o: defines.h 
+k_scheduler: k_scheduler.h k_pcb.h k_queue.h k_priority_queue.h
+k_utility.o: k_utility.h k_pcb.h k_queue.h k_defines.h 
 
-test_queue.o: k_queue.h k_pcb.h
-test_priority_queue.o: test_priority_queue.h k_priority_queue.h
-test_message_queue.o: test_message_queue.h k_message_queue.h
-test_tracebuffer.o: test_tracebuffer.h k_tracebuffer.h
+k_init_struct.o: k_init_struct.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h
+
+k_globals.o: k_globals.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h
+k_defines.o: k_defines.h 
+
+test_queue.o: k_queue.h k_pcb.h k_init_struct.h
+test_priority_queue.o: test_priority_queue.h k_priority_queue.h k_init_struct.h
+test_message_queue.o: test_message_queue.h k_message_queue.h k_init_struct.h
+test_tracebuffer.o: test_tracebuffer.h k_tracebuffer.h k_init_struct.h
 
 .PHONY: clean
 
