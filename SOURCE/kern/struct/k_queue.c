@@ -38,7 +38,9 @@ int k_queue_is_empty(k_queue_ptr Q)
 * 				: the queue specified by a pointer to a queue. This function
 *				: is used to enqueue to the allQ on initialization, and 
 *				: enqueueing to the readyQ and blockedQ. To specify which 
-*				: queue pointer to modify, the allQ parameter is used.				   
+*				: queue pointer to modify, the allQ parameter is used.
+*				: NOTE: Since processes are never removed from the allQ,
+*				: remove doesn't handle the allQ case.				   
 *              
 * Assumptions   : Will do nothing in the case of enqueueing a NULL pointer.
 *				: Assumes the PCB pointer given points to a valid PCB. 

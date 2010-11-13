@@ -7,10 +7,15 @@ k_PCB_ptr k_PCB_init(int p_pid, int p_status, int p_priority, void *k_start_addr
 	
 	if (PCB == NULL)
 		return NULL; // Return NULL if malloc failed
-		
+	
+	// Check if priority is valid, if not set to lowest priority
+	if (p_priority < 0 || p_priority >= PRIORITY_NUM)
+		p_priority = PRIORITY_NUM - 1;
+	
 	// Set fields of PCB
 	PCB->k_queue_next = NULL;
 	PCB->k_all_queue_next = NULL;
+	PCB->k_received_message_queue = k_message_queue_init();
 	PCB->p_pid = p_pid;
 	PCB->p_status = p_status;
 	PCB->p_priority = p_priority;
@@ -98,4 +103,20 @@ k_tracebuffer_ptr k_tracebuffer_init()
 	return TB;
 }
 
-
+k_itable_ptr k_itable_init(int process_num, int *pid, int *priority, int *is_iprocess, void **start_address)
+{
+	int i;
+	k_itable_ptr process_table = malloc(sizeof(k_itable));
+	process_table->pid = malloc(sizeof(int) * process_num);
+	process_table->priority = malloc(sizeof(int) * process_num);
+	process_table->is_iprocess = malloc(sizeof(int) * process_num);
+	process_table->start_address = malloc(sizeof(void *) * process_num);
+	for (i=0; i<process_num; i++)
+	{
+		process_table->pid[i] = pid[i];
+		process_table->priority[i] = priority[i];
+		process_table->is_iprocess[i] = is_iprocess[i];
+		process_table->start_address[i] = start_address[i];
+	} 
+	return process_table;
+}

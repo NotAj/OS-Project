@@ -5,6 +5,7 @@
 #include "k_pcb.h"
 #include "k_queue.h"
 #include "k_priority_queue.h"
+#include "k_globals.h"
 
 /****************************************************************
  Scheduler
@@ -28,7 +29,7 @@ void k_process_switch( );
 
 void k_context_switch (k_PCB_ptr prev_process, k_PCB_ptr next_process);
 
-void k_release_process (k_PCB_ptr prev_process, k_PCB_ptr next_process);
+void k_release_processor ();
 
 void k_change_priority (int new_priority, int target_pid);
 

@@ -1,8 +1,11 @@
 #!/bin/sh
 
+make clean
 make
 ./TEST_Q
 ./TEST_PQ
 ./TEST_MQ
 ./TEST_TB
-		
+./TEST_ITABLE
+./TEST_UTILITY		
+./TEST_SCHEDULER

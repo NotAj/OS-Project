@@ -7,10 +7,9 @@
 
 int main()
 {
-	printf("Starting \n");
 	int i, count;
 
-	printf("TESTING TRACEBUFFERS\n\n");
+	printf("TESTING TRACEBUFFERS\n");
 
 	printf("Test initialize tracebuffer");	
 	// Initializing tracebuffer
@@ -70,5 +69,5 @@ int main()
 	printf("---->PASS\n");
 
 	
-	printf("TRACEBUFFER PASSED\n");
+	printf("TRACEBUFFER PASSED\n\n");
 }

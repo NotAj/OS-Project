@@ -17,7 +17,7 @@ void test_priority_queue_print(k_priority_queue_ptr PQ)
 	for (i=0; i<4; i++)
 	{ 
 		printf("Priority %d ------------------- \n", i);
-		test_queue_print(PQ->array[i]);
+		test_queue_print(0, PQ->array[i]);
 	}
 	printf("\n");
 }

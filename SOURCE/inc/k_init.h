@@ -1,7 +1,9 @@
-#ifndef K_INIT_STRUCT_H
-#define K_INIT_STRUCT_H
+#ifndef K_INIT_H
+#define K_INIT_H
 
 #include <stdlib.h>
+#include "k_scheduler.h"
+//#include "k_ipc.h"
 #include "k_pcb.h"
 #include "k_message.h"
 #include "k_queue.h"
@@ -9,6 +11,11 @@
 #include "k_message_queue.h"
 #include "k_tracebuffer.h"
 #include "k_itable.c"
+#include "k_init_struct.h"
+#include "k_defines.h"
+#include "k_globals.h"
+#include <signal.h>
+#include <setjmp.h>
 
 /****************************************************************
  Struct Initalizations
@@ -25,18 +32,16 @@
 
 /*************************
 * Function Declarations
+
 *************************/
-k_PCB_ptr k_PCB_init(int p_pid, int p_status, int p_priority, void *k_start_address);
+void k_scheduler_init();
 
-k_message_ptr k_message_init();
+void k_ipc_init(int msg_env_num);
 
-k_queue_ptr k_queue_init();
+void k_process_init();
 
-k_priority_queue_ptr k_priority_queue_init();
+void k_signal_init();
 
-k_message_queue_ptr k_message_queue_init();
+void k_init();
 
-k_tracebuffer_ptr k_tracebuffer_init();
-
-k_itable_ptr k_itable_init(int process_num, int *pid, int *priority, int *is_iprocess, void **start_address);
 #endif
