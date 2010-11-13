@@ -37,7 +37,24 @@ int main()
 	
 	printf("---->PASS\n");
 	
-	printf("Testing Send\n");
+	printf("Testing Successfull Send\n");
+	message->msg_size = 3;
+	j = k_send_message(2, message);
+	
+	assert(j == 1);
+	message = NULL;
+
+	printf("---->PASS\n");
+
+	printf("Testing Successfull Receive\n");
+	
+	while (k_current_process->p_pid != 2) {
+		release_processor();
+	message = k_receive_message();
+	
+	assert(message != NULL);
+	assert(i == k_current_process->p_pid);
+
 	printf("MESSAGE QUEUE PASSED\n");
 
 }

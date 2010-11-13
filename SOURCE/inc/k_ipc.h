@@ -2,9 +2,12 @@
 #define K_IPC_H
 
 #include "k_message.h"
-#include "k_PCB.h"
+#include "k_pcb.h"
 #include "k_message_queue.h"
 #include "k_scheduler.h"
+#include "k_tracebuffer.h"
+#include "k_defines.h"
+#include "k_utility.h"
 
 /****************************************************************
  Queue Data structure
@@ -19,7 +22,7 @@
 *************************/
 int k_send_message (int dest_process_id, MsgEnv * msg_env_ptr);
 
-MsgEnv* k_recieve_message ();
+MsgEnv* k_receive_message ();
 
 MsgEnv* k_request_msg_env ();
 
