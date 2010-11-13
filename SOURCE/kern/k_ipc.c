@@ -1,6 +1,7 @@
 #include "k_message.h"
 #include "k_PCB.h"
 #include "k_message_queue.h"
+#include "k_scheduler.h"
 
 /****************************************************************
  Template Data Structure 
@@ -108,6 +109,8 @@ MsgEnv* k_request_msg_env ()
 
 int k_release_msg_env (MsgEnv * msg_env_ptr) 
  {
+	if(msg_env_ptr == NULL)
+		return 0;
 	msg_env_ptr->sender_pid = 0;
 	msg_env_ptr->receiver_pid = 0;
 	msg_env_ptr->msg_type = 0;
