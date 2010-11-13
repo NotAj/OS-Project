@@ -1,0 +1,20 @@
+Possible ipc cases:
+
+1. Successfull Request
+2. Successfull Send
+3. Successfull Receive
+4. Successfull Release
+
+5. Failed Request of an I-process
+6. Failed Request of a regular process (x2)
+
+7. Successfull dequeue from blocked queue on release (only 1)
+8. Second successfull dequeue from blocked queue
+
+9. Formerly blocked on resource process reblocks on Request
+
+10. Failed Receive of an I-process
+11. Failed Receive of a regular process
+
+12. Successfull change from 'blocked on receive' to ready
+ 
