@@ -32,7 +32,7 @@ int k_send_message (int dest_process_id, MsgEnv * msg_env_ptr)
 	k_PCB_ptr dest_PCB;
 	//Function takes a PID, and returns a pointer to its PCB
 	dest_PCB = k_pid_to_PCB_ptr(dest_process_id);
-	if(dest_PCB == NULL)
+	if(dest_PCB == NULL || msg_env_ptr == NULL)
 		return 0; 
 	msg_env_ptr->sender_pid = k_current_process->p_pid;
 	msg_env_ptr->receiver_pid = dest_process_id;
