@@ -5,16 +5,19 @@ Possible ipc cases:
 3. Successfull Receive
 4. Successfull Release
 
+5. Failed Request of a regular process (x2)
+
+6. Successfull dequeue from blocked queue on release (only 1)
+7. Second successfull dequeue from blocked queue
+
+8. Formerly blocked on resource process reblocks on Request
+
+9. Failed Receive of a regular process
+10. Successfull change from 'blocked on receive' to ready
+
+11. Failed Send by Bad Pid
+12. Failed Send by NULL Message
+13. Failed Release by NULL Message
+
 *5. Failed Request of an I-process
-6. Failed Request of a regular process (x2)
-
-7. Successfull dequeue from blocked queue on release (only 1)
-8. Second successfull dequeue from blocked queue
-
-9. Formerly blocked on resource process reblocks on Request
-
 *10. Failed Receive of an I-process
-11. Failed Receive of a regular process
-
-12. Successfull change from 'blocked on receive' to ready
- 
