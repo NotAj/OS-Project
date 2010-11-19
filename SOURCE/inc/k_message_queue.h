@@ -1,5 +1,5 @@
-#ifndef MESSAGE_QUEUE_H
-#define MESSAGE_QUEUE_H
+#ifndef K_MESSAGE_QUEUE_H
+#define K_MESSAGE_QUEUE_H
 
 #include <stdlib.h>
 #include "k_message.h"

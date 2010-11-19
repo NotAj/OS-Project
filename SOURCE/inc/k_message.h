@@ -1,5 +1,5 @@
-#ifndef MESSAGE_H
-#define MESSAGE_H
+#ifndef K_MESSAGE_H
+#define K_MESSAGE_H
 
 #include "defines.h"
 

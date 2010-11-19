@@ -2,12 +2,12 @@
 #define GLOBALS_H
 
 #include <stdlib.h>
-
 #include "k_pcb.h"
 #include "k_message.h"
 #include "k_queue.h"
 #include "k_priority_queue.h"
 #include "k_message_queue.h"
+#include "k_tracebuffer.h"
 
 /***************************************
  Global Variables
@@ -15,6 +15,7 @@
 k_PCB_ptr k_current_process;		// Points to PCB of currently executing process
 k_PCB_ptr k_interrupted_process;	// Points to PCB of interrupted process
 int k_atomic_flag;					// Flag controlling calls to atomic
+//#ifdef K_QUEUE_H
 k_queue_ptr k_allQ;					// Queue contains all process in the RTX
 k_priority_queue_ptr k_readyQ;		// PQ containing all ready process
 k_priority_queue_ptr k_blockedQ;	// PQ containing all blocked_on_allocate processes

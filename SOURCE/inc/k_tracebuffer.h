@@ -1,8 +1,7 @@
-#ifndef TRACEBUFFER_H
-#define TRACEBUFFER_H
+#ifndef K_TRACEBUFFER_H
+#define K_TRACEBUFFER_H
 
 #include <stdlib.h>
-#include "globals.h"
 #include "defines.h"
 
 /****************************************************************

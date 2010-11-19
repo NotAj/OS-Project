@@ -1,9 +1,10 @@
-#ifndef PRIORITY_QUEUE_H
-#define PRIORITY_QUEUE_H
+#ifndef K_PRIORITY_QUEUE_H
+#define K_PRIORITY_QUEUE_H
 
 #include <stdlib.h>
 #include "k_pcb.h"
 #include "k_queue.h"
+#include "k_utility.h"
 
 /****************************************************************
  Priority Queue Data structure
@@ -36,6 +37,6 @@ void k_priority_queue_enqueue (k_PCB_ptr process, k_priority_queue_ptr PQ);
 
 k_PCB_ptr k_priority_queue_dequeue (k_priority_queue_ptr PQ);
 
-k_PCB_ptr k_priority_queue_remove (int pid, k_priority_queue_ptr PQ)
+k_PCB_ptr k_priority_queue_remove (int pid, k_priority_queue_ptr PQ);
 
 #endif

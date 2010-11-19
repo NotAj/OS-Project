@@ -23,7 +23,7 @@
 int k_priority_queue_is_empty(k_priority_queue_ptr PQ) 
 {
 	if (PQ == NULL)
-		return NULL; // Do nothing if invalid pointer passed
+		return 1; // Return empty code if invalid pointer passed
 
 	// The priority queue must have an array of 4 queues, so check if these queues are empty or not
 	int i;
@@ -53,9 +53,7 @@ int k_priority_queue_is_empty(k_priority_queue_ptr PQ)
 void k_priority_queue_enqueue(k_PCB_ptr process, k_priority_queue_ptr PQ)
 {
 	if (PQ == NULL)
-		return NULL; // Do nothing if invalid pointer passed
-
-
+		return; // Do nothing if invalid pointer passed
 
 	if (process == NULL)
 		return; // Trying to enqueue a NULL pointer, do nothing.
@@ -112,16 +110,16 @@ k_PCB_ptr k_priority_queue_dequeue(k_priority_queue_ptr PQ)
 *				: if no PCB on the queue has the PID specified.  
 *				: Assumes a valid queue is specified.
 *****************************************************************************/
-k_PCB_ptr k_priority_queue_remove(int pid, k_queue_ptr PQ)
+k_PCB_ptr k_priority_queue_remove(int pid, k_priority_queue_ptr PQ)
 {
 	if (PQ == NULL)
 		return NULL; // Do nothing if invalid pointer passed
 	
 	k_PCB_ptr removed_pcb;	
-	removed_pcb = pid_to_PCB_ptr(pid);
+	removed_pcb = k_pid_to_PCB_ptr(pid);
 	if (removed_pcb == NULL)
-		return; // If specified PID is invalid, do nothing
+		return NULL; // If specified PID is invalid, do nothing
 
-	return k_queue_remove(PID, PQ->array[removed_pcb->p_priority]);
+	return k_queue_remove(pid, PQ->array[removed_pcb->p_priority]);
 }
 

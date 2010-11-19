@@ -24,7 +24,7 @@
 int k_queue_is_empty(k_queue_ptr Q) 
 {
 	if (Q == NULL)
-		return NULL; // Do nothing if invalid pointer passed
+		return 1; // Return empty code if invalid pointer passed
 
 	// If no items in queue, both head and tail will point to NULL
 	// The result will be 1 if true, signifying an empty queue
@@ -47,7 +47,7 @@ int k_queue_is_empty(k_queue_ptr Q)
 void k_queue_enqueue(k_PCB_ptr process, int all_Q, k_queue_ptr Q)
 {
 	if (Q == NULL)
-		return NULL; // Do nothing if invalid pointer passed
+		return; // Do nothing if invalid pointer passed
 
 	if (process == NULL)
 		return; // Trying to enqueue a NULL pointer, do nothing
