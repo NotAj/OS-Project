@@ -24,7 +24,7 @@ int k_clock_m;						// Wall Clock time in minutes
 int k_clock_s;						// Wall Clock time in seconds
 int k_clock_tick;					// System time in clock ticks (100ms per tick)
 int k_display_clock;				// Flag controlling display of wall clock
-//k_tracebuffer_array k_send_TB;		// Sent message TB array (16 last sends)
-//k_tracebuffer_array k_receive_TB;   // Receive message TB array (16 last receives)
+k_tracebuffer_ptr k_send_TB;		// Sent message TB array (16 last sends)
+k_tracebuffer_ptr k_receive_TB;   // Receive message TB array (16 last receives)
 
 #endif

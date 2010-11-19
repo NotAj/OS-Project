@@ -1,6 +1,7 @@
 #ifndef SCHEDULER_H
 #define SCHEDULER_H
 
+#include <setjmp.h>
 #include "pcb.h"
 #include "queue.h"
 #include "priority_queue.h"
@@ -8,10 +9,11 @@
 /****************************************************************
  Scheduler
  ----------------------------------------------------------------
- The scheduler consists of the pcb, queue and priority_queue data
- structures. It serves to consolidate all the includes so that the
- api functions only need to include the scheduler. IT MIGHT BECOME
- A STRUCT WITH A GLOBAL INSTANCE THAT HAS BOTH SCHEDULING QUEUES.
+ The scheduler consists of the functions that perform the scheduling, 
+ as well as the data structures that make it up. 
+ Only the release_processor functionality is made available to processes
+ via the api. 
+ Iprocesses can access these functions and call scheduling functions directly. 
 
 *****************************************************************/
 
@@ -29,12 +31,8 @@ typedef struct k_queue_struct
 /*************************
 * Function Declarations
 *************************/
-/*int k_queue_is_empty (k_queue_ptr Q);
+void k_process_switch( );
 
-void k_queue_enqueue (k_PCB_ptr process, int all_Q, k_queue_ptr Q);
+void k_context_switch (k_PCB_ptr prev_process, k_PCB_ptr next_process);
 
-k_PCB_ptr k_queue_dequeue (k_queue_ptr Q);
-
-k_PCB_ptr k_queue_remove(int PID, k_queue_ptr Q);
-*/
 #endif

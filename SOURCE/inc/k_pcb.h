@@ -5,6 +5,8 @@
 #include <setjmp.h>
 #include "k_message.h"
 #include "k_message_queue.h"
+#include "globals.h"
+#include "defines.h"
 
 /****************************************************************
  PCB Data structure
@@ -37,5 +39,10 @@ typedef struct k_PCB_struct
 	jmp_buf *k_jmpbuf;
 	void *k_start_address;
 } k_PCB;
+
+/*************************
+* Function Declarations
+*************************/
+//k_PCB_ptr pid_to_PCB_ptr (int pid, k_queue_ptr Q);
 
 #endif

@@ -36,4 +36,6 @@ void k_priority_queue_enqueue (k_PCB_ptr process, k_priority_queue_ptr PQ);
 
 k_PCB_ptr k_priority_queue_dequeue (k_priority_queue_ptr PQ);
 
+k_PCB_ptr k_priority_queue_remove (int pid, k_priority_queue_ptr PQ)
+
 #endif

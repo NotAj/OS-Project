@@ -1,27 +1,20 @@
-#include "k_pcb.h"
+#include "k_utility.h"
 
 /****************************************************************
- PCB Data structure
+ Utility Functions
  ----------------------------------------------------------------
- This structure contains all important information on each process
- in the RTX. A PCB for each process is created during intialization
- and is tracked on the various scheduling queues and the allQ. 
- Each PCB contains the PID, status, priority of a process. It also
- contains the stack pointer for each process, as well as a field to
- store the context when switching processes. Each process also has
- a queue of pending messages.
-
+ This file contains all the utility functions that are needed for
+ the user api, or for use in other functions 
 *****************************************************************/
 
-/****************************************************************************
+/***************************************************************************
 * Function      : pid_to_PCB_ptr 
-******************************************************************************
+****************************************************************************
 * Description   : This function takes a PID and returns a pointer to the PCB
 *				: of the corresponding process. 
 *              
 * Assumptions   : Will return NULL if PCB with that PID doesn't exist.
 *****************************************************************************/
-/*
 k_PCB_ptr pid_to_PCB_ptr (int pid)
 {
 	k_PCB_ptr pcb;
@@ -33,4 +26,4 @@ k_PCB_ptr pid_to_PCB_ptr (int pid)
 	// In either case, return pcb
 	return pcb;
 }
-*/
+

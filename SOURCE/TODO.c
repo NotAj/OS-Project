@@ -26,3 +26,6 @@ int main()
 	// Helpers
 	kb_helper.c   	// io_buffer.c
 	crt_help.c	// io_buffer.c	
+}
+
+// ADD K_PRIORITY_QUEUE_REMOVE or do some hacky shit in change_process_priority

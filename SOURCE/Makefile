@@ -52,7 +52,7 @@ $(OBJ_DIR):
 .c.o:
 	$(CC) $(CFLAGS) -c -o $(OBJ_DIR)$@ $<
 
-k_pcb.o: k_pcb.h
+k_pcb.o: k_pcb.h defines.h
 k_message.o: k_message.h defines.h
 
 k_queue.o: k_queue.h k_pcb.h
@@ -60,7 +60,8 @@ k_priority_queue.o : k_queue.h k_pcb.h
 k_message_queue.o: k_message_queue.h k_message.h
 k_tracebuffer.o: k_tracebuffer.h
 
-globals.o: globals.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h
+k_utility.o: k_utility.h k_pcb.h k_queue.h globals.h
+globals.o: globals.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h
 defines.o: defines.h 
 
 test_queue.o: k_queue.h k_pcb.h
