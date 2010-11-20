@@ -14,21 +14,25 @@ TEST_OBJECTS = $(OBJECTS) $(TEST_SOURCES:.h=.o)
 TEST_OBJECTS_DIR = $(TEST_OBJECTS:%=$(OBJ_DIR)%)
 OBJ_DIR = obj/
 
+VPATH = inc:kern:test:kern/struct:init:obj
+
 MAIN = main.c
 TEST_Q_MAIN = test/main_queue.c
 TEST_PQ_MAIN = test/main_priority_queue.c
 TEST_MQ_MAIN = test/main_message_queue.c
 TEST_TB_MAIN = test/main_tracebuffer.c 
-
-VPATH = inc:kern:test:kern/struct:init:obj
+TEST_UTILITY_MAIN = test/main_utility.c
+TEST_SCHEDULER_MAIN = test/main_scheduler.c
 
 EXE = RTX 
 TEST_Q_EXE = TEST_Q
 TEST_PQ_EXE = TEST_PQ 
 TEST_MQ_EXE = TEST_MQ
 TEST_TB_EXE = TEST_TB
+TEST_UTILITY_EXE = TEST_UTILITY
+TEST_SCHEDULER_EXE = TEST_SCHEDULER
 
-ALL_EXECUTABLE = $(EXE) $(TEST_Q_EXE) $(TEST_PQ_EXE) $(TEST_MQ_EXE) $(TEST_TB_EXE)
+ALL_EXECUTABLE = $(EXE) $(TEST_Q_EXE) $(TEST_PQ_EXE) $(TEST_MQ_EXE) $(TEST_TB_EXE) $(TEST_UTILITY_EXE)
 
 all: $(ALL_EXECUTABLE)
 
@@ -42,6 +46,11 @@ $(TEST_MQ_EXE): $(TEST_OBJECTS) $(TEST_MQ_MAIN)
 	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_MQ_MAIN) -o $@
 $(TEST_TB_EXE): $(TEST_OBJECTS) $(TEST_TB_MAIN)
 	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_TB_MAIN) -o $@
+$(TEST_UTILITY_EXE): $(TEST_OBJECTS) $(TEST_UTILITY_MAIN)
+	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_UTILITY_MAIN) -o $@
+$(TEST_SCHEDULER_EXE): $(TEST_OBJECTS) $(TEST_SCHEDULER_MAIN)
+	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_SCHEDULER_MAIN) -o $@
+
 
 $(OBJECTS): | $(OBJ_DIR)
 $(TEST_OBJECTS): | $(OBJ_DIR)
@@ -61,7 +70,7 @@ k_message_queue.o: k_message_queue.h k_message.h
 k_tracebuffer.o: k_tracebuffer.h k_defines.h
 
 k_scheduler: k_scheduler.h k_pcb.h k_queue.h k_priority_queue.h
-k_utility.o: k_utility.h k_pcb.h k_queue.h k_defines.h 
+k_utility.o: k_utility.h k_pcb.h k_queue.h k_defines.h k_globals.h
 
 k_init_struct.o: k_init_struct.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h
 
@@ -72,6 +81,9 @@ test_queue.o: k_queue.h k_pcb.h k_init_struct.h
 test_priority_queue.o: test_priority_queue.h k_priority_queue.h k_init_struct.h
 test_message_queue.o: test_message_queue.h k_message_queue.h k_init_struct.h
 test_tracebuffer.o: test_tracebuffer.h k_tracebuffer.h k_init_struct.h
+test_scheduler.o: test_scheduler.h k_scheduler.h k_pcb.h k_queue.h k_priority_queue.h
+test_utility.o: test_utility.h k_pcb.h k_queue.h k_defines.h k_globals.h
+
 
 .PHONY: clean
 

@@ -150,6 +150,17 @@ int main()
 	assert(k_queue_is_empty(Q));
 	printf("---->PASS\n");
 
+	printf("Test enqueue to allQ");
+	for(i=0;i<2;i++)
+	{
+		pcb = k_PCB_init(i,i,i,NULL);
+		k_queue_enqueue(pcb,1,Q);
+	}		
+	// Functionality is exactly the same, just check if the correct pointer is updated
+	assert(Q->head->k_queue_next == NULL);
+	assert(Q->head->k_all_queue_next == pcb);
+	printf("---->PASS\n");	
+
 	printf("QUEUE PASSED\n");
 
 }
