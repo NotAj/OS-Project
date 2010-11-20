@@ -5,7 +5,7 @@
 #include <setjmp.h>
 #include "k_message.h"
 #include "k_message_queue.h"
-#include "defines.h"
+#include "k_defines.h"
 
 /****************************************************************
  PCB Data structure

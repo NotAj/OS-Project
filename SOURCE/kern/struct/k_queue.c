@@ -156,6 +156,7 @@ k_PCB_ptr k_queue_remove(int pid, k_queue_ptr Q)
 	prev_pcb->k_queue_next = current_pcb->k_queue_next;
 	if (current_pcb == Q->tail) // Check if removing tail
 		Q->tail = prev_pcb;	
-	
+
+	current_pcb->k_queue_next = NULL; // Set pointer to NULL since removing from Q
 	return current_pcb;
 }

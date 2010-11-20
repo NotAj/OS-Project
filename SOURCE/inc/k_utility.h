@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "k_pcb.h"
 #include "k_queue.h"
-#include "defines.h"
+#include "k_defines.h"
 
 /****************************************************************
  Utility Functions

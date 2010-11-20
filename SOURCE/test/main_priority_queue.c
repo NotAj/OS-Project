@@ -1,10 +1,12 @@
 #include "k_queue.h"
 #include "k_pcb.h"
 #include "k_priority_queue.h"
+#include "k_init_struct.h"
 #include "test_queue.h"
 #include "test_priority_queue.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 int main()
 {
@@ -15,11 +17,7 @@ int main()
 	printf("\n\n");
 	printf("TESTING PRIORITY QUEUE\n");
 	// Initialize priority queue
-	k_priority_queue_ptr PQ = malloc(sizeof(k_priority_queue));
-	for (i=0; i<4; i++)
-	{
-		PQ->array[i] = malloc(sizeof(k_queue));		
-	}
+	k_priority_queue_ptr PQ = k_priority_queue_init();
 	printf("Test print empty queue\n");
 	test_priority_queue_print(PQ);
 	

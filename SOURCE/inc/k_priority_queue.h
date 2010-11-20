@@ -5,6 +5,7 @@
 #include "k_pcb.h"
 #include "k_queue.h"
 #include "k_utility.h"
+#include "k_defines.h"
 
 /****************************************************************
  Priority Queue Data structure
@@ -23,8 +24,9 @@ typedef struct k_priority_queue_struct *k_priority_queue_ptr;
 
 typedef struct k_priority_queue_struct
 {	
-	// Array of a type is headed by a pointer to the type, so make a pointer to a queue_ptr
 	// 4 priority levels, so 4 items in the array.	
+	// Making an array of Q pointers because all Q functions operate on a k_queue_ptr
+	// Because of this, the 4 queues need to be initialized and placed in the array during initialization.
 	k_queue_ptr array[4]; 
 } k_priority_queue;
 

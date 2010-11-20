@@ -2,7 +2,7 @@
 #define K_TRACEBUFFER_H
 
 #include <stdlib.h>
-#include "defines.h"
+#include "k_defines.h"
 
 /****************************************************************
  Tracebuffer Data Structure 
@@ -32,8 +32,8 @@ typedef struct k_trace_struct
 typedef struct k_tracebuffer_struct *k_tracebuffer_ptr;
 
 typedef struct k_tracebuffer_struct
-{	
-	k_trace buffer[TRACEBUFFER_SIZE];
+{
+	k_trace_ptr buffer[TRACEBUFFER_SIZE];
 	int head;
 	int tail;
 } k_tracebuffer;
