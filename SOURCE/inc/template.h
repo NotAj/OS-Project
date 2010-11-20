@@ -1,5 +1,5 @@
 #ifndef K_QUEUE_H
-#define k_QUEUE_H
+#define K_QUEUE_H
 
 #include "k_pcb.h"
 
