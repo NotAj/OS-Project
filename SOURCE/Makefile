@@ -32,7 +32,7 @@ TEST_TB_EXE = TEST_TB
 TEST_UTILITY_EXE = TEST_UTILITY
 TEST_SCHEDULER_EXE = TEST_SCHEDULER
 
-ALL_EXECUTABLE = $(EXE) $(TEST_Q_EXE) $(TEST_PQ_EXE) $(TEST_MQ_EXE) $(TEST_TB_EXE) $(TEST_UTILITY_EXE)
+ALL_EXECUTABLE = $(EXE) $(TEST_Q_EXE) $(TEST_PQ_EXE) $(TEST_MQ_EXE) $(TEST_TB_EXE) $(TEST_UTILITY_EXE) $(TEST_SCHEDULER_EXE)
 
 all: $(ALL_EXECUTABLE)
 
@@ -83,7 +83,6 @@ test_message_queue.o: test_message_queue.h k_message_queue.h k_init_struct.h
 test_tracebuffer.o: test_tracebuffer.h k_tracebuffer.h k_init_struct.h
 test_scheduler.o: test_scheduler.h k_scheduler.h k_pcb.h k_queue.h k_priority_queue.h
 test_utility.o: test_utility.h k_pcb.h k_queue.h k_defines.h k_globals.h
-
 
 .PHONY: clean
 

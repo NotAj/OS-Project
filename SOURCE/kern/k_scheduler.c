@@ -13,9 +13,16 @@
 /****************************************************************************
 * Function      : k_process_switch 
 ******************************************************************************
-* Description   : 
+* Description   : This function is called by any functions that need to change
+*				: processes using the scheduler. It retrieves the ready process
+*				: with the highest priority from the readyQ, updates the 
+*				: current_process global, sets it to executing, and does a context
+*				: switch. This function is called by release_processor, 
+*				: receive_message and request_msg_env functions.
 *           
-* Assumptions   : Assumes a valid queue is specified. 
+* Assumptions   : This function assumes previously executing process has already
+*				: been set to ready/blocked and enqueued on the appropriate queue 
+*				: Assumes that there is always a ready process on the readyQ 
 *****************************************************************************/
 void k_process_switch ( )
 {
@@ -38,28 +45,39 @@ void k_process_switch ( )
 /****************************************************************************
 * Function      : k_context_switch 
 ******************************************************************************
-* Description   :
+* Description   : This function only saves the context of prev_process and 
+*				: restores the context of next_process. It is called by process
+*				: switch to perform the context switching, or called directly by
+*				: the signal handler to perform context switching to an iprocess 
+*				: outside of the scheduler.
 * 
-* Assumptions   : Assumes a valid queue is specified. 
-*****************************************************************************/
+* Assumptions   : Assumes all system variables have been updated prior to being 
+*				: called to ensure proper system operation. 
+******************************************&**********************************/
 void k_context_switch (k_PCB_ptr prev_process, k_PCB_ptr next_process)
 {
-	int status;
+	//int status;
 	// Save the context of the previous process.
-	status = setjmp(prev_process->k_jmp_buf);
-	if (status == 0) // Status is 0, signifying that context has just been saved
+	//status = setjmp(prev_process->k_jmp_buf);
+	printf("SWITCH PID %d->%d\n", prev_process->p_pid, next_process->p_pid);
+	//printf("STATUS = %d\n", status);
+	//if (status == 0) // Status is 0, signifying that context has just been saved
+	if(setjmp(prev_process->k_jmp_buf) == 0)
 	{
+		printf("JUMP %d->%d\n", prev_process->p_pid, next_process->p_pid);
 		longjmp(next_process->k_jmp_buf, 1); // Restores next_process’ context
 	}
+	printf("RESTORED %d->%d\n", prev_process->p_pid,next_process->p_pid);
 	// Function is here if returning from long_jmp(), no action required.
 }
 
 /****************************************************************************
 * Function      : k_release_processor 
 ******************************************************************************
-* Description   :
+* Description   : This function is used by an executing process to stop execution
+*				: and switch to the next ready process. 
 * 
-* Assumptions   : Assumes a valid queue is specified. 
+* Assumptions   : 
 *****************************************************************************/
 void k_release_processor (k_PCB_ptr prev_process, k_PCB_ptr next_process)
 {
