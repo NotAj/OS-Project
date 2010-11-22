@@ -29,7 +29,9 @@ int main()
 	int priority[5];
 	int is_iprocess[5];
 	void *start_address[5];  
-	
+
+	printf("TESTING ITABLE\n");	
+
 	pid[0] = 1;
 	is_iprocess[0] = 1; 
 	priority[0] = 1;
@@ -74,5 +76,5 @@ int main()
 		fp();
 	}
 	printf("--->PASS\n");
-	printf("ITABLE PASSED\n");
+	printf("ITABLE PASSED\n\n");
 }

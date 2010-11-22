@@ -57,4 +57,5 @@ int main()
 	assert(k_allQ->head == head);
 	assert(k_allQ->tail == tail);
 	printf("---->PASS\n");	
+	printf("UTILITY FUNCTIONS PASSED!\n\n");
 }

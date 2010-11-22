@@ -91,6 +91,5 @@ int main()
 	assert(k_message_queue_is_empty(MQ));
 	printf("---->PASS\n");
 	
-	printf("MESSAGE QUEUE PASSED\n");
-
+	printf("MESSAGE QUEUE PASSED\n\n");
 }

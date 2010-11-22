@@ -8,7 +8,7 @@
 
 int main()
 {
-	printf("TESTING QUEUE \n");
+	printf("\nTESTING QUEUE \n");
 	int i, j;
 	k_PCB_ptr pcb; 
 	k_queue_ptr Q;
