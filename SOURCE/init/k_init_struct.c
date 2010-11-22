@@ -11,6 +11,7 @@ k_PCB_ptr k_PCB_init(int p_pid, int p_status, int p_priority, void *k_start_addr
 	// Set fields of PCB
 	PCB->k_queue_next = NULL;
 	PCB->k_all_queue_next = NULL;
+	PCB->k_received_message_queue = k_message_queue_init();
 	PCB->p_pid = p_pid;
 	PCB->p_status = p_status;
 	PCB->p_priority = p_priority;
