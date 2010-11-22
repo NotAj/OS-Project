@@ -58,8 +58,12 @@ void k_process_switch ( )
 *				: by process_switch if called through scheduler 
 ******************************************&**********************************/
 void k_context_switch (k_PCB_ptr prev_process, k_PCB_ptr next_process)
-{
+{	
 	extern k_PCB_ptr k_current_process;
+
+	if (prev_process == NULL || next_process == NULL)
+		//k_terminate(); // Context switch should always be given valid parameters
+	
 	// Setting the current_process global here since context_switch won't work the first time unless current_process is set correctly, and don't want to forget it outside
 	// REMEMBER this change for signal handler
 	k_current_process = next_process;
@@ -88,7 +92,7 @@ void k_context_switch (k_PCB_ptr prev_process, k_PCB_ptr next_process)
 * 
 * Assumptions   : 
 *****************************************************************************/
-void k_release_processor (k_PCB_ptr prev_process, k_PCB_ptr next_process)
+void k_release_processor ()
 {
 	extern k_PCB_ptr k_current_process;	
 	extern k_priority_queue_ptr k_readyPQ;
