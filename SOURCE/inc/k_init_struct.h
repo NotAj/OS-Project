@@ -26,7 +26,7 @@
 /*************************
 * Function Declarations
 *************************/
-k_PCB_ptr k_PCB_init(int p_pid, int p_priority, int p_status, void *k_start_address);
+k_PCB_ptr k_PCB_init(int p_pid, int p_status, int p_priority, void *k_start_address);
 
 k_message_ptr k_message_init();
 

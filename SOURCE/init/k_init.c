@@ -71,13 +71,14 @@ void k_process_init(int num_process, k_itable_ptr init_table)
 	{
 		if(init_table->is_iprocess[i])
 		{
+			// Note parameters of k_PCB_init are (pid, status, priority, start_address)
 			// Process is iprocess
-			pcb = k_PCB_init(init_table->pid[i], init_table->priority[i], STATUS_IPROCESS, init_table->start_address[i]);
+			pcb = k_PCB_init(init_table->pid[i], STATUS_IPROCESS, init_table->priority[i], init_table->start_address[i]);
 		}
 		else
 		{
 			// Normal process
-			pcb = k_PCB_init(init_table->pid[i], init_table->priority[i], STATUS_READY, init_table->start_address[i]);
+			pcb = k_PCB_init(init_table->pid[i], STATUS_READY, init_table->priority[i],  init_table->start_address[i]);
 			k_priority_queue_enqueue(pcb, k_readyPQ);
 		}
 		pcb->k_stack_pointer = malloc(STACK_SIZE);
