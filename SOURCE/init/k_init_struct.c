@@ -98,19 +98,19 @@ k_tracebuffer_ptr k_tracebuffer_init()
 	return TB;
 }
 
-k_itable_ptr k_itable_init(int process_num, int *pid, int *status, int *priority, void **start_address)
+k_itable_ptr k_itable_init(int process_num, int *pid, int *priority, int *is_iprocess, void **start_address)
 {
 	int i;
 	k_itable_ptr process_table = malloc(sizeof(k_itable));
 	process_table->pid = malloc(sizeof(int) * process_num);
-	process_table->status = malloc(sizeof(int) * process_num);
 	process_table->priority = malloc(sizeof(int) * process_num);
+	process_table->is_iprocess = malloc(sizeof(int) * process_num);
 	process_table->start_address = malloc(sizeof(void *) * process_num);
 	for (i=0; i<process_num; i++)
 	{
 		process_table->pid[i] = pid[i];
-		process_table->status[i] = status[i];
 		process_table->priority[i] = priority[i];
+		process_table->is_iprocess[i] = is_iprocess[i];
 		process_table->start_address[i] = start_address[i];
 	} 
 	return process_table;

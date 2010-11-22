@@ -38,4 +38,5 @@ k_message_queue_ptr k_message_queue_init();
 
 k_tracebuffer_ptr k_tracebuffer_init();
 
+k_itable_ptr k_itable_init(int process_num, int *pid, int *priority, int *is_iprocess, void **start_address);
 #endif

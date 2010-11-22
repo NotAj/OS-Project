@@ -18,8 +18,8 @@ typedef struct k_itable_struct *k_itable_ptr;
 typedef struct k_itable_struct
 {	
 	int *pid;
-	int *status;
 	int *priority;
+	int *is_iprocess;
 	void **start_address;
 } k_itable;
 
