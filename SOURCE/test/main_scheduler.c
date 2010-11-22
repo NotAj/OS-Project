@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include "k_itable.c"
+
 
 k_PCB_ptr allPCB[2];
 int stop = 0;
@@ -42,11 +44,11 @@ int main()
 
 	// Initialize structures;
 	k_PCB_ptr pcb, pcb2;
-	int result;
+	int results;
 	jmp_buf buf;
-	extern k_priority_queue_ptr k_readyQ;
+	extern k_priority_queue_ptr k_readyPQ;
 	extern k_PCB_ptr k_current_process;
-	k_readyQ = k_priority_queue_init();	
+	k_readyPQ = k_priority_queue_init();	
 	void (*start_add[2])();
 	start_add[0] = &proc_0;
 	start_add[1] = &proc_1;	
@@ -54,6 +56,7 @@ int main()
 	for(i=0;i<2;i++)
 	{
 		pcb = k_PCB_init(i,i,i,start_add[i]);
+		pcb->k_stack_pointer = malloc(STACK_SIZE);
 		allPCB[i] = pcb;
 		if(!(setjmp(buf)))
 		{
@@ -137,7 +140,7 @@ int main()
 		for(j=0; j<4;j++)
 		{
 		pcb = k_PCB_init(j*10 + i,STATUS_READY,j,NULL);
-		k_priority_queue_enqueue(pcb, k_readyQ);
+		k_priority_queue_enqueue(pcb, k_readyPQ);
 		}
 	}
 	k_current_process = k_PCB_init(23, STATUS_EXECUTING, 2, NULL); 

@@ -27,12 +27,12 @@
 void k_process_switch ( )
 {
 	extern k_PCB_ptr k_current_process;
-	extern k_priority_queue_ptr k_readyQ;
+	extern k_priority_queue_ptr k_readyPQ;
 
 	k_PCB_ptr prev_process, next_process;
 	prev_process = k_current_process;
 	// Retrieve next process to be run from readyQ priority queue
-	next_process = k_priority_queue_dequeue(k_readyQ);	
+	next_process = k_priority_queue_dequeue(k_readyPQ);	
 
 	// Since call to context_switch results in transferring control to different process, set status of next process here, and update current_process global
 	next_process->p_status = STATUS_EXECUTING;
@@ -56,18 +56,19 @@ void k_process_switch ( )
 ******************************************&**********************************/
 void k_context_switch (k_PCB_ptr prev_process, k_PCB_ptr next_process)
 {
+	//TODO Deal with commented printf
 	//int status;
 	// Save the context of the previous process.
 	//status = setjmp(prev_process->k_jmp_buf);
-	printf("SWITCH PID %d->%d\n", prev_process->p_pid, next_process->p_pid);
+	//printf("SWITCH PID %d->%d\n", prev_process->p_pid, next_process->p_pid);
 	//printf("STATUS = %d\n", status);
 	//if (status == 0) // Status is 0, signifying that context has just been saved
 	if(setjmp(prev_process->k_jmp_buf) == 0)
 	{
-		printf("JUMP %d->%d\n", prev_process->p_pid, next_process->p_pid);
+		//printf("JUMP %d->%d\n", prev_process->p_pid, next_process->p_pid);
 		longjmp(next_process->k_jmp_buf, 1); // Restores next_process’ context
 	}
-	printf("RESTORED %d->%d\n", prev_process->p_pid,next_process->p_pid);
+	//printf("RESTORED %d->%d\n", prev_process->p_pid,next_process->p_pid);
 	// Function is here if returning from long_jmp(), no action required.
 }
 
@@ -82,11 +83,11 @@ void k_context_switch (k_PCB_ptr prev_process, k_PCB_ptr next_process)
 void k_release_processor (k_PCB_ptr prev_process, k_PCB_ptr next_process)
 {
 	extern k_PCB_ptr k_current_process;	
-	extern k_priority_queue_ptr k_readyQ;
+	extern k_priority_queue_ptr k_readyPQ;
 
 	// Set the process' status to ready, and enqueue to ready queue
 	k_current_process->p_status = STATUS_READY;  
-	k_priority_queue_enqueue(k_current_process, k_readyQ);
+	k_priority_queue_enqueue(k_current_process, k_readyPQ);
 	
 	//Perform a process switch
 	k_process_switch();
@@ -105,7 +106,7 @@ void k_release_processor (k_PCB_ptr prev_process, k_PCB_ptr next_process)
 *****************************************************************************/
 void k_change_priority(int new_priority, int target_pid)
 {
-	extern k_priority_queue_ptr k_readyQ;
+	extern k_priority_queue_ptr k_readyPQ;
 
 	k_PCB_ptr changed_pcb;
 
@@ -125,11 +126,11 @@ void k_change_priority(int new_priority, int target_pid)
 	// Check if target process is in readyQ
 	if (changed_pcb->p_status == STATUS_READY)
 		// Remove process from current spot in the readyQ
-		changed_pcb  = k_priority_queue_remove(target_pid, k_readyQ);
+		changed_pcb  = k_priority_queue_remove(target_pid, k_readyPQ);
 		// Change the priority of target process
 		changed_pcb->p_priority = new_priority;
 		// Enqueue onto readyQ
-		k_priority_queue_enqueue(changed_pcb, k_readyQ);
+		k_priority_queue_enqueue(changed_pcb, k_readyPQ);
 
 	// If process is blocked, executing or interrupted, just change priority 
 	changed_pcb->p_priority = new_priority;	

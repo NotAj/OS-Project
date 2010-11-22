@@ -5,6 +5,7 @@
 #include "k_pcb.h"
 #include "k_queue.h"
 #include "k_priority_queue.h"
+#include "k_globals.h"
 
 /****************************************************************
  Scheduler
