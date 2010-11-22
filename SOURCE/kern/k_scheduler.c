@@ -34,9 +34,9 @@ void k_process_switch ( )
 	// Retrieve next process to be run from readyQ priority queue
 	next_process = k_priority_queue_dequeue(k_readyPQ);	
 
-	// Since call to context_switch results in transferring control to different process, set status of next process here, and update current_process global
+	// Since call to context_switch results in transferring control to different process, set status of next process here
+	// Update current_process global inside context_switch since it's integral to it working, and doing that won't conflict with anything
 	next_process->p_status = STATUS_EXECUTING;
-	k_current_process = next_process;
 	//Perform the context switch
 	k_context_switch(prev_process, next_process);
 	//At this point process has returned from having context restored, so no action necessary. Just exit function.
@@ -49,13 +49,21 @@ void k_process_switch ( )
 *				: restores the context of next_process. It is called by process
 *				: switch to perform the context switching, or called directly by
 *				: the signal handler to perform context switching to an iprocess 
-*				: outside of the scheduler.
+*				: outside of the scheduler. Setting of current_process global is 
+*				: handled by context switch
 * 
-* Assumptions   : Assumes all system variables have been updated prior to being 
-*				: called to ensure proper system operation. 
+* Assumptions   : BIG NOTE: THE METHOD OF INITIALIZATION USED REQUIRES CURRENT_PROCESS
+*				: TO BE SET BY CALLING FUNCTION BEFORE CALLING CONTEXT SWITCH
+*				: Assumes processes have been pushed to required scheduling queues
+*				: by process_switch if called through scheduler 
 ******************************************&**********************************/
 void k_context_switch (k_PCB_ptr prev_process, k_PCB_ptr next_process)
 {
+	extern k_PCB_ptr k_current_process;
+	// Setting the current_process global here since context_switch won't work the first time unless current_process is set correctly, and don't want to forget it outside
+	// REMEMBER this change for signal handler
+	k_current_process = next_process;
+	
 	//TODO Deal with commented printf
 	//int status;
 	// Save the context of the previous process.
