@@ -7,7 +7,11 @@ k_PCB_ptr k_PCB_init(int p_pid, int p_status, int p_priority, void *k_start_addr
 	
 	if (PCB == NULL)
 		return NULL; // Return NULL if malloc failed
-		
+	
+	// Check if priority is valid, if not set to lowest priority
+	if (p_priority < 0 || p_priority >= PRIORITY_NUM)
+		p_priority = PRIORITY_NUM - 1;
+	
 	// Set fields of PCB
 	PCB->k_queue_next = NULL;
 	PCB->k_all_queue_next = NULL;
