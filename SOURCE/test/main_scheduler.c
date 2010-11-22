@@ -1,40 +1,55 @@
 #include "k_queue.h"
 #include "k_pcb.h"
 #include "k_priority_queue.h"
+#include "k_itable.c"
 #include "k_scheduler.h"
 #include "test_queue.h"
 #include "test_priority_queue.h"
 #include "k_init_struct.h"
+#include "k_init.h"
+#include "k_globals.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "k_itable.c"
 
-
-k_PCB_ptr allPCB[2];
-int stop = 0;
-
-void proc_0()
-{
-	int j;
-	stop = 1;
-	printf("In Process 0\n");
-	k_context_switch(allPCB[0], allPCB[1]);
-	printf("In Process 0, after context switch\n");
-	
-	while(1)
-		j++;	
-}
+//#define DEBUG//TODO
 
 void proc_1()
 {
-	int j;
-	stop = 1;
-	printf("Process 1\n");
-	k_context_switch(allPCB[1],allPCB[0]);
-	printf("In Process 1, after context switch\n");
-	while (1)
-		j++;
+	while(1)
+	{
+		printf("Process 1\n");
+		k_PCB_ptr pcb,pcb2, pcb3;
+		pcb = k_pid_to_PCB_ptr(1);
+		pcb2 = k_pid_to_PCB_ptr(2);
+		pcb3 = k_pid_to_PCB_ptr(3);
+	//	printf("proc1->%p\n",pcb->k_start_address);
+	//	printf("proc1->%p\n",pcb2->k_start_address);
+		
+		//k_priority_queue_enqueue(pcb, k_readyPQ);
+		//k_current_process = pcb3;
+		k_context_switch(pcb, pcb2);
+	//	k_release_processor();
+	}
+}
+
+void proc_2()
+{
+	while(1)
+	{
+		printf("Process 2\n");
+	//	k_release_processor();
+	}
+}
+
+void proc_3()
+{
+	while(1)
+	{
+		printf("Process 3\n");
+		printf("STILL Process 3\n");
+	//	k_release_processor();
+	}
 }
 
 int main()
@@ -43,65 +58,44 @@ int main()
 	int i, j;
 
 	// Initialize structures;
-	k_PCB_ptr pcb, pcb2;
-	int results;
-	jmp_buf buf;
-	extern k_priority_queue_ptr k_readyPQ;
-	extern k_PCB_ptr k_current_process;
-	k_readyPQ = k_priority_queue_init();	
-	void (*start_add[2])();
-	start_add[0] = &proc_0;
-	start_add[1] = &proc_1;	
+	k_global_init();
+	k_scheduler_init();
+	k_ipc_init(10);	
 	
-	for(i=0;i<2;i++)
-	{
-		pcb = k_PCB_init(i,i,i,start_add[i]);
-		pcb->k_stack_pointer = malloc(STACK_SIZE);
-		allPCB[i] = pcb;
-		if(!(setjmp(buf)))
-		{
-			if(!(setjmp(pcb->k_jmp_buf)))
-			{
-				printf("Set Context %d\n",i);
-				longjmp(buf,1);
-			}
-			else
-			{
-				printf("First Restore %d\n",pcb->p_pid);
-				void (*fp)() = pcb->k_start_address;
-				fp();
-				printf("AFTER FUNCTION CALL %d\n",pcb->p_pid);
-			}
-		}	
-	}
-	if (stop == 0)
-	{
-		k_context_switch(allPCB[0],allPCB[1]); 
-		printf("AFTER FIRST CONTEXT SWITCH\n");
-	}
+	int pid[2];
+	int priority[2];
+	int is_iprocess[2];
+	void *start_address[2];
 
-	printf("DONE\n");
+	int num_proc = 3;
+	
+	pid[0] = 1;
+	priority[0] = 0;
+	is_iprocess[0] = 0;
+	start_address[0] = (void *)&proc_1;
+	printf("proc1->%p\n",&proc_1);
+
+	pid[1] = 2;
+	priority[1] = 1;
+	is_iprocess[1] = 0;
+	start_address[1] = (void *)&proc_2;
+	printf("proc2->%p\n",&proc_2);
+
+	pid[2] = 3;
+	priority[2] = 0;
+	is_iprocess[2] = 0;
+	start_address[2] = (void *)&proc_3;
+	printf("proc3->%p\n",&proc_3);
 
 
-/*
-	pcb = k_PCB_init(1,1,1,NULL);
-	pcb2 = k_PCB_init(2,2,2,NULL);
+	//TODO allPCB = malloc(sizeof(k_PCB_ptr) * 2);
+	
+	k_itable_ptr init_table;
+	init_table = k_itable_init(num_proc, pid, priority, is_iprocess, start_address);
+	k_process_init(num_proc,init_table);
+	k_process_switch();
 	
 
-	setjmp(pcb2->k_jmp_buf);
-	if(!setjmp(pcb->k_jmp_buf)) {
-		printf("Saved 2\n");
-		//setjmp(pcb2->k_jmp_buf)
-		k_context_switch(pcb2,pcb);
-		printf("Restored 2\n");
-	}
-	else
-	{
-		printf("Restored 1\n");
-		k_context_switch(pcb,pcb2);
-	}	
-	printf("TEST");
-*/
 /*	switch(setjmp(buf))
 	{
 		case(0):
