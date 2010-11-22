@@ -5,4 +5,5 @@ make
 ./TEST_Q
 ./TEST_MQ
 ./TEST_TB
-		
+./TEST_ITABLE
+./TEST_UTILITY		

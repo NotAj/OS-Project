@@ -8,6 +8,7 @@
 #include "k_priority_queue.h"
 #include "k_message_queue.h"
 #include "k_tracebuffer.h"
+#include "k_itable.c"
 
 /****************************************************************
  Struct Initalizations

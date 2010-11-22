@@ -4,13 +4,15 @@ LDFLAGS = -g -I./$(INC_DIR)
 
 INC_DIR = inc/
 
-SOURCES = k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_utility.h k_scheduler.h k_init_struct.h k_globals.h k_defines.h 
+SOURCES = k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c k_utility.h k_scheduler.h k_init_struct.h k_globals.h k_defines.h 
 TEST_SOURCES = test_queue.h test_priority_queue.h test_message_queue.h test_tracebuffer.h
 
 # TODO Figure out proper way of linking using o files in obj/
-OBJECTS = $(SOURCES:.h=.o)
+OBJECTS_INTER = $(SOURCES:.h=.o)
+OBJECTS = $(OBJECTS_INTER:.c=.o)
 OBJECTS_DIR = $(OBJECTS:%=$(OBJ_DIR)%) 
-TEST_OBJECTS = $(OBJECTS) $(TEST_SOURCES:.h=.o)
+TEST_OBJECTS_INTER = $(OBJECTS) $(TEST_SOURCES:.h=.o)
+TEST_OBJECTS = $(TEST_OBJECTS_INTER:.c=.o)
 TEST_OBJECTS_DIR = $(TEST_OBJECTS:%=$(OBJ_DIR)%)
 OBJ_DIR = obj/
 
@@ -21,6 +23,7 @@ TEST_Q_MAIN = test/main_queue.c
 TEST_PQ_MAIN = test/main_priority_queue.c
 TEST_MQ_MAIN = test/main_message_queue.c
 TEST_TB_MAIN = test/main_tracebuffer.c 
+TEST_ITABLE_MAIN = test/main_itable.c 
 TEST_UTILITY_MAIN = test/main_utility.c
 TEST_SCHEDULER_MAIN = test/main_scheduler.c
 
@@ -29,10 +32,11 @@ TEST_Q_EXE = TEST_Q
 TEST_PQ_EXE = TEST_PQ 
 TEST_MQ_EXE = TEST_MQ
 TEST_TB_EXE = TEST_TB
+TEST_ITABLE_EXE = TEST_ITABLE
 TEST_UTILITY_EXE = TEST_UTILITY
 TEST_SCHEDULER_EXE = TEST_SCHEDULER
 
-ALL_EXECUTABLE = $(EXE) $(TEST_Q_EXE) $(TEST_PQ_EXE) $(TEST_MQ_EXE) $(TEST_TB_EXE) $(TEST_UTILITY_EXE) $(TEST_SCHEDULER_EXE)
+ALL_EXECUTABLE = $(EXE) $(TEST_Q_EXE) $(TEST_PQ_EXE) $(TEST_MQ_EXE) $(TEST_TB_EXE) $(TEST_ITABLE_EXE) $(TEST_UTILITY_EXE) $(TEST_SCHEDULER_EXE)
 
 all: $(ALL_EXECUTABLE)
 
@@ -46,11 +50,12 @@ $(TEST_MQ_EXE): $(TEST_OBJECTS) $(TEST_MQ_MAIN)
 	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_MQ_MAIN) -o $@
 $(TEST_TB_EXE): $(TEST_OBJECTS) $(TEST_TB_MAIN)
 	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_TB_MAIN) -o $@
+$(TEST_ITABLE_EXE): $(TEST_OBJECTS) $(TEST_ITABLE_MAIN)
+	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_ITABLE_MAIN) -o $@
 $(TEST_UTILITY_EXE): $(TEST_OBJECTS) $(TEST_UTILITY_MAIN)
 	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_UTILITY_MAIN) -o $@
 $(TEST_SCHEDULER_EXE): $(TEST_OBJECTS) $(TEST_SCHEDULER_MAIN)
 	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_SCHEDULER_MAIN) -o $@
-
 
 $(OBJECTS): | $(OBJ_DIR)
 $(TEST_OBJECTS): | $(OBJ_DIR)
@@ -60,6 +65,8 @@ $(OBJ_DIR):
 	mkdir $(OBJ_DIR)
 .c.o:
 	$(CC) $(CFLAGS) -c -o $(OBJ_DIR)$@ $<
+.h.o:
+	$(CC) $(CFLAGS) -c -o $(OBJ_DIR)$@ $<
 
 k_pcb.o: k_pcb.h k_defines.h
 k_message.o: k_message.h k_defines.h
@@ -68,13 +75,14 @@ k_queue.o: k_queue.h k_pcb.h
 k_priority_queue.o : k_priority_queue.h k_queue.h k_pcb.h k_utility.h k_defines.h
 k_message_queue.o: k_message_queue.h k_message.h
 k_tracebuffer.o: k_tracebuffer.h k_defines.h
+k_itable.o: 
 
 k_scheduler: k_scheduler.h k_pcb.h k_queue.h k_priority_queue.h
 k_utility.o: k_utility.h k_pcb.h k_queue.h k_defines.h k_globals.h
 
 k_init_struct.o: k_init_struct.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h
 
-k_globals.o: k_globals.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h
+k_globals.o: k_globals.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c k_init_struct.h
 k_defines.o: k_defines.h 
 
 test_queue.o: k_queue.h k_pcb.h k_init_struct.h
