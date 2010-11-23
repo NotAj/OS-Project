@@ -11,7 +11,7 @@
  Process Defines
 ****************************************/
 #define PROCESS_NUM 11 		// Number of processes in the RTX 
-#define STACK_SIZE 1024		// Size of the stack for each process (in Bytes)
+#define STACK_SIZE 16384	// Size of the stack for each process (16K)
 #define PRIORITY_NUM 4 		// Number of priority levels in the OS
 
 /***************************************
