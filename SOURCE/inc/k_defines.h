@@ -25,7 +25,6 @@
 ****************************************/
 #define TRACEBUFFER_SIZE 16 // Number of traces
 
-
 /***************************************
  PID Defines
 ****************************************/
@@ -53,5 +52,13 @@
 #define MSG_TYPE_INPUT_REQUEST 1	// Used by get_console_chars()
 #define MSG_TYPE_CONSOLE_INPUT 2	// Used by KB iprocess
 #define MSG_TYPE_WAKEUP_CODE 3		// Used by Timer iprocess
+
+/***************************************
+ ERROR Type Defines
+****************************************/
+#define ERROR_NONE 0
+#define ERROR_INVALID_PARAMETERS 1
+#define ERROR_MALLOC_FAILED 2
+#define ERROR_CRITICAL 3
 
 #endif
