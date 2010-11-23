@@ -12,6 +12,7 @@
 ****************************************/
 #define PROCESS_NUM 11 		// Number of processes in the RTX 
 #define STACK_SIZE 16384	// Size of the stack for each process (16K)
+#define STACK_OFFSET 8		// Offset required to set stack_pointer inside allocated memory space (Set sp to STACK_SIZE + pointer, since stack is descending, but that points just outside the stack. 8 bits is the size of 1 pointer in a 64bit system. 
 #define PRIORITY_NUM 4 		// Number of priority levels in the OS
 
 /***************************************
