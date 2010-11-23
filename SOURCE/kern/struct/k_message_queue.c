@@ -40,7 +40,7 @@ int k_message_queue_is_empty(k_message_queue_ptr MQ)
 *				: Assumes the message pointer given points to a valid message. 
 *				: Assumes a valid queue is specified.
 *****************************************************************************/
-void k_message_queue_enqueue(MsgEnv_ptr message, k_message_queue_ptr MQ)
+void k_message_queue_enqueue(k_message_ptr message, k_message_queue_ptr MQ)
 {
 	if (message == NULL)
 		return; // Trying to enqueue a NULL pointer, do nothing
@@ -75,13 +75,13 @@ void k_message_queue_enqueue(MsgEnv_ptr message, k_message_queue_ptr MQ)
 * Assumptions   : Will return NULL if dequeueing from an empty queue.
 *				: Assumes a valid queue is specified.
 *****************************************************************************/
-MsgEnv_ptr k_message_queue_dequeue(k_message_queue_ptr MQ) 
+k_message_ptr k_message_queue_dequeue(k_message_queue_ptr MQ) 
 {
 	// Return NULL if Q is empty
 	if(k_message_queue_is_empty(MQ))
 		return NULL;	
 	// Message to be returned
-	MsgEnv_ptr return_message;
+	k_message_ptr return_message;
 	return_message = MQ->head;
  	
 	// Set head to next message in queue

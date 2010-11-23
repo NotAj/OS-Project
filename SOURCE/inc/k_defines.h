@@ -1,5 +1,5 @@
-#ifndef DEFINES_H
-#define DEFINES_H
+#ifndef K_DEFINES_H
+#define K_DEFINES_H
 
 /***************************************
  Message Envelope Defines
@@ -12,6 +12,7 @@
 ****************************************/
 #define PROCESS_NUM 11 		// Number of processes in the RTX 
 #define STACK_SIZE 1024		// Size of the stack for each process (in Bytes)
+#define PRIORITY_NUM 4 		// Number of priority levels in the OS
 
 /***************************************
  IO Helper Defines

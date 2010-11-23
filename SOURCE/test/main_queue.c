@@ -1,100 +1,166 @@
 #include "k_queue.h"
 #include "k_pcb.h"
 #include "test_queue.h"
+#include "k_init_struct.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 int main()
 {
-	printf("Starting \n");
+	printf("\nTESTING QUEUE \n");
 	int i, j;
- 
-	// Initializing queue
+	k_PCB_ptr pcb; 
+	k_queue_ptr Q;
+
+	printf("Test pcb initialize");
+	pcb = k_PCB_init(1,2,3,(void *)0x111);
+	// Test if fields initialized properly
+	assert(pcb->p_pid == 1);
+	assert(pcb->p_status == 2);
+	assert(pcb->p_priority == 3);
+	assert(pcb->k_start_address == (void *)0x111);
+	printf("---->PASS\n");
 	
-	i = -1 % 4;
-	printf("%d", i);
+	printf("Test queue initialize");
+	Q = k_queue_init();
+	// Test if Q initialized to NULL head and tailo
+	assert(Q->head == NULL && Q->tail == NULL);
+	printf("---->PASS\n");
 
-	k_queue_ptr Q = malloc(sizeof(k_queue));
-
-	test_queue_print(Q);
-	printf("queue_is_empty = %d \n", k_queue_is_empty(Q));
-	printf("Start Enqueue \n");
-	test_queue_print(Q);
-	for (i=0; i< 10; i++)
+	printf("Test queue is empty");
+	assert(k_queue_is_empty(Q));
+	printf("---->PASS\n");
+	
+	printf("Test queue enqueue ");
+	k_PCB_ptr add[6];
+	for (i=0; i< 5; i++)
 	{
-		k_PCB_ptr pcb = malloc(sizeof(k_PCB));
-		pcb->p_pid = i+1;
+		pcb = k_PCB_init(i,i+1,(i+2)% PRIORITY_NUM, NULL);
 		k_queue_enqueue(pcb, 0, Q);
-		test_queue_print(Q);
-		printf("\n\n");
+		add[i] = pcb; 
 	}
-	printf("Done Enqueue\n\n");
-	printf("Start Dequeue\n");
-
-	for (i=0; i< 10; i++)
+	add[5] = NULL;
+	assert(Q->head == add[0]);
+	assert(Q->tail == add[4]);
+	pcb = Q->head;
+	for (i=0; i<5; i++)
 	{
-		k_PCB_ptr pcb;
-		pcb = k_queue_dequeue(Q);
-		printf("Dequeued PCB = %d || Next = %p\n", pcb->p_pid,pcb->k_queue_next);
-		test_queue_print(Q);
-		printf("\n\n");
+		assert(pcb->p_pid == i);
+		assert(pcb->p_status == i+1);
+		assert(pcb->p_priority == (i+2)% PRIORITY_NUM); // Updated to reflect priority being restricted between 0 and 3
+		assert(pcb->k_queue_next == add[i+1]);		
+		pcb = pcb->k_queue_next;
 	}
-	printf("Done Dequeue\n\n");
-
-	printf("Test dequeue Empty Queue\n");
+	printf("---->PASS\n");
 	
-	k_PCB_ptr pcb;
-	pcb = k_queue_dequeue(Q);	
-	if(pcb == NULL);
-		printf("PASSED \n");
+	printf("Test queue dequeue");
 	pcb = k_queue_dequeue(Q);
-	test_queue_print(Q);
-	printf("\n\n");
-	
-	printf("Test remove empty queue \n");
-	pcb = k_queue_remove(5, Q);	
-	if(pcb == NULL);
-		printf("PASSED \n");
-	pcb = k_queue_remove(400, Q);
-	test_queue_print(Q);
-	printf("\n\n");
-
-	printf("Testing Queue remove\n");
-	printf("\n");
-	for (i=0; i< 10; i++)
+	assert(pcb->p_pid == 0);
+	assert(pcb->p_status == 1);
+	assert(pcb->p_priority == 2);
+	assert(pcb->k_queue_next == NULL);
+	// After dequeue, first item is removed.
+	assert(Q->head == add[1]);
+	assert(Q->tail == add[4]);
+	pcb = Q->head;
+	for (i=1; i<5; i++)
 	{
-		k_PCB_ptr pcb = malloc(sizeof(k_PCB));
-		pcb->p_pid = i+1;
-		k_queue_enqueue(pcb, 0, Q);
+		assert(pcb->p_pid == i);
+		assert(pcb->p_status == i+1);
+		assert(pcb->p_priority == (i+2)% PRIORITY_NUM);
+		assert(pcb->k_queue_next == add[i+1]);		
+		pcb = pcb->k_queue_next;
 	}
-	test_queue_print(Q);
-	printf("\n\n");
+	printf("---->PASS\n");
 	
-	printf("REMOVING PID 1\n");
-	pcb = k_queue_remove(1, Q);
-	printf("Removed PCB = %d || Next = %p\n", pcb->p_pid, pcb->k_queue_next);	
-	test_queue_print(Q);
-	printf("\n");
+	printf("Test queue remove");	
+	// Remove non-existant PID
+	pcb = k_queue_remove(10, Q);	
+	assert(pcb == NULL);	
+	assert(Q->head == add[1]);
+	assert(Q->tail == add[4]);
+		
+	pcb = Q->head;
+	for (i=1; i<5; i++)
+	{
+		assert(pcb->p_pid == i);
+		assert(pcb->p_status == i+1);
+		assert(pcb->p_priority == (i+2) % PRIORITY_NUM);
+		assert(pcb->k_queue_next == add[i+1]);		
+		pcb = pcb->k_queue_next;	
+	}
+	// Remove last item
+	pcb = k_queue_remove(4,Q);
+	add[4] = NULL;
+	assert(pcb->p_pid == 4);
+	assert(pcb->p_status == 5);
+	assert(pcb->p_priority == (6) % PRIORITY_NUM);
+	assert(pcb->k_queue_next == NULL);				
+	assert(Q->head == add[1]);
+	assert(Q->tail == add[3]);
+
+	pcb = Q->head;
+	for (i=1; i<4; i++)
+	{
+		assert(pcb->p_pid == i);
+		assert(pcb->p_status == i+1);
+		assert(pcb->p_priority == (i+2) % PRIORITY_NUM);
+		assert(pcb->k_queue_next == add[i+1]);		
+		pcb = pcb->k_queue_next;	
+	}
+	// Remove item in middle
+	pcb = k_queue_remove(2,Q);
+	add[2] = add[3];
+	assert(pcb->p_pid == 2);
+	assert(pcb->p_status == 3);
+	assert(pcb->p_priority == (4) % PRIORITY_NUM);
+	assert(pcb->k_queue_next == NULL);				
+	assert(Q->head == add[1]);
+	assert(Q->tail == add[3]);
+		
+	pcb = Q->head;	
+	for (i=1; (i<4); i++)
+	{
+		if (i != 2)
+		{
+			assert(pcb->p_pid == i);
+			assert(pcb->p_status == i+1);
+			assert(pcb->p_priority == (i+2) % PRIORITY_NUM);
+			assert(pcb->k_queue_next == add[i+1]);		
+			pcb = pcb->k_queue_next;
+		}
+	}
+	printf("---->PASS\n");
+
+
+	printf("Test dequeue empty Queue");
+	for (i=0; i<3; i++)
+	{
+		pcb = k_queue_dequeue(Q);
+	}
+	pcb = k_queue_dequeue(Q);
+	assert(pcb == NULL);
+	assert(k_queue_is_empty(Q));
+	printf("---->PASS\n");
 	
-	printf("REMOVING PID 10\n");
-	pcb = k_queue_remove(10, Q);
-	printf("Removed PCB = %d || Next = %p\n", pcb->p_pid, pcb->k_queue_next);
-	test_queue_print(Q);
-	printf("\n");
-	
-	printf("REMOVING PID 5\n");
-	pcb = k_queue_remove(5, Q);
-	printf("Removed PCB = %d || Next = %p\n", pcb->p_pid, pcb->k_queue_next);
-	test_queue_print(Q);
-	printf("\n");
-	printf("Done testing remove\n\n");
-	
-	printf("Test remove nonexistent pid from queue\n");
-	pcb = k_queue_remove(100, Q);
-	if(pcb == NULL)
-		printf("PASSED\n");
-	test_queue_print(Q);
-	
-	printf("TEST COMPLETE \n");
+	printf("Test remove empty queue ");
+	pcb = k_queue_remove(1,Q);
+	assert(pcb == NULL);
+	assert(k_queue_is_empty(Q));
+	printf("---->PASS\n");
+
+	printf("Test enqueue to allQ");
+	for(i=0;i<2;i++)
+	{
+		pcb = k_PCB_init(i,i,i,NULL);
+		k_queue_enqueue(pcb,1,Q);
+	}		
+	// Functionality is exactly the same, just check if the correct pointer is updated
+	assert(Q->head->k_queue_next == NULL);
+	assert(Q->head->k_all_queue_next == pcb);
+	printf("---->PASS\n");	
+
+	printf("QUEUE PASSED\n");
 
 }

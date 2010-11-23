@@ -5,7 +5,7 @@
 void test_message_queue_print(k_message_queue_ptr MQ)
 {
 	int i = 0;
-	MsgEnv_ptr curr_message = NULL;
+	k_message_ptr curr_message = NULL;
 	if (k_message_queue_is_empty(MQ))
 	{	
 		printf("Empty Queue \n\n");

@@ -1,52 +1,95 @@
 #include "k_message.h"
 #include "k_message_queue.h"
 #include "test_message_queue.h"
+#include "k_init_struct.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 int main()
 {
-	printf("Starting \n");
+	printf("TESTING MESSAGE QUEUE \n");
 	int i, j;
+	k_message_ptr message; 
+	k_message_queue_ptr MQ;
 
-	 printf("TESTING MESSAGE QUEUE\n\n");
-
-	// Initializing queue
-	k_message_queue_ptr MQ = malloc(sizeof(k_message_queue));
-
-	test_message_queue_print(MQ);
-	printf("queue_is_empty = %d \n", k_message_queue_is_empty(MQ));
-	printf("Start Enqueue \n");
-	test_message_queue_print(MQ);
-	for (i=0; i< 10; i++)
-	{
-		MsgEnv_ptr message = malloc(sizeof(MsgEnv));
-		message->sender_pid = i+1;
-		k_message_queue_enqueue(message, MQ);
-		test_message_queue_print(MQ);
-		printf("\n\n");
-	}
-	printf("Done Enqueue\n\n");
-	printf("Start Dequeue\n");
-
-	for (i=0; i< 10; i++)
-	{
-		MsgEnv_ptr message;
-		message = k_message_queue_dequeue(MQ);
-		printf("Dequeued MESSAGE = %d || Next = %p\n", message->sender_pid,message->k_queue_next);
-		test_message_queue_print(MQ);
-		printf("\n\n");
-	}
-	printf("Done Dequeue\n\n");
-
-	printf("Test dequeue Empty Queue\n");
+	printf("Test message initialize");
+	message = k_message_init();
+	assert(message != NULL);
+	printf("---->PASS\n");
 	
-	MsgEnv_ptr message;
-	message = k_message_queue_dequeue(MQ);	
-	if(message == NULL);
-		printf("PASSED \n");
+	printf("Test message queue initialize");
+	MQ = k_message_queue_init();
+	// Test if MQ initialized to NULL head and tailo
+	assert(MQ->head == NULL && MQ->tail == NULL);
+	printf("---->PASS\n");
+
+	printf("Test message queue is empty");
+	assert(k_message_queue_is_empty(MQ));
+	printf("---->PASS\n");
+	
+	printf("Test message queue enqueue ");
+	k_message_ptr add[6];
+	for (i=0; i< 5; i++)
+	{
+		message = k_message_init();
+		message->sender_pid = i;
+		message->receiver_pid = i+1;
+		message->msg_type = i+2;
+		message->msg_size = i+3;
+		message->expiry_time = i+4;
+		k_message_queue_enqueue(message, MQ);
+		add[i] = message; 
+	}
+	add[5] = NULL;
+	assert(MQ->head == add[0]);
+	assert(MQ->tail == add[4]);
+	message = MQ->head;
+	for (i=0; i<5; i++)
+	{
+		assert(message->sender_pid == i);
+		assert(message->receiver_pid == i+1);
+		assert(message->msg_type == i+2);
+		assert(message->msg_size == i+3);
+		assert(message->expiry_time == i+4);
+		assert(message->k_queue_next == add[i+1]);		
+		message = message->k_queue_next;
+	}
+	printf("---->PASS\n");
+	
+	printf("Test queue dequeue");
 	message = k_message_queue_dequeue(MQ);
-	test_message_queue_print(MQ);
-	printf("\n\n");	
-	printf("DONE\n");
+	assert(message->sender_pid == 0);
+	assert(message->receiver_pid == 1);
+	assert(message->msg_type == 2);
+	assert(message->msg_size == 3);
+	assert(message->expiry_time == 4);
+	assert(message->k_queue_next == NULL);
+	// After dequeue, first item is removed.
+	assert(MQ->head == add[1]);
+	assert(MQ->tail == add[4]);
+	message = MQ->head;
+	for (i=1; i<5; i++)
+	{
+		assert(message->sender_pid == i);
+		assert(message->receiver_pid == i+1);
+		assert(message->msg_type == i+2);
+		assert(message->msg_size == i+3);
+		assert(message->expiry_time == i+4);
+		assert(message->k_queue_next == add[i+1]);		
+		message = message->k_queue_next;
+	}
+	printf("---->PASS\n");
+
+	printf("Test dequeue empty Message Queue");
+	for (i=1; i<5; i++)
+	{
+		message = k_message_queue_dequeue(MQ);
+	}
+	message = k_message_queue_dequeue(MQ);
+	assert(message == NULL);
+	assert(k_message_queue_is_empty(MQ));
+	printf("---->PASS\n");
+	
+	printf("MESSAGE QUEUE PASSED\n\n");
 }

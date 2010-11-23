@@ -1,28 +1,76 @@
 #include "k_queue.h"
 #include "k_pcb.h"
 #include "k_priority_queue.h"
+#include "k_init_struct.h"
 #include "test_queue.h"
 #include "test_priority_queue.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 int main()
 {
-	printf("Starting \n");
-	int i, j;
-	k_PCB_ptr pcb; 
+	printf("\nTESTING PRIORITY QUEUE\n");
+	int i=0;
+	k_PCB_ptr pcb;
+	k_PCB_ptr pcb2;
+	k_PCB_ptr pcb3;
+	k_priority_queue_ptr PQ;
+	k_priority_queue_ptr PQ2;
+
+	printf("Testing priority queue initialize");
+	PQ = k_priority_queue_init();
+	assert(PQ != NULL);
+	printf("---->PASS\n");
+
+	printf("Testing priority queue is empty");
+	assert(k_priority_queue_is_empty(PQ));
+//	for (i=0; i<4; i++)
+//		assert (PQ->array[i]->head == NULL);
+	printf("---->PASS\n");
+		
+	printf("Testing priority queue enqueue");	
+	k_priority_queue_enqueue(NULL, PQ);	
+	assert(k_priority_queue_is_empty(PQ));
+
+	pcb = k_PCB_init(999,2,4,(void *)0x111);
+	k_priority_queue_enqueue(pcb, PQ);
+	assert(pcb->p_priority == 3);
+
+	pcb->p_priority = -2;	
+	k_priority_queue_enqueue(pcb, PQ);
+	assert(pcb->p_priority == 3);
+
+	pcb->p_priority = 0;	
+	k_priority_queue_enqueue(pcb, PQ);
+	assert(pcb->p_priority == 0);
+
+	pcb->p_priority = 2;	
+	k_priority_queue_enqueue(pcb, PQ);
+	assert(pcb->p_priority == 2);
 	
-	printf("\n\n");
-	printf("TESTING PRIORITY QUEUE\n");
-	// Initialize priority queue
-	k_priority_queue_ptr PQ = malloc(sizeof(k_priority_queue));
-	for (i=0; i<4; i++)
-	{
-		PQ->array[i] = malloc(sizeof(k_queue));		
-	}
-	printf("Test print empty queue\n");
-	test_priority_queue_print(PQ);
-	
+	printf("---->PASS\n");
+
+	printf("Testing priority queue dequeue - empty");
+	PQ2 = k_priority_queue_init();
+	pcb2 = k_priority_queue_dequeue(PQ2);
+	if (k_priority_queue_is_empty(PQ2))
+		assert(pcb2 == NULL);
+	printf("---->PASS\n");
+
+	printf("Testing priority queue dequeue - nonempty");
+	pcb2 = k_PCB_init(111,2,2,(void *)0x111);
+	pcb3 = k_PCB_init(222,2,3,(void *)0x111);
+	k_priority_queue_enqueue(pcb2, PQ2);
+	k_priority_queue_enqueue(pcb3, PQ2);
+//	test_priority_queue_print(PQ2);	
+	pcb2 = k_priority_queue_dequeue(PQ2);
+//	test_priority_queue_print(PQ2);	
+	for(i=0;i<=pcb2->p_priority;i++)
+		assert(k_queue_is_empty(PQ2->array[i]));
+	printf("---->PASS\n");
+
+/*	Previous code to do some stuff Ali wanted it to
 	for (i=0; i<4; i++)
 	{	
 		for (j=0; j<4; j++)
@@ -35,60 +83,6 @@ int main()
 		test_priority_queue_print(PQ);
 		printf("\n");
 	}
-	printf("Testing priority Queue dequeue\n");
-	while(!k_priority_queue_is_empty(PQ))
-	{
-		pcb = k_priority_queue_dequeue(PQ);
-		printf("Removed PCB = (%d,%d) || next = %p\n", pcb->p_pid, pcb->p_priority, pcb->k_queue_next);
-		test_priority_queue_print(PQ);
-		printf("\n\n");
-	}
-
-	printf("Testing enqueue NULL pcb\n");	
-	k_priority_queue_enqueue(NULL, PQ);	
-	test_priority_queue_print(PQ);
-	printf("\n");	
-	
-	printf("Testing dequeue from empty priority queue\n");
-	pcb = k_priority_queue_dequeue(PQ);
-	printf("%p\n",pcb);
-	if (pcb == NULL)
-		printf("PASSED\n");	
-	test_priority_queue_print(PQ);
-	printf("\n");
-	
-	printf("Test adding PCB with invalid priority to PQ\n");
-	pcb = malloc(sizeof(k_PCB));
-	pcb->p_pid = 999;
-	pcb->p_priority = 4;	
-	k_priority_queue_enqueue(pcb, PQ);
-	test_priority_queue_print(PQ);		
-
-	pcb = malloc(sizeof(k_PCB));
-	pcb->p_pid = 999;
-	pcb->p_priority = -2;	
-	k_priority_queue_enqueue(pcb, PQ);
-	test_priority_queue_print(PQ);		
-
-	pcb = malloc(sizeof(k_PCB));
-	pcb->p_pid = 999;
-	pcb->p_priority = 0;	
-	k_priority_queue_enqueue(pcb, PQ);
-	test_priority_queue_print(PQ);	
-
-	pcb = malloc(sizeof(k_PCB));
-	pcb->p_pid = 999;
-	pcb->p_priority = 2;	
-	k_priority_queue_enqueue(pcb, PQ);
-	test_priority_queue_print(PQ);
-	
-	printf("Testing general enqueue & dequeuei\n");
-	pcb = k_priority_queue_dequeue(PQ);
-	printf("Removed PCB = (%d,%d) || next = %p\n", pcb->p_pid, pcb->p_priority, pcb->k_queue_next);
-	test_priority_queue_print(PQ);
-
-	pcb = k_priority_queue_dequeue(PQ);
-	printf("Removed PCB = (%d,%d) || next = %p\n", pcb->p_pid, pcb->p_priority, pcb->k_queue_next);
-	test_priority_queue_print(PQ);
-	printf("\n\n");
+*/
+	printf("PRIORITY QUEUE PASSED =]\n\n");
 }	

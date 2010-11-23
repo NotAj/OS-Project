@@ -24,7 +24,7 @@
 int k_queue_is_empty(k_queue_ptr Q) 
 {
 	if (Q == NULL)
-		return NULL; // Do nothing if invalid pointer passed
+		return 1; // Return empty code if invalid pointer passed
 
 	// If no items in queue, both head and tail will point to NULL
 	// The result will be 1 if true, signifying an empty queue
@@ -38,7 +38,9 @@ int k_queue_is_empty(k_queue_ptr Q)
 * 				: the queue specified by a pointer to a queue. This function
 *				: is used to enqueue to the allQ on initialization, and 
 *				: enqueueing to the readyQ and blockedQ. To specify which 
-*				: queue pointer to modify, the allQ parameter is used.				   
+*				: queue pointer to modify, the allQ parameter is used.
+*				: NOTE: Since processes are never removed from the allQ,
+*				: remove doesn't handle the allQ case.				   
 *              
 * Assumptions   : Will do nothing in the case of enqueueing a NULL pointer.
 *				: Assumes the PCB pointer given points to a valid PCB. 
@@ -47,7 +49,7 @@ int k_queue_is_empty(k_queue_ptr Q)
 void k_queue_enqueue(k_PCB_ptr process, int all_Q, k_queue_ptr Q)
 {
 	if (Q == NULL)
-		return NULL; // Do nothing if invalid pointer passed
+		return; // Do nothing if invalid pointer passed
 
 	if (process == NULL)
 		return; // Trying to enqueue a NULL pointer, do nothing
@@ -156,6 +158,7 @@ k_PCB_ptr k_queue_remove(int pid, k_queue_ptr Q)
 	prev_pcb->k_queue_next = current_pcb->k_queue_next;
 	if (current_pcb == Q->tail) // Check if removing tail
 		Q->tail = prev_pcb;	
-	
+
+	current_pcb->k_queue_next = NULL; // Set pointer to NULL since removing from Q
 	return current_pcb;
 }

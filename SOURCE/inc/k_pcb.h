@@ -1,12 +1,11 @@
-#ifndef PCB_H
-#define PCB_H
+#ifndef K_PCB_H
+#define K_PCB_H
 
 #include <stdlib.h>
 #include <setjmp.h>
 #include "k_message.h"
 #include "k_message_queue.h"
-#include "globals.h"
-#include "defines.h"
+#include "k_defines.h"
 
 /****************************************************************
  PCB Data structure
@@ -36,7 +35,7 @@ typedef struct k_PCB_struct
 	int p_priority;
 	int p_status;
 	void *k_stack_pointer;
-	jmp_buf *k_jmpbuf;
+	jmp_buf k_jmp_buf;
 	void *k_start_address;
 } k_PCB;
 
