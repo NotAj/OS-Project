@@ -18,14 +18,14 @@ typedef struct k_timeout_queue_struct *k_timeout_queue_ptr;
 
 typedef struct k_timeout_queue_struct
 {
-MsgEnv_ptr head;
+k_message_ptr head;
 } k_timeout_queue;
 
 /*************************
 * Function Declarations
 *************************/
-void k_message_queue_enqueue (MsgEnv_ptr message, k_message_queue_ptr MQ);
+void k_timeout_queue_enqueue (k_message_ptr msg, k_timeout_queue_ptr TQ);
 
-MsgEnv_ptr k_message_queue_dequeue (k_message_queue_ptr MQ);
+k_message_ptr k_timeout_queue_dequeue (k_timeout_queue_ptr TQ);
 
 #endif
