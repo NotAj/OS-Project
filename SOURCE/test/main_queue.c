@@ -36,7 +36,7 @@ int main()
 	k_PCB_ptr add[6];
 	for (i=0; i< 5; i++)
 	{
-		pcb = k_PCB_init(i,i+1,i+2, NULL);
+		pcb = k_PCB_init(i,i+1,(i+2)% PRIORITY_NUM, NULL);
 		k_queue_enqueue(pcb, 0, Q);
 		add[i] = pcb; 
 	}
@@ -48,7 +48,7 @@ int main()
 	{
 		assert(pcb->p_pid == i);
 		assert(pcb->p_status == i+1);
-		assert(pcb->p_priority == i+2);
+		assert(pcb->p_priority == (i+2)% PRIORITY_NUM); // Updated to reflect priority being restricted between 0 and 3
 		assert(pcb->k_queue_next == add[i+1]);		
 		pcb = pcb->k_queue_next;
 	}
@@ -68,7 +68,7 @@ int main()
 	{
 		assert(pcb->p_pid == i);
 		assert(pcb->p_status == i+1);
-		assert(pcb->p_priority == i+2);
+		assert(pcb->p_priority == (i+2)% PRIORITY_NUM);
 		assert(pcb->k_queue_next == add[i+1]);		
 		pcb = pcb->k_queue_next;
 	}
@@ -86,7 +86,7 @@ int main()
 	{
 		assert(pcb->p_pid == i);
 		assert(pcb->p_status == i+1);
-		assert(pcb->p_priority == i+2);
+		assert(pcb->p_priority == (i+2) % PRIORITY_NUM);
 		assert(pcb->k_queue_next == add[i+1]);		
 		pcb = pcb->k_queue_next;	
 	}
@@ -95,7 +95,7 @@ int main()
 	add[4] = NULL;
 	assert(pcb->p_pid == 4);
 	assert(pcb->p_status == 5);
-	assert(pcb->p_priority == 6);
+	assert(pcb->p_priority == (6) % PRIORITY_NUM);
 	assert(pcb->k_queue_next == NULL);				
 	assert(Q->head == add[1]);
 	assert(Q->tail == add[3]);
@@ -105,7 +105,7 @@ int main()
 	{
 		assert(pcb->p_pid == i);
 		assert(pcb->p_status == i+1);
-		assert(pcb->p_priority == i+2);
+		assert(pcb->p_priority == (i+2) % PRIORITY_NUM);
 		assert(pcb->k_queue_next == add[i+1]);		
 		pcb = pcb->k_queue_next;	
 	}
@@ -114,7 +114,7 @@ int main()
 	add[2] = add[3];
 	assert(pcb->p_pid == 2);
 	assert(pcb->p_status == 3);
-	assert(pcb->p_priority == 4);
+	assert(pcb->p_priority == (4) % PRIORITY_NUM);
 	assert(pcb->k_queue_next == NULL);				
 	assert(Q->head == add[1]);
 	assert(Q->tail == add[3]);
@@ -126,7 +126,7 @@ int main()
 		{
 			assert(pcb->p_pid == i);
 			assert(pcb->p_status == i+1);
-			assert(pcb->p_priority == i+2);
+			assert(pcb->p_priority == (i+2) % PRIORITY_NUM);
 			assert(pcb->k_queue_next == add[i+1]);		
 			pcb = pcb->k_queue_next;
 		}
