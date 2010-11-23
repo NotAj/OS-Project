@@ -1,5 +1,5 @@
-#ifndef K_API_H
-#define K_API_H
+#ifndef API_H
+#define API_H
 
 #include "k_pcb.h"
 #include "k_queue.h"
@@ -16,8 +16,9 @@
  This file has all the user visible API function available to 
  user processes. These primitives disable interrupts, then call the 
  kernel version of these primitives. They reenable interrupts before
- returning.
+ returning. All primitives return 0 on success.
 *****************************************************************/
+
 /*************************
 * Scheduler primitives 
 *************************/
