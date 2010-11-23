@@ -2,7 +2,6 @@
 
 void k_global_init()
 {
-printf("CHECK1");
 	extern k_PCB_ptr k_current_process;
 	extern k_PCB_ptr k_interrupted_process;
 	extern int k_atomic_flag;		
