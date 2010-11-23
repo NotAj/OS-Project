@@ -120,6 +120,7 @@ void k_release_processor ()
 void k_change_priority(int new_priority, int target_pid)
 {
 	extern k_priority_queue_ptr k_readyPQ;
+	extern k_priority_queue_ptr k_blockedPQ;
 
 	k_PCB_ptr changed_pcb;
 
@@ -132,22 +133,45 @@ void k_change_priority(int new_priority, int target_pid)
 	if (changed_pcb == NULL) // Means target_pid specified is invalid
 		return; // Do nothing 
 
+	// Do nothing in the case of specifying an iprocess
+	if (changed_pcb->p_status == STATUS_IPROCESS)
+		return; // Do nothing
+
 	// Check if new priority specified equals old priority
 	if(changed_pcb->p_priority == new_priority)
 		return; // No action required
 
 	// Check if target process is in readyQ
 	if (changed_pcb->p_status == STATUS_READY)
+	{
 		// Remove process from current spot in the readyQ
 		changed_pcb  = k_priority_queue_remove(target_pid, k_readyPQ);
+		// If process not on respective queue, OS is in invalid state, terminate
+		if (changed_pcb == NULL)
+			return; //TODO k_terminate()
 		// Change the priority of target process
 		changed_pcb->p_priority = new_priority;
 		// Enqueue onto readyQ
 		k_priority_queue_enqueue(changed_pcb, k_readyPQ);
-
-	// If process is blocked, executing or interrupted, just change priority 
-	changed_pcb->p_priority = new_priority;	
-	
+	}
+	// If process in blockedQ, place in new position
+	else if(changed_pcb->p_status == STATUS_BLOCKED_ON_RESOURCE)
+	{
+		// Remove process from current spot in the blockedQ
+		changed_pcb  = k_priority_queue_remove(target_pid, k_blockedPQ);
+		// If process not on respective queue, OS is in invalid state, terminate
+		if (changed_pcb == NULL)
+			return; //TODO k_terminate()
+		// Change the priority of target process
+		changed_pcb->p_priority = new_priority;
+		// Enqueue onto readyQ
+		k_priority_queue_enqueue(changed_pcb, k_blockedPQ);
+	}
+	else
+	{
+		// If process is blocked on resource, interrupted, or executing just change priority 
+		changed_pcb->p_priority = new_priority;	
+	}
 	return;
 }
 
