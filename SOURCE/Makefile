@@ -4,7 +4,7 @@ LDFLAGS = -g -I./$(INC_DIR)
 
 INC_DIR = inc/
 
-SOURCES = k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c k_utility.h k_scheduler.h k_init_struct.h k_init.h k_globals.h k_defines.h 
+SOURCES = k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c k_utility.h k_scheduler.h api.h k_init_struct.h k_init.h k_globals.h k_defines.h 
 TEST_SOURCES = test_queue.h test_priority_queue.h test_message_queue.h test_tracebuffer.h
 
 # TODO Figure out proper way of linking using o files in obj/
@@ -79,6 +79,8 @@ k_itable.o:
 
 k_scheduler: k_scheduler.h k_pcb.h k_queue.h k_priority_queue.h k_globals.h
 k_utility.o: k_utility.h k_pcb.h k_queue.h k_defines.h k_globals.h
+
+api.o: api.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_scheduler.h k_message.h k_message_queue.h k_tracebuffer.h  
 
 k_init_struct.o: k_init_struct.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c
 k_init.o: k_init.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c k_init_struct.h k_defines.h k_globals.h

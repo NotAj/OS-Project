@@ -27,7 +27,7 @@ int request_process_status(MsgEnv *msg_env_ptr);
 
 int terminate();
 
-int change_priority(int new_priority, int target_process);
+int change_priority(int new_priority, int target_process_id);
 
 /*************************
 * IPC primitives 
@@ -36,11 +36,11 @@ int send_message(int dest_process_id, MsgEnv *msg_envelope);
 
 MsgEnv *receive_message();
 
-MsgEnv *request_msg_env()
+MsgEnv *request_msg_env();
 
 int release_msg_env(MsgEnv *msg_env_ptr);
 
-int get_trace_buffers(MsgEnv *message_envelope);i
+int get_trace_buffers(MsgEnv *message_envelope);
 
 /*************************
 * Timing primitives 

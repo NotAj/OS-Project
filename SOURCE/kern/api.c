@@ -14,9 +14,9 @@
 *************************/
 int release_processor()
 {
-	atomic(on);
+	//atomic(on);
 	k_release_processor();
-	atomic(off);
+	//atomic(off);
 	
 }
 
@@ -26,11 +26,11 @@ int request_process_status(MsgEnv *msg_env_ptr)
 int terminate()
 {}
 
-int change_priority(int new_priority, int target_process)
+int change_priority(int new_priority, int target_process_id)
 {
-	atomic(on);
-	k_change_priority(int new_priority, int target_process);
-	atomic(off);
+	//atomic(on);
+	return (k_change_priority(new_priority, target_process_id));
+	//atomic(off);
 }
 
 /*************************
