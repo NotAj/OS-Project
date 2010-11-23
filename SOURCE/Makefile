@@ -26,7 +26,7 @@ TEST_TB_MAIN = test/main_tracebuffer.c
 TEST_ITABLE_MAIN = test/main_itable.c 
 TEST_UTILITY_MAIN = test/main_utility.c
 TEST_SCHEDULER_MAIN = test/main_scheduler.c
-TEST_IPC_MAIN = test/main_ipc_2.c
+TEST_IPC_MAIN = test/main_ipc.c
 
 EXE = RTX 
 TEST_Q_EXE = TEST_Q
