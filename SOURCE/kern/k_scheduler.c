@@ -117,7 +117,7 @@ void k_release_processor ()
 * 
 * Assumptions   : In the case of invalid parameters, no action is taken. 
 *****************************************************************************/
-void k_change_priority(int new_priority, int target_pid)
+int k_change_priority(int new_priority, int target_process_id)
 {
 	extern k_priority_queue_ptr k_readyPQ;
 	extern k_priority_queue_ptr k_blockedPQ;
@@ -129,7 +129,7 @@ void k_change_priority(int new_priority, int target_pid)
 		return; // Do nothing
 
 	// Get the PCB of target process.
-	changed_pcb = k_pid_to_PCB_ptr(target_pid);
+	changed_pcb = k_pid_to_PCB_ptr(target_process_id);
 	if (changed_pcb == NULL) // Means target_pid specified is invalid
 		return; // Do nothing 
 
@@ -145,7 +145,7 @@ void k_change_priority(int new_priority, int target_pid)
 	if (changed_pcb->p_status == STATUS_READY)
 	{
 		// Remove process from current spot in the readyQ
-		changed_pcb  = k_priority_queue_remove(target_pid, k_readyPQ);
+		changed_pcb  = k_priority_queue_remove(target_process_id, k_readyPQ);
 		// If process not on respective queue, OS is in invalid state, terminate
 		if (changed_pcb == NULL)
 			return; //TODO k_terminate()
@@ -158,7 +158,7 @@ void k_change_priority(int new_priority, int target_pid)
 	else if(changed_pcb->p_status == STATUS_BLOCKED_ON_RESOURCE)
 	{
 		// Remove process from current spot in the blockedQ
-		changed_pcb  = k_priority_queue_remove(target_pid, k_blockedPQ);
+		changed_pcb  = k_priority_queue_remove(target_process_id, k_blockedPQ);
 		// If process not on respective queue, OS is in invalid state, terminate
 		if (changed_pcb == NULL)
 			return; //TODO k_terminate()

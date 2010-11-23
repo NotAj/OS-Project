@@ -31,6 +31,6 @@ void k_context_switch (k_PCB_ptr prev_process, k_PCB_ptr next_process);
 
 void k_release_processor ();
 
-void k_change_priority (int new_priority, int target_pid);
+int k_change_priority (int new_priority, int target_process_id);
 
 #endif
