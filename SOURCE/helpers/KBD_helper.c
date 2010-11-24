@@ -1,8 +1,8 @@
 #include <stdlib.h>
-#include <stdlio.h>
+#include <stdio.h>
 #include <unistd.h>
 #include <sys/mman.h>
-#include "k_io_buffer.h"
+#include "k_io_buffer.c"
 
 /****************************************************************
  Keyboard Helper Process 
@@ -29,7 +29,7 @@ int keyboard (char *KBbuffer[]){
 	
 	/************Mapping memory to the file************/
 	mmap_ptr = 	mmap((caddr_t) 0,		// Memory Location, 0 lets OS choose
-				BUFSIZE,		// How many bytes to mmap
+				BUFFER_SIZE,		// How many bytes to mmap
 				PROT_READ | PROT_WRITE, // Read and write permissions
 				MAP_SHARED,    		// Accessible by another process
 				fid,           		// Which file is associated with mmap
@@ -46,7 +46,7 @@ int keyboard (char *KBbuffer[]){
 		
 	/*Signal the RTX if there is a carriage return or if the string equals the size of the 		buffer.  Since BUFSIZE equals the max size of an envelope, the string should not reach 		this length anyway...	*/
 
-	 	if (c=='\n' || input_buf->length==BUFSIZE)
+	 	if (c=='\n' || input_buf->length==BUFFER_SIZE)
 		{
 			//Set last character to null
 			input_buf->bufdata[input_buf->length-1] = '\0';		

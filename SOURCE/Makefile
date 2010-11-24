@@ -28,7 +28,7 @@ TEST_ITABLE_MAIN = test/main_itable.c
 TEST_UTILITY_MAIN = test/main_utility.c
 TEST_SCHEDULER_MAIN = test/main_scheduler.c
 TEST_KBD_MAIN = test/main_kbd.c
-TEST_KBD_MAIN = test/main_crt.c
+TEST_CRT_MAIN = test/main_crt.c
 
 
 EXE = RTX 
@@ -99,7 +99,7 @@ k_init.o: k_init.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_qu
 
 k_globals.o: k_globals.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_init_struct.h
 k_defines.o: k_defines.h 
-
+	
 test_queue.o: k_queue.h k_pcb.h k_init_struct.h
 test_priority_queue.o: test_priority_queue.h k_priority_queue.h k_init_struct.h
 test_message_queue.o: test_message_queue.h k_message_queue.h k_init_struct.h
@@ -107,7 +107,7 @@ test_tracebuffer.o: test_tracebuffer.h k_tracebuffer.h k_init_struct.h
 test_scheduler.o: test_scheduler.h k_scheduler.h k_pcb.h k_queue.h k_priority_queue.h
 test_utility.o: test_utility.h k_pcb.h k_queue.h k_defines.h k_globals.h
 kbd_helper.o: kbd_helper.c io_buffer.c
-crt_helper.o: crt_helper.c io_buffer.c
+#crt_helper.o: crt_helper.c io_buffer.c
 
 .PHONY: clean
 
