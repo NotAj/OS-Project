@@ -24,6 +24,7 @@ int release_processor()
 
 int request_process_status(MsgEnv *msg_env_ptr)
 {
+	k_request_process_status(msg_env_ptr);	
 	return 1;
 }
 
@@ -96,6 +97,7 @@ MsgEnv *request_msg_env()
 
 int get_trace_buffers(MsgEnv *message_envelope)
 {
+	k_get_trace_buffers(message_envelope);	
 	return 1;
 }
 
