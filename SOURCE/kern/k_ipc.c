@@ -147,24 +147,43 @@ int k_get_trace_buffers(MsgEnv * message_envelope)
 	k_trace_ptr tb;
 	int i, place, offset, spid, rpid, msgtyp, time;
 	place = k_sendTB->head;
-	//place = 0;	
 	tb = k_sendTB->buffer[place];  //create a node to traverse k_allQ
 	offset = 0;
 	i = 0;
 	offset += sprintf(message_envelope->msg_text, "SENT MESSAGES:\nSnd PID,  Rec PID,  Msg Type,  Timestamp:\n");
 
-	while(/*&& (place != k_sendTB->head ||*/ i < 15)
+	while(place != k_sendTB->head || i == 0)
 	{			
 		spid = tb->sender_pid;		
 		rpid = tb->receiver_pid;
 		msgtyp = tb->msg_type;
 		time = tb->timestamp;
 		offset += sprintf(message_envelope->msg_text+offset, "  %d<t>%d<t>%d<t>%d<cr>", spid, rpid, msgtyp, time); 
-printf("%d\n", offset);
-/*		place--;
+
+		place--;
 		if (place < 0)
 			place = TRACEBUFFER_SIZE - 1;
-*/		tb = k_sendTB->buffer[place];
+		tb = k_sendTB->buffer[place];
+		i++;
+	}
+
+	place = k_receiveTB->head;
+	tb = k_receiveTB->buffer[place];  //create a node to traverse k_allQ
+	i = 0;
+	offset += sprintf(message_envelope->msg_text+offset, "\nReceived MESSAGES:\nSnd PID,  Rec PID,  Msg Type,  Timestamp:\n");
+
+	while(place != k_receiveTB->head || i == 0)
+	{			
+		spid = tb->sender_pid;		
+		rpid = tb->receiver_pid;
+		msgtyp = tb->msg_type;
+		time = tb->timestamp;
+		offset += sprintf(message_envelope->msg_text+offset, "  %d<t>%d<t>%d<t>%d<cr>", spid, rpid, msgtyp, time); 
+
+		place--;
+		if (place < 0)
+			place = TRACEBUFFER_SIZE - 1;
+		tb = k_receiveTB->buffer[place];
 		i++;
 	}
 	printf("%s\n", message_envelope->msg_text);
