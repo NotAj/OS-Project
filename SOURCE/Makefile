@@ -4,7 +4,7 @@ LDFLAGS = -g $(INC_DIR)
 
 INC_DIR = -I./inc/ -I./proc/
 
-SOURCES = k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c k_utility.h k_scheduler.h api.h k_system_proc.h k_i_proc.h user_proc.h k_init_struct.h k_init.h k_globals.h k_defines.h 
+SOURCES = k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c k_utility.h k_scheduler.h k_ipc.h api.h k_system_proc.h k_i_proc.h user_proc.h k_init_struct.h k_init.h k_globals.h k_defines.h 
 TEST_SOURCES = test_queue.h test_priority_queue.h test_message_queue.h test_tracebuffer.h
 
 # TODO Figure out proper way of linking using o files in obj/
@@ -26,6 +26,7 @@ TEST_TB_MAIN = test/main_tracebuffer.c
 TEST_ITABLE_MAIN = test/main_itable.c 
 TEST_UTILITY_MAIN = test/main_utility.c
 TEST_SCHEDULER_MAIN = test/main_scheduler.c
+TEST_IPC_MAIN = test/main_ipc_2.c
 
 EXE = RTX 
 TEST_Q_EXE = TEST_Q
@@ -35,8 +36,9 @@ TEST_TB_EXE = TEST_TB
 TEST_ITABLE_EXE = TEST_ITABLE
 TEST_UTILITY_EXE = TEST_UTILITY
 TEST_SCHEDULER_EXE = TEST_SCHEDULER
+TEST_IPC_EXE = TEST_IPC
 
-ALL_EXECUTABLE = $(EXE) $(TEST_Q_EXE) $(TEST_PQ_EXE) $(TEST_MQ_EXE) $(TEST_TB_EXE) $(TEST_ITABLE_EXE) $(TEST_UTILITY_EXE) $(TEST_SCHEDULER_EXE)
+ALL_EXECUTABLE = $(EXE) $(TEST_Q_EXE) $(TEST_PQ_EXE) $(TEST_MQ_EXE) $(TEST_TB_EXE) $(TEST_ITABLE_EXE) $(TEST_UTILITY_EXE) $(TEST_SCHEDULER_EXE) $(TEST_IPC_EXE)
 
 all: $(ALL_EXECUTABLE)
 
@@ -56,6 +58,8 @@ $(TEST_UTILITY_EXE): $(TEST_OBJECTS) $(TEST_UTILITY_MAIN)
 	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_UTILITY_MAIN) -o $@
 $(TEST_SCHEDULER_EXE): $(TEST_OBJECTS) $(TEST_SCHEDULER_MAIN)
 	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_SCHEDULER_MAIN) -o $@
+$(TEST_IPC_EXE): $(TEST_OBJECTS) $(TEST_IPC_MAIN)
+	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_IPC_MAIN) -o $@
 
 $(OBJECTS): | $(OBJ_DIR)
 $(TEST_OBJECTS): | $(OBJ_DIR)
@@ -79,6 +83,7 @@ k_itable.o:
 
 k_scheduler: k_scheduler.h k_pcb.h k_queue.h k_priority_queue.h k_globals.h
 k_utility.o: k_utility.h k_pcb.h k_queue.h k_defines.h k_globals.h
+k_ipc.o: k_ipc.h k_scheduler.h k_pcb.h k_message_queue.h k_message.h k_tracebuffer.h k_defines.h k_utility.h
 
 api.o: api.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_scheduler.h k_message.h k_message_queue.h k_tracebuffer.h  
 
