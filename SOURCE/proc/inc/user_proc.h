@@ -3,4 +3,6 @@
 
 #include "api.h"
 
+void proc_A();
+
 #endif
