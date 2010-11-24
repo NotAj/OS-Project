@@ -27,8 +27,10 @@ k_PCB_ptr k_PCB_init(int p_pid, int p_status, int p_priority, void *k_start_addr
 
 k_message_ptr k_message_init()
 {
-	// Return pointer to allocated message
-	return ((k_message_ptr) malloc(sizeof(k_message)));
+	// Allocate space for message envelope fields and text field.
+	k_message_ptr msg= (k_message_ptr) malloc(sizeof(k_message));
+	msg->msg_text = (char *) malloc(sizeof(char) * MSG_ENV_SIZE);
+	return msg;
 }	
 
 k_queue_ptr k_queue_init()
