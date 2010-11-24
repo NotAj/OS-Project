@@ -127,3 +127,47 @@ int k_release_msg_env (MsgEnv * msg_env_ptr)
 	 }
 	return ERROR_NONE;
  }
+
+/****************************************************************************
+* Function      :  k_request_process_status
+******************************************************************************
+* Description   : This function accepts a msg env pointer and goes through the queue
+*		: of all PCB's adding the PID, priority, and status of each to the 
+*		: text of the message. 
+* 
+* Assumptions   :  
+*****************************************************************************/
+int k_get_trace_buffers(MsgEnv * message_envelope)
+{
+	if (message_envelope == NULL)
+	{	
+		die(ERROR_CONTEXT_SWITCH); // request process status should always be given valid parameters
+	}
+
+	k_trace_ptr tb;
+	int i, place, offset, spid, rpid, msgtyp, time;
+	place = k_sendTB->head;
+	//place = 0;	
+	tb = k_sendTB->buffer[place];  //create a node to traverse k_allQ
+	offset = 0;
+	i = 0;
+	offset += sprintf(message_envelope->msg_text, "SENT MESSAGES:\nSnd PID,  Rec PID,  Msg Type,  Timestamp:\n");
+
+	while(/*&& (place != k_sendTB->head ||*/ i < 15)
+	{			
+		spid = tb->sender_pid;		
+		rpid = tb->receiver_pid;
+		msgtyp = tb->msg_type;
+		time = tb->timestamp;
+		offset += sprintf(message_envelope->msg_text+offset, "  %d<t>%d<t>%d<t>%d<cr>", spid, rpid, msgtyp, time); 
+printf("%d\n", offset);
+/*		place--;
+		if (place < 0)
+			place = TRACEBUFFER_SIZE - 1;
+*/		tb = k_sendTB->buffer[place];
+		i++;
+	}
+	printf("%s\n", message_envelope->msg_text);
+	return ERROR_NONE; 	//once the message envelope is populated with the
+					//information for all processes
+}

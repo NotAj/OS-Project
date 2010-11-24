@@ -28,7 +28,7 @@ int k_clock_s;				// Wall Clock time in seconds
 int k_clock_tick;			// System time in clock ticks (100ms per tick)
 int k_display_clock;			// Flag controlling display of wall clock
 k_tracebuffer_ptr k_sendTB;		// Sent message TB array (16 last sends)
-k_tracebuffer_ptr k_receiveTB;	// Receive message TB array (16 last receives)
+k_tracebuffer_ptr k_receiveTB;		// Receive message TB array (16 last receives)
 k_io_buffer_ptr k_input_buf;		// Keyboard buffer
 k_io_buffer_ptr k_output_buf;		// CRT buffer
 int k_RTX_pid;					// PID of the RTX
