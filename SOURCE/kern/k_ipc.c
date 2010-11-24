@@ -160,9 +160,7 @@ int k_get_trace_buffers(MsgEnv * message_envelope)
 		time = tb->timestamp;
 		offset += sprintf(message_envelope->msg_text+offset, "  %d<t>%d<t>%d<t>%d<cr>", spid, rpid, msgtyp, time); 
 
-		place--;
-		if (place < 0)
-			place = TRACEBUFFER_SIZE - 1;
+		place = (place+1)%16;
 		tb = k_sendTB->buffer[place];
 		i++;
 	}
@@ -180,9 +178,7 @@ int k_get_trace_buffers(MsgEnv * message_envelope)
 		time = tb->timestamp;
 		offset += sprintf(message_envelope->msg_text+offset, "  %d<t>%d<t>%d<t>%d<cr>", spid, rpid, msgtyp, time); 
 
-		place--;
-		if (place < 0)
-			place = TRACEBUFFER_SIZE - 1;
+		place = (place+1)%16;
 		tb = k_receiveTB->buffer[place];
 		i++;
 	}
