@@ -1,8 +1,8 @@
 #ifndef K_IO_H
 #define K_IO_H
 
-#include <stdlib>
-#include "k_messages.h"
+#include <stdlib.h>
+#include "k_message.h"
 
 /****************************************************************
  I/O primitives:
