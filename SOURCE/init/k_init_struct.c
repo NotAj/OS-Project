@@ -122,3 +122,11 @@ k_itable_ptr k_itable_init(int process_num, int *pid, int *priority, int *is_ipr
 	} 
 	return process_table;
 }
+
+io_buffer_ptr io_buffer_init()
+{
+	io_buffer_ptr myBuff;
+	myBuff->length = 0;
+	myBuff->wait_flag = 0;
+	return myBuff;
+}

@@ -18,7 +18,7 @@ int keyboard (char *KBbuffer[]){
 
 	/************Initializations************/
 	caddr_t mmap_ptr;		
-	io_buffer *input_buf;		//Creates pointer to buffer struct
+	io_buffer_ptr input_buf = io_buffer_init();	//Creates pointer to buffer struct
 	int rtx_pid, fid;		//To store RTX process id and memory mapped file id
 	char c;				//Char for key being typed
 

@@ -9,7 +9,7 @@
 int main(){
 	/************Initializations************/
 	caddr_t mmap_ptr;
-	io_buffer *output_buf;
+	io_buffer_ptr output_buf = io_buffer_init();
 	char *outputfile = "outputfile";	//Naming sharedmem file	
 	int RTX_pid = getpid();			//Store PID of RTX
 	//Create file to map memory to

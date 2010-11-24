@@ -18,7 +18,7 @@ int crt (char *CRTbuffer[]){
 	/************Initializations************/
 	caddr_t mmap_ptr;
 	int rtx_pid, fid;		//To store RTX process id and memory mapped file id
-	io_buffer *output_buf;		//Creates pointer to buffer struct	
+	io_buffer_ptr output_buf = io_buffer_init();	//Creates an io_buffer pointer 
 	int i;
 
 	/************Getting IDs array pointer that was passed in************/

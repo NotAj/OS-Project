@@ -7,16 +7,19 @@
 #include "k_io_buffer.c"
 
 int main(){
+
 	/************Initializations************/
 	caddr_t mmap_ptr;
-	io_buffer *input_buf;
-	char *inputfile = "inputfile";		//Naming sharedmem file	
+	io_buffer_ptr input_buf = io_buffer_init();
+	char *inputfile = "inputfile.txt";	//Naming sharedmem file	
 	int RTX_pid = getpid();			//Store PID of RTX
 	//Create file to map memory to
 	int fid = open(inputfile, O_RDWR | O_CREAT | O_EXCL, (mode_t) 0755);	
 	assert(fid>0);
 	ftruncate(fid, BUFFER_SIZE); 		//Change size of file to match buffer size
 	char kbd_info[2] = {RTX_pid, fid};	//Char array required for execl function
+	char c;
+	int i;
 	
 	printf("\n\nRTX_pid = %d\n",RTX_pid);
 	printf("fid = %d\n",fid);
@@ -38,22 +41,18 @@ int main(){
 	input_buf = (io_buffer *) mmap_ptr;		//creating pointer to the sharedmem
 
 	/************Testing helper process************/
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
+	while(1)
+	{
+		if(input_buf->wait_flag == 1)
+		{
+			printf("User input:  ");
+			for(i=0;i<=input_buf->length;i++)
+			{
+				fscanf(fid, "%c", c);
+				printf("%c",c);
+			}
+			printf("\n");
+		}
+	}
 
 }

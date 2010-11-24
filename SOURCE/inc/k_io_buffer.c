@@ -14,11 +14,11 @@
 * Type Declarations
 ****************************/
 
-typedef struct {
+typedef struct io_buffer_struct *io_buffer_ptr;
+
+typedef struct io_buffer_struct
+{
 	char bufdata[BUFFER_SIZE];
 	int length;
 	int wait_flag;
-}io_buffer;
-
-
-
+} io_buffer;
