@@ -17,6 +17,7 @@
 int keyboard (char *KBbuffer[]){
 
 	/************Initializations************/
+	caddr_t mmap_ptr;		
 	io_buffer *input_buf;		//Creates pointer to buffer struct
 	int rtx_pid, fid;		//To store RTX process id and memory mapped file id
 	char c;				//Char for key being typed
@@ -35,7 +36,7 @@ int keyboard (char *KBbuffer[]){
 				fid,           		// Which file is associated with mmap
 				(off_t) 0);		// Offset in page frame
 	
-	input_buf = (io_buffer *) mmap_ptr		//creating pointer to the shared memory
+	input_buf = (io_buffer *) mmap_ptr;		//creating pointer to the shared memory
 	
 	
 	/************Reading from the keyboard************/
@@ -50,7 +51,7 @@ int keyboard (char *KBbuffer[]){
 		{
 			//Set last character to null
 			input_buf->bufdata[input_buf->length-1] = '\0';		
-			kill(rtx_pid,SIGUSR1);		//Signal the RTX	
+//			kill(rtx_pid,SIGUSR1);		//Signal the RTX	
 			input_buf->wait_flag = 1;	//Set wait_flag to true
 			while(input_buf->wait_flag == 1)
 			//Check every 100 miliseconds if the RTX has cleared the flag
