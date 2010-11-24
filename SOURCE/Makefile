@@ -4,7 +4,7 @@ LDFLAGS = -g $(INC_DIR)
 
 INC_DIR = -I./inc/ -I./proc/inc -I./helpers
 
-SOURCES = k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c k_io_buffer.c k_utility.h k_scheduler.h api.h k_system_proc.h k_i_proc.h user_proc.h k_init_struct.h k_init.h k_globals.h kbd_helper.c crt_helper.c k_defines.h
+SOURCES = k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c k_io_buffer.c k_utility.h k_scheduler.h kbd_helper.c crt_helper.c api.h k_system_proc.h k_i_proc.h user_proc.h k_init_struct.h k_init.h k_globals.h k_defines.h
 TEST_SOURCES = test_queue.h test_priority_queue.h test_message_queue.h test_tracebuffer.h
 
 # TODO Figure out proper way of linking using o files in obj/
@@ -65,7 +65,6 @@ $(TEST_KBD_EXE): $(TEST_OBJECTS) $(TEST_KBD_MAIN)
 $(TEST_CRT_EXE): $(TEST_OBJECTS) $(TEST_CRT_MAIN)
 	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_CRT_MAIN) -o $@
 
-
 $(OBJECTS): | $(OBJ_DIR)
 $(TEST_OBJECTS): | $(OBJ_DIR)
 
@@ -76,8 +75,6 @@ $(OBJ_DIR):
 	$(CC) $(CFLAGS) -c -o $(OBJ_DIR)$@ $<
 .h.o:
 	$(CC) $(CFLAGS) -c -o $(OBJ_DIR)$@ $<
-
-
 
 k_pcb.o: k_pcb.h k_defines.h
 k_message.o: k_message.h k_defines.h
@@ -92,27 +89,28 @@ k_io_buffer.o: k_io_buffer.c
 k_scheduler: k_scheduler.h k_pcb.h k_queue.h k_priority_queue.h k_globals.h
 k_utility.o: k_utility.h k_pcb.h k_queue.h k_defines.h k_globals.h
 
+kbd_helper.o: kbd_helper.c k_io_buffer.c
+crt_helper.o: crt_helper.c k_io_buffer.c
+
 api.o: api.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_scheduler.h k_message.h k_message_queue.h k_tracebuffer.h  
 
 k_system_proc.o: k_system_proc.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_scheduler.h k_message.h k_message_queue.h k_tracebuffer.h api.h 
 k_system_proc.o: k_i_proc.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_scheduler.h k_message.h k_message_queue.h k_tracebuffer.h api.h 
 user_proc.o: user_proc.h api.h
 
-k_init_struct.o: k_init_struct.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c
-k_init.o: k_init.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c k_init_struct.h k_system_proc.h k_defines.h k_globals.h
 
 k_globals.o: k_globals.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_init_struct.h
 k_defines.o: k_defines.h k_pcb.h 
-	
+
+k_init.o: k_init.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c k_init_struct.h k_system_proc.h k_defines.h k_globals.h
+k_init_struct.o: k_init_struct.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c
+
 test_queue.o: k_queue.h k_pcb.h k_init_struct.h
 test_priority_queue.o: test_priority_queue.h k_priority_queue.h k_init_struct.h
 test_message_queue.o: test_message_queue.h k_message_queue.h k_init_struct.h
 test_tracebuffer.o: test_tracebuffer.h k_tracebuffer.h k_init_struct.h
 test_scheduler.o: test_scheduler.h k_scheduler.h k_pcb.h k_queue.h k_priority_queue.h
 test_utility.o: test_utility.h k_pcb.h k_queue.h k_defines.h k_globals.h
-
-kbd_helper.o: kbd_helper.c k_io_buffer.c
-crt_helper.o: crt_helper.c k_io_buffer.c
 
 .PHONY: clean
 
