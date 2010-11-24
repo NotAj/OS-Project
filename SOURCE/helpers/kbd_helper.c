@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include "k_init_struct.h"
 #include "k_io_buffer.c"
 
 /****************************************************************
@@ -18,7 +19,7 @@ int keyboard (char *KBbuffer[]){
 
 	/************Initializations************/
 	caddr_t mmap_ptr;		
-	io_buffer_ptr input_buf = io_buffer_init();	//Creates pointer to buffer struct
+	k_io_buffer_ptr input_buf = k_io_buffer_init();	//Creates pointer to buffer struct
 	int rtx_pid, fid;		//To store RTX process id and memory mapped file id
 	char c;				//Char for key being typed
 
@@ -36,7 +37,7 @@ int keyboard (char *KBbuffer[]){
 				fid,           		// Which file is associated with mmap
 				(off_t) 0);		// Offset in page frame
 	
-	input_buf = (io_buffer *) mmap_ptr;		//creating pointer to the shared memory
+	input_buf = (k_io_buffer_ptr) mmap_ptr;		//creating pointer to the shared memory
 	
 	
 	/************Reading from the keyboard************/

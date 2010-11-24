@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include "k_io_buffer.c"
+#include "k_init_struct.h"
 
 /****************************************************************
  CRT Helper Process 
@@ -18,7 +19,7 @@ int crt (char *CRTbuffer[]){
 	/************Initializations************/
 	caddr_t mmap_ptr;
 	int rtx_pid, fid;		//To store RTX process id and memory mapped file id
-	io_buffer_ptr output_buf = io_buffer_init();	//Creates an io_buffer pointer 
+	k_io_buffer_ptr output_buf = k_io_buffer_init();	//Creates an io_buffer pointer 
 	int i;
 
 	/************Getting IDs array pointer that was passed in************/
@@ -34,7 +35,7 @@ int crt (char *CRTbuffer[]){
 				fid, 			// Which file is associated with mmap
 				(off_t) 0);		// Offset in page frame
 	
-	output_buf = (io_buffer *) mmap_ptr;		//creating pointer to the shared memory
+	output_buf = (k_io_buffer_ptr) mmap_ptr;		//creating pointer to the shared memory
 	
 	
 	/************Printing to the screen************/

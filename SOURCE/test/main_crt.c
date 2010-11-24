@@ -4,12 +4,15 @@
 #include <sys/mman.h>
 #include <fcntl.h>
 #include <assert.h>
+#include "k_init_struct.h"
+#include "k_globals.h"
 #include "k_io_buffer.c"
 
 int main(){
 	/************Initializations************/
 	caddr_t mmap_ptr;
-	io_buffer_ptr output_buf = io_buffer_init();
+	extern k_io_buffer_ptr output_buf;
+	output_buf = k_io_buffer_init();
 	char *outputfile = "outputfile";	//Naming sharedmem file	
 	int RTX_pid = getpid();			//Store PID of RTX
 	//Create file to map memory to
@@ -35,7 +38,7 @@ int main(){
 			(off_t) 0);			// Offset in page frame
 	assert(mmap_ptr != MAP_FAILED);
 	
-	output_buf = (io_buffer *) mmap_ptr;		//creating pointer to the sharedmem
+	output_buf = (k_io_buffer_ptr) mmap_ptr;		//creating pointer to the sharedmem
 
 	/************Testing helper process************/
 	

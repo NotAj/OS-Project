@@ -1,3 +1,6 @@
+#ifndef K_IO_BUFFER_C
+#define K_IO_BUFFER_C
+
 #include "k_defines.h"
 
 /****************************************************************
@@ -14,11 +17,13 @@
 * Type Declarations
 ****************************/
 
-typedef struct io_buffer_struct *io_buffer_ptr;
+typedef struct k_io_buffer_struct *k_io_buffer_ptr;
 
-typedef struct io_buffer_struct
+typedef struct k_io_buffer_struct
 {
-	char bufdata[BUFFER_SIZE];
+	char *bufdata;
 	int length;
 	int wait_flag;
-} io_buffer;
+} k_io_buffer;
+
+#endif

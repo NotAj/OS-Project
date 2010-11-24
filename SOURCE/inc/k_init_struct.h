@@ -41,5 +41,5 @@ k_tracebuffer_ptr k_tracebuffer_init();
 
 k_itable_ptr k_itable_init(int process_num, int *pid, int *priority, int *is_iprocess, void **start_address);
 
-io_buffer_ptr io_buffer_init();
+k_io_buffer_ptr k_io_buffer_init();
 #endif
