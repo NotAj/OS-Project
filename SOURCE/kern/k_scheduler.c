@@ -69,19 +69,12 @@ void k_context_switch (k_PCB_ptr prev_process, k_PCB_ptr next_process)
 	// REMEMBER this change for signal handler
 	k_current_process = next_process;
 	
-	//TODO Deal with commented printf
-	//int status;
 	// Save the context of the previous process.
-	//status = setjmp(prev_process->k_jmp_buf);
-	//printf("SWITCH PID %d->%d\n", prev_process->p_pid, next_process->p_pid);
-	//printf("STATUS = %d\n", status);
-	//if (status == 0) // Status is 0, signifying that context has just been saved
+	// Status is 0, signifying that context has just been saved
 	if(setjmp(prev_process->k_jmp_buf) == 0)
 	{
-		//printf("JUMP %d->%d\n", prev_process->p_pid, next_process->p_pid);
 		longjmp(next_process->k_jmp_buf, 1); // Restores next_process’ context
 	}
-	//printf("RESTORED %d->%d\n", prev_process->p_pid,next_process->p_pid);
 	// Function is here if returning from long_jmp(), no action required.
 }
 
@@ -93,7 +86,7 @@ void k_context_switch (k_PCB_ptr prev_process, k_PCB_ptr next_process)
 * 
 * Assumptions   : 
 *****************************************************************************/
-void k_release_processor ()
+int k_release_processor ()
 {
 	extern k_PCB_ptr k_current_process;	
 	extern k_priority_queue_ptr k_readyPQ;
@@ -104,6 +97,8 @@ void k_release_processor ()
 	
 	//Perform a process switch
 	k_process_switch();
+	// When switched back to process, return success
+	return ERROR_NONE;
 }
 
 /****************************************************************************
@@ -117,7 +112,7 @@ void k_release_processor ()
 * 
 * Assumptions   : In the case of invalid parameters, no action is taken. 
 *****************************************************************************/
-void k_change_priority(int new_priority, int target_pid)
+int k_change_priority(int new_priority, int target_process_id)
 {
 	extern k_priority_queue_ptr k_readyPQ;
 	extern k_priority_queue_ptr k_blockedPQ;
@@ -126,29 +121,29 @@ void k_change_priority(int new_priority, int target_pid)
 
 	// Check if new priority is valid
 	if (new_priority < 0 || new_priority > 3)
-		return; // Do nothing
+		return ERROR_INVALID_PARAMETERS; // Do nothing
 
 	// Get the PCB of target process.
-	changed_pcb = k_pid_to_PCB_ptr(target_pid);
+	changed_pcb = k_pid_to_PCB_ptr(target_process_id);
 	if (changed_pcb == NULL) // Means target_pid specified is invalid
-		return; // Do nothing 
+		return ERROR_INVALID_PARAMETERS; // Do nothing 
 
 	// Do nothing in the case of specifying an iprocess
 	if (changed_pcb->p_status == STATUS_IPROCESS)
-		return; // Do nothing
+		return ERROR_INVALID_PARAMETERS; // Do nothing
 
 	// Check if new priority specified equals old priority
 	if(changed_pcb->p_priority == new_priority)
-		return; // No action required
+		return ERROR_INVALID_PARAMETERS; // No action required
 
 	// Check if target process is in readyQ
 	if (changed_pcb->p_status == STATUS_READY)
 	{
 		// Remove process from current spot in the readyQ
-		changed_pcb  = k_priority_queue_remove(target_pid, k_readyPQ);
+		changed_pcb  = k_priority_queue_remove(target_process_id, k_readyPQ);
 		// If process not on respective queue, OS is in invalid state, terminate
 		if (changed_pcb == NULL)
-			return; //TODO k_terminate()
+			return ERROR_CRITICAL; //TODO k_terminate()
 		// Change the priority of target process
 		changed_pcb->p_priority = new_priority;
 		// Enqueue onto readyQ
@@ -158,10 +153,10 @@ void k_change_priority(int new_priority, int target_pid)
 	else if(changed_pcb->p_status == STATUS_BLOCKED_ON_RESOURCE)
 	{
 		// Remove process from current spot in the blockedQ
-		changed_pcb  = k_priority_queue_remove(target_pid, k_blockedPQ);
+		changed_pcb  = k_priority_queue_remove(target_process_id, k_blockedPQ);
 		// If process not on respective queue, OS is in invalid state, terminate
 		if (changed_pcb == NULL)
-			return; //TODO k_terminate()
+			return ERROR_CRITICAL; //TODO k_terminate()
 		// Change the priority of target process
 		changed_pcb->p_priority = new_priority;
 		// Enqueue onto readyQ
@@ -172,6 +167,6 @@ void k_change_priority(int new_priority, int target_pid)
 		// If process is blocked on resource, interrupted, or executing just change priority 
 		changed_pcb->p_priority = new_priority;	
 	}
-	return;
+	return ERROR_NONE;
 }
 

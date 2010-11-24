@@ -1,3 +1,5 @@
+#include "k_defines.h"
+
 /****************************************************************
  IO Buffer Data structure
  ----------------------------------------------------------------
@@ -12,11 +14,11 @@
 * Type Declarations
 ****************************/
 
-struct io_buffer{
+typedef struct {
 	char bufdata[BUFFER_SIZE];
-	int length = 0;
-	int wait_flag = 0;
-};
+	int length;
+	int wait_flag;
+}io_buffer;
 
 
 

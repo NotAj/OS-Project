@@ -16,6 +16,7 @@
 #include "k_globals.h"
 #include <signal.h>
 #include <setjmp.h>
+#include "k_system_proc.h"
 
 /****************************************************************
  Struct Initalizations

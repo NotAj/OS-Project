@@ -88,8 +88,9 @@ void k_process_init(int num_process, k_itable_ptr init_table)
 		{
 			// Set up stack pointer for this process
 			// Note the stack offsets negatively so give it address at end of stack
-			// Instruction moves the value (pcb->k_stack_pointer + STACK_SIZE) into register esp (holds stack pointer) with the constraint that a register must be used.
-			char *sp_top = pcb->k_stack_pointer + STACK_SIZE;
+			// Instruction moves the value (pcb->k_stack_pointer + STACK_SIZE - STACK_OFFSET) into register esp (holds stack pointer) with the constraint that a register must be used.
+			// This sets the stack pointer inside the space allocated, and not just outside.
+			char *sp_top = pcb->k_stack_pointer + STACK_SIZE - STACK_OFFSET;
 			__asm__("movl %0, %%esp" : : "g" (sp_top));
 			// NOTE output operand can't be an expression, so evaluate before asm.
 			if(!(setjmp(pcb->k_jmp_buf))) // Context has just been saved, jump back 
@@ -147,6 +148,10 @@ void k_init()
 	k_scheduler_init(); // Initialize scheduling queues
 	
 	//TODO PROCESS ITABLE SETTING HERE	
+	pid[0] = PID_NULL;
+	priority[0] = PRIORITY_NUM - 1; // Set to lowest priority
+	is_iprocess[0] = 0; 
+	start_address[0] = &(proc_null);
 
 	init_table = k_itable_init(PROCESS_NUM, pid, priority, is_iprocess, start_address);	
 	k_process_init(PROCESS_NUM, init_table); // Initialize all processes using itable
