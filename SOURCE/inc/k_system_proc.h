@@ -13,4 +13,6 @@
 
 void proc_null();
 
+void proc_wall_clock();
+
 #endif
