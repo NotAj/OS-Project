@@ -152,6 +152,22 @@ void k_init()
 	priority[0] = PRIORITY_NUM - 1; // Set to lowest priority
 	is_iprocess[0] = 0; 
 	start_address[0] = &(proc_null);
+	
+	pid[0] = PID_USER_A;
+	priority[0] = PRIORITY_NUM - 1; // Set to lowest priority
+	is_iprocess[0] = 0; 
+	start_address[0] = &(proc_A);
+
+	pid[0] = PID_USER_B;
+	priority[0] = PRIORITY_NUM - 1; // Set to lowest priority
+	is_iprocess[0] = 0; 
+	start_address[0] = &(proc_B);
+
+	pid[0] = PID_USER_C;
+	priority[0] = PRIORITY_NUM - 1; // Set to lowest priority
+	is_iprocess[0] = 0; 
+	start_address[0] = &(proc_C);
+
 
 	init_table = k_itable_init(PROCESS_NUM, pid, priority, is_iprocess, start_address);	
 	k_process_init(PROCESS_NUM, init_table); // Initialize all processes using itable
