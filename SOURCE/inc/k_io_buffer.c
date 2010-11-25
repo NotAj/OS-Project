@@ -21,7 +21,7 @@ typedef struct k_io_buffer_struct *k_io_buffer_ptr;
 
 typedef struct k_io_buffer_struct
 {
-	char *bufdata;
+	char bufdata[BUFFER_SIZE];
 	int length;
 	int wait_flag;
 } k_io_buffer;

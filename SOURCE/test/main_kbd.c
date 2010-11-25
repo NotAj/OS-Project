@@ -62,11 +62,13 @@ int main(){
 			printf("User input:  ");
 			for(i=0;i<input_buf->length;i++)
 			{
-				c = input_buf->bufdata[i];
-				printf("%c",c);
+			//	c = input_buf->bufdata[i];
+				printf("%c",input_buf->bufdata[i]);
 			}
 			printf("\n");
 			input_buf->wait_flag = 0;
+			input_buf->length = 0;
+			
 		}
 	}
 

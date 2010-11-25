@@ -46,16 +46,12 @@ int main (int argc, char *KBbuffer[]){
 	c = getchar();					//Get inputted character 
 	input_buf->length += 1;
 	
-	printf("1 - inputted char  = %c\n",c);
-	printf("input_buf->wait_flag = %d\n",input_buf->wait_flag);
-
 	/*Signal the RTX if there is a carriage return or if the string equals the size of the 		buffer.  Since BUFSIZE equals the max size of an envelope, the string should not reach 		this length anyway...	*/
 
 	 	if (c=='\n' || input_buf->length==BUFFER_SIZE)
 		{
-			printf("yo dawg, im in the first condition\n");
 			//Set last character to null
-			//input_buf->bufdata[input_buf->length-1] = '\0';		
+			input_buf->bufdata[input_buf->length-1] = '\0';		
 //			kill(rtx_pid,SIGUSR1);		//Signal the RTX	
 			input_buf->wait_flag = 1;	//Set wait_flag to true
 			while(input_buf->wait_flag == 1)
@@ -64,11 +60,9 @@ int main (int argc, char *KBbuffer[]){
 		}	//(ie: it has read from the buffer)
 		else
 		{
-			printf("yo dawg, im in the second condition %d\n",input_buf->length);
-			//input_buf->bufdata[input_buf->length-1] = c;
-			printf("%c\n",c);//remember to remove this
+			input_buf->bufdata[input_buf->length-1] = c;
 		}
-		printf("OutsideIf\n");
 	}
+
 }
 	
