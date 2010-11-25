@@ -1,11 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-#include "k_init_struct.h"
 #include <sys/mman.h>
+#include <assert.h>
 #include "k_io_buffer.c"
 #include "k_defines.h"
-#include <assert.h>
 
 /****************************************************************
  Keyboard Helper Process 
@@ -20,7 +19,7 @@
 int main (int argc, char *KBbuffer[]){
 	/************Initializations************/
 	caddr_t mmap_ptr;		
-	k_io_buffer_ptr input_buf;	//Creates pointer to buffer struct
+	k_io_buffer_ptr input_buf;	//Creates io_buffer pointer to buffer struct
 	int rtx_pid, fid;		//To store RTX process id and memory mapped file id
 	char c;				//Char for key being typed
 	
@@ -36,10 +35,11 @@ int main (int argc, char *KBbuffer[]){
 				fid,           		// Which file is associated with mmap
 				(off_t) 0);		// Offset in page frame
 	assert(mmap_ptr != MAP_FAILED);
+
 	input_buf = (k_io_buffer_ptr) mmap_ptr;		//creating pointer to the shared memory
-	
 	input_buf->length = 0;
 	input_buf->wait_flag = 0;
+
 	/************Reading from the keyboard************/
 	while(1)			  		//Loop forever
 	{
