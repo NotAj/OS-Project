@@ -47,17 +47,38 @@ int change_priority(int new_priority, int target_process_id)
 *************************/
 int send_message(int dest_process_id, MsgEnv *msg_envelope)
 {
-	return 1;
+	int code;
+	//atomic(on);
+	code = k_send_message(dest_process_id, msg_envelope);
+	//atomic(off);
+	return code;
 }
 
 MsgEnv *receive_message()
 {
-	return NULL;
+	MsgEnv *msg;
+	//atomic(on);
+	msg = k_receive_message();
+	//atomic(off);return NULL;
+	return msg;
 }
+
 
 int release_msg_env(MsgEnv *msg_env_ptr)
 {
-	return 1;
+	int code;
+	//atomic(on);
+	code = k_release_msg_env(msg_env_ptr);
+	//atomic(off);
+	return code;
+}
+MsgEnv *request_msg_env()
+{
+	MsgEnv *msg;
+	//atomic(on);
+	msg = k_request_msg_env();
+	//atomic(off);
+	return msg;
 }
 
 int get_trace_buffers(MsgEnv *message_envelope)

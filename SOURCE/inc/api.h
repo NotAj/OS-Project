@@ -8,6 +8,7 @@
 #include "k_message.h"
 #include "k_message_queue.h"
 #include "k_tracebuffer.h"
+#include "k_ipc.h"
 #include "k_globals.h"
 
 /****************************************************************
