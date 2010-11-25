@@ -108,7 +108,7 @@ k_tracebuffer_ptr k_tracebuffer_init()
 k_itable_ptr k_itable_init(int process_num, int *pid, int *priority, int *is_iprocess, void **start_address)
 {
 	int i;
-	k_itable_ptr process_table = malloc(sizeof(k_itable));
+	k_itable_ptr process_table = malloc(sizeof(k_itable));	
 	process_table->pid = malloc(sizeof(int) * process_num);
 	process_table->priority = malloc(sizeof(int) * process_num);
 	process_table->is_iprocess = malloc(sizeof(int) * process_num);
