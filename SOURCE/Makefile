@@ -2,14 +2,19 @@ CC = gcc
 CFLAGS = -Wall -g $(INC_DIR) 
 LDFLAGS = -g $(INC_DIR) 
 
-INC_DIR = -I./inc/ -I./proc/inc -I./helpers
+INC_DIR = -I./inc/ -I./proc/inc 
 
 SOURCES = k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c k_io_buffer.c k_utility.h k_scheduler.h k_ipc.h api.h k_system_proc.h k_i_proc.h user_proc.h k_init_struct.h k_init.h k_globals.h k_defines.h
 HELPER_SOURCES = k_defines.h k_io_buffer.h k_init_struct.h
 TEST_SOURCES = test_queue.h test_priority_queue.h test_message_queue.h test_tracebuffer.h
 
+MEM_FILES = inputfile outputfile
+
 # TODO Figure out proper way of linking using o files in obj/
 OBJ_DIR = obj/
+HELPER_DIR = helpers/
+
+VPATH = inc:kern:test:kern/struct:init:proc:proc/inc:helpers:obj
 
 OBJECTS_INTER = $(SOURCES:.h=.o)
 OBJECTS = $(OBJECTS_INTER:.c=.o)
@@ -21,8 +26,6 @@ HELPER_OBJECTS_DIR = $(HELPER_OBJECTS:%=$(OBJ_DIR)%)
 TEST_OBJECTS_INTER = $(OBJECTS) $(TEST_SOURCES:.h=.o)
 TEST_OBJECTS = $(TEST_OBJECTS_INTER:.c=.o)
 TEST_OBJECTS_DIR = $(TEST_OBJECTS:%=$(OBJ_DIR)%)
-
-VPATH = inc:kern:test:kern/struct:init:proc:proc/inc:helpers:obj
 
 MAIN = main.c
 
@@ -57,10 +60,8 @@ TEST_CRT_EXE = TEST_CRT
 TEST_IPC_EXE = TEST_IPC
 
 RTX_EXECUTABLES = $(EXE) $(CRT_HELPER_EXE) $(KBD_HELPER_EXE)
-TEST_EXECUTABLES = $(TEST_Q_EXE) $(TEST_PQ_EXE) $(TEST_MQ_EXE) $(TEST_TB_EXE) $(TEST_ITABLE_EXE) $(TEST_UTILITY_EXE) $(TEST_SCHEDULER_EXE) $(TEST_KBD_EXE) $(TEST_CRT_EXE)
+TEST_EXECUTABLES = $(TEST_Q_EXE) $(TEST_PQ_EXE) $(TEST_MQ_EXE) $(TEST_TB_EXE) $(TEST_ITABLE_EXE) $(TEST_UTILITY_EXE) $(TEST_SCHEDULER_EXE) $(TEST_IPC_EXE) $(TEST_KBD_EXE) $(TEST_CRT_EXE)
 ALL_EXECUTABLES = $(RTX_EXECUTABLES) $(TEST_EXECUTABLES)
-
-ALL_EXECUTABLE = $(EXE) $(TEST_Q_EXE) $(TEST_PQ_EXE) $(TEST_MQ_EXE) $(TEST_TB_EXE) $(TEST_ITABLE_EXE) $(TEST_UTILITY_EXE) $(TEST_SCHEDULER_EXE) $(TEST_IPC_EXE)
 
 all: $(ALL_EXECUTABLES)
 rtx: $(RTX_EXECUTABLES)
@@ -70,9 +71,9 @@ $(EXE): $(OBJECTS) $(MAIN)
 	$(CC) $(LDFLAGS) $(OBJECTS_DIR) $(MAIN) -o $@
 
 $(CRT_HELPER_EXE): $(HELPER_OBJECTS) $(CRT_MAIN)
-	$(CC) $(LDFLAGS) $(HELPER_OBJECTS_DIR) $(CRT_MAIN) -o helpers/$@ 
+	$(CC) $(LDFLAGS) $(HELPER_OBJECTS_DIR) $(CRT_MAIN) -o $(HELPER_DIR)$@ 
 $(KBD_HELPER_EXE): $(HELPER_OBJECTS) $(KBD_MAIN)
-	$(CC) $(LDFLAGS) $(HELPER_OBJECTS_DIR) $(KBD_MAIN) -o helpers/$@
+	$(CC) $(LDFLAGS) $(HELPER_OBJECTS_DIR) $(KBD_MAIN) -o $(HELPER_DIR)$@
 
 $(TEST_Q_EXE): $(TEST_OBJECTS) $(TEST_Q_MAIN)
 	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_Q_MAIN) -o $@
@@ -88,12 +89,12 @@ $(TEST_UTILITY_EXE): $(TEST_OBJECTS) $(TEST_UTILITY_MAIN)
 	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_UTILITY_MAIN) -o $@
 $(TEST_SCHEDULER_EXE): $(TEST_OBJECTS) $(TEST_SCHEDULER_MAIN)
 	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_SCHEDULER_MAIN) -o $@
+$(TEST_IPC_EXE): $(TEST_OBJECTS) $(TEST_IPC_MAIN)
+	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_IPC_MAIN) -o $@
 $(TEST_KBD_EXE): $(TEST_OBJECTS) $(TEST_KBD_MAIN)
 	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_KBD_MAIN) -o $@
 $(TEST_CRT_EXE): $(TEST_OBJECTS) $(TEST_CRT_MAIN)
 	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_CRT_MAIN) -o $@
-$(TEST_IPC_EXE): $(TEST_OBJECTS) $(TEST_IPC_MAIN)
-	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_IPC_MAIN) -o $@
 
 $(OBJECTS): | $(OBJ_DIR)
 $(TEST_OBJECTS): | $(OBJ_DIR)
@@ -101,6 +102,7 @@ $(TEST_OBJECTS): | $(OBJ_DIR)
 $(OBJ_DIR):
 	@echo $(OBJECTS) 
 	mkdir $(OBJ_DIR)
+
 .c.o:
 	$(CC) $(CFLAGS) -c -o $(OBJ_DIR)$@ $<
 .h.o:
@@ -142,5 +144,7 @@ test_utility.o: test_utility.h k_pcb.h k_queue.h k_defines.h k_globals.h
 .PHONY: clean
 
 clean:
-	rm -f *.o $(ALL_EXECUTABLE)
+	rm -f $(MEM_FILES)	
+	rm -f *.o $(ALL_EXECUTABLES)
 	rm -rf $(OBJ_DIR)
+	rm -f $(HELPER_DIR)crt_helper $(HELPER_DIR)kbd_helper
