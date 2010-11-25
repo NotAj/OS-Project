@@ -86,7 +86,25 @@ int get_trace_buffers(MsgEnv *message_envelope)
 	return 1;
 }
 
+MsgEnv_queue_ptr MsgEnv_queue_init()
+{
+	return (k_message_queue_init());
+}
 
+int MsgEnv_queue_is_empty(MsgEnv_queue_ptr MQ)
+{
+	return (k_message_queue_is_empty(MQ));
+}
+
+void MsgEnv_queue_enqueue(MsgEnv *message, MsgEnv_queue_ptr MQ) 
+{
+	k_message_queue_enqueue(message, MQ);
+}
+
+MsgEnv *MsgEnv_queue_dequeue(MsgEnv_queue_ptr MQ)
+{
+	return (k_message_queue_dequeue(MQ));
+}
 /*************************
 * Timing primitives 
 *************************/

@@ -168,7 +168,6 @@ void k_init()
 	is_iprocess[0] = 0; 
 	start_address[0] = &(proc_C);
 
-
 	init_table = k_itable_init(PROCESS_NUM, pid, priority, is_iprocess, start_address);	
 	k_process_init(PROCESS_NUM, init_table); // Initialize all processes using itable
 	// NOTE: Normally cannot longjmp if the function that setjmp was called in has returned, but since we've set up a different stack for each process, this is not a problem.

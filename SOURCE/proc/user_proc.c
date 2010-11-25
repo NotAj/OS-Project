@@ -2,7 +2,7 @@
 
 void proc_A()
 {
-/*	int num;
+	int num;
 	MsgEnv *msg = receive_message(); // Sent by CCI in response to s command
 	release_msg_env(msg);
 	num = 0;
@@ -14,11 +14,11 @@ void proc_A()
 		send_message(PID_USER_B,msg);
 		num++;
 		release_processor();
-	}*/
+	}
 }
 
 void proc_B()
-{/*
+{
 	MsgEnv *msg;
 	while(1)
 	{
@@ -29,12 +29,13 @@ void proc_B()
 		while (msg->msg_type != MSG_TYPE_COUNT_REPORT);
 		// Will only forward messages of the correct type
 		send_message(PID_USER_C,msg);
-	}*/
+	}
 }
 
 void proc_C()
-{/*
+{
 	MsgEnv_queue_ptr localMQ;
+	localMQ = MsgEnv_queue_init();
 	MsgEnv *msg;
 	while(1)
 	{
@@ -67,5 +68,5 @@ void proc_C()
 		}
 		release_msg_env(msg);
 		release_processor();
-	}*/
+	}
 }
