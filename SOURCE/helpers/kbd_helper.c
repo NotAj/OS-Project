@@ -16,7 +16,7 @@
 
 *****************************************************************/
 
-int keyboard (char *KBbuffer[]){
+int main (char *KBbuffer[]){
 	printf("Yay the helper is running and its PID is %d\n",getpid());
 	/************Initializations************/
 	caddr_t mmap_ptr;		

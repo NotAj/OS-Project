@@ -15,7 +15,7 @@
 
 *****************************************************************/
 
-int crt (char *CRTbuffer[]){
+int main (char *CRTbuffer[]){
 	
 	/************Initializations************/
 	caddr_t mmap_ptr;
