@@ -1,9 +1,13 @@
 #include "k_i_proc.h" 
-#include "k_messages.h"
+#include "k_message.h"
 #include "k_pcb.h"
 #include "k_ipc.h"
 #include "k_struct_init.h"
 #include "k_scheduler.h"
+#include "k_globals.h"
+#include "k_defines.h"
+#include "k_io_buffer.c"
+
 
 /****************************************************************************
 * Function      : key_i_proc 
@@ -21,20 +25,14 @@
 
 void key_i_proc()
 {
-	k_PCB_ptr prev_process;
 	k_message_ptr input_msg;
 	extern k_queue_ptr k_allQ;
+	extern k_PCB_ptr k_interrupted_process;
 	extern k_PCB_ptr k_current_process;
-	extern io_buffer in_buffer;
+	extern k_io_buffer_ptr input_buf;
 
 	while (1) //loop forever
 	{
-		//save interrupted process
-		prev_process = k_current_process;
-		
-		//set iprocess as current process
-		k_current_process = pid_to_PCB_ptr(PID_I_KB , k_allQ);
-		
 		//Only forward the kb input if there is a process that wants kb input (signified 
 		//by a msg in the received message queue
 		if (k_current_process->k_received_message_queue->head != NULL)
@@ -44,27 +42,27 @@ void key_i_proc()
 		
 			//Copy contents of input buffer to message envelope
 			int i; 
-			for (i =0; i<in_buffer->count; i++)
+			for (i =0; i<input_buf->length; i++)
 			{
-				input_msg->msg_text[i]  = in_buffer->data[i]; 
+				input_msg->msg_text[i]  = input_buf->bufdata[i]; 
 			}
 		
 			//send message to process that requested input
 			input_msg->receiver_pid = input_msg->sender_pid;
 			input_msg->sender_pid = PID_I_KB;
 			input_msg->msg_type = MSG_TYPE_CONSOLE_INPUT;
-			input_msg->msg_size = in_buffer->count;
+			input_msg->msg_size = input_buf->length;
 			k_send_message (input_msg->receiver_pid, input_msg);
 		}	
 
 		//If user is not waiting for kb input then discard contents of buffer
 		//Discard contents of buffer after forwarding user input also
-		in_buffer->count = 0;
-		in_buffer->flag = 0;
+		input_buf->length = 0;
+		input_buf->wait_flag = 0;
 		
 		//Restore context of interrupted process
-		k_current_process = prev_process;
-		k_context_switch(pid_to_PCB_ptr(PID_I_KB, k_allQ), k_current_process);
+		k_context_switch(k_current_process, k_interrupted_process);
+
 	}
 }
 
@@ -74,7 +72,7 @@ void key_i_proc()
 ******************************************************************************
 * Description   : The crt iprocess is triggered by a signal sent from the crt helper 
 *		: process every 100msec. the iprocess receives output from processes 
-*		: and writes the data to the output shared memory buffer. The 
+*		: and writes the bufdata to the output shared memory buffer. The 
 *		: iprocess checks for a message in its message received queue, 
 *		: and if there is it will attempt to copy the message to the output 
 *		: buffer. If the shared memory is busy, it switches back to the the 
@@ -87,33 +85,28 @@ void key_i_proc()
 
 void crt_i_proc()
 {
-	k_PCB_ptr prev_process;
 	k_message_ptr output_msg;
 	extern k_queue_ptr k_allQ;
 	extern k_PCB_ptr k_current_process;
-	extern io_buffer out_buffer;
+	extern k_PCB_ptr k_interrupted_process;
+	extern k_io_buffer_ptr output_buf;
 
 	while (1) //loop forever
 	{
-		//save interrupted process
-		prev_process = k_current_process;
-		//set iprocess as current process
-		k_current_process = pid_to_PCB_ptr(PID_I_CRT, k_allQ);
-
-		//Check if data is waiting to be output to crt
+		//Check if bufdata is waiting to be output to crt
 		if (k_current_process->k_received_message_queue->head != NULL)
 		{
-			if (out_buffer->flag == 1)
+			if (output_buf->wait_flag == 1)
 			{
 				output_msg = k_receive_message();
 				//write to output buffer
 				int i; 
 				for (i=0; i<output_msg->msg_size; i++)
 				{
-					out_buffer->data[i]  = output_msg->msg_text[i]; 
+					output_buf->bufdata[i]  = output_msg->msg_text[i]; 
 				}
-				out_buffer->count = output_msg->msg_size;
-				out_buffer->flag = 0;
+				output_buf->length = output_msg->msg_size;
+				output_buf->wait_flag = 0;
 			}
 		
 			//send message to process that requested input
@@ -123,10 +116,9 @@ void crt_i_proc()
 			output_msg->msg_size = 0;
 			k_send_message(output_msg->receiver_pid, output_msg)
 		}	
+		//Restore context of interrupted process
+		k_context_switch(k_current_process, k_interrupted_process);
 	}
-	//Restore context of interrupted process
-	k_current_process = prev_process;
-	k_context_switch(pid_to_PCB_ptr(PID_I_CRT, k_allQ), k_current_process);
 }
 
 /****************************************************************************
@@ -149,16 +141,11 @@ void timer_i_proc()
 	extern k_timeout_queue TQ;    //use global timeoutQ
 	extern int k_clock_tick;	
 	extern k_PCB_ptr k_current_process;
-	k_PCB_ptr prev_process;
+	extern k_PCB_ptr k_interrupted_process;
 	k_message_ptr timeout_msg;
  
 	while(1) //loop forever	
 	{
-		//save interrupted process
-		prev_process = current_process;
-		//set iprocess as current process
-		current_process = pid_to_PCB_ptr(PID_I_TIMER, k_allQ);
-
 		//update RTX internal time stamp clock
 		k_clock_tick++;
 
@@ -182,8 +169,7 @@ void timer_i_proc()
 			timeout_msg = k_timeout_queue_dequeue(TQ);				
 		}
 		//Restore context of interrupted process
-		k_current_process = prev_process;
-		k_context_switch(pid_to_PCB_ptr(PID_I_TIMER, k_allQ), k_current_process);
+		k_context_switch(k_current_process, k_interrupted_process);
 	}
 }
 
