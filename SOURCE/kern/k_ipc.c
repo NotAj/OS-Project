@@ -1,10 +1,4 @@
-#include "k_message.h"
-#include "k_pcb.h"
-#include "k_message_queue.h"
-#include "k_scheduler.h"
-#include "k_tracebuffer.h"
-#include "k_defines.h"
-#include "k_utility.h"
+#include "k_ipc.h"
 
 /****************************************************************
  Template Data Structure 
