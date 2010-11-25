@@ -4,6 +4,7 @@
 #include <sys/mman.h>
 #include "k_io_buffer.c"
 #include "k_init_struct.h"
+#include "k_defines.h"
 
 /****************************************************************
  CRT Helper Process 

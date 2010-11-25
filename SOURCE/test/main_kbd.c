@@ -7,6 +7,7 @@
 #include "k_init_struct.h"
 #include "k_globals.h"
 #include "k_io_buffer.c"
+#include "k_defines.h"
 
 int main(){
 
@@ -20,19 +21,24 @@ int main(){
 	int fid = open(inputfile, O_RDWR | O_CREAT , (mode_t) 0755);	
 	assert(fid>0);
 	ftruncate(fid, BUFFER_SIZE); 		//Change size of file to match buffer size
-	char kbd_info[2] = {RTX_pid, fid};	//Char array required for execl function
+	char kbd_info1[20],kbd_info2[20];	//Char array required for execl function
+	sprintf(kbd_info1, "%d", RTX_pid);
+	sprintf(kbd_info2, "%d", fid);
 	char c;
 	int i;
 	
 	printf("\n\nRTX_pid = %d\n",RTX_pid);
-	printf("fid = %d\n",fid);
+	printf("fid = %d\n\n",fid);
 	
 	/************Forking into Keyboard Helper************/
 	int newPID = fork();
-	printf("child PID = %d",newPID);
 	if(newPID == 0)				//Check that fork was successful
-		execl("../helpers/kbd_helper", "kbd_helper",kbd_info, (char *)NULL);	
-	
+	{
+		i = execl("../helpers/kbd_helper", "kbd_helper", kbd_info1, kbd_info2, (char *)0);
+//kbd_info1, kbd_info2, 
+		printf("execl = %d\n",i);
+	}
+	printf("child PID = %d\n",newPID);	
 	/************Mapping memory to the file************/
 	mmap_ptr = mmap((caddr_t) 0,			// Memory Location, 0 lets OS choose
 			BUFFER_SIZE,			// How many bytes to mmap

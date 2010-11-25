@@ -7,6 +7,7 @@
 #include "k_init_struct.h"
 #include "k_globals.h"
 #include "k_io_buffer.c"
+#include "k_defines.h"
 
 int main(){
 	/************Initializations************/

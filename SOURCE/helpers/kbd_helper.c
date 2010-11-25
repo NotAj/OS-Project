@@ -4,6 +4,7 @@
 #include <sys/mman.h>
 #include "k_init_struct.h"
 #include "k_io_buffer.c"
+#include "k_defines.h"
 
 /****************************************************************
  Keyboard Helper Process 
@@ -16,7 +17,7 @@
 *****************************************************************/
 
 int keyboard (char *KBbuffer[]){
-
+	printf("Yay the helper is running and its PID is %d\n",getpid());
 	/************Initializations************/
 	caddr_t mmap_ptr;		
 	k_io_buffer_ptr input_buf = k_io_buffer_init();	//Creates pointer to buffer struct
@@ -59,7 +60,10 @@ int keyboard (char *KBbuffer[]){
 				usleep(100000);
 		}	//(ie: it has read from the buffer)
 		else
+		{
 			input_buf->bufdata[input_buf->length-1] = c;
+			printf("%c",c);
+		}
 	}
 }
-
+	
