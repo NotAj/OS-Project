@@ -52,6 +52,7 @@
 #define MSG_TYPE_INPUT_REQUEST 1	// Used by get_console_chars()
 #define MSG_TYPE_CONSOLE_INPUT 2	// Used by KB iprocess
 #define MSG_TYPE_WAKEUP_CODE 3		// Used by Timer iprocess
+#define MSG_TYPE_DISPLAY_ACK 4		// Used by CRT iprocess
 
 /***************************************
  ERROR Type Defines

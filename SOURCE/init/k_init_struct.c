@@ -27,8 +27,10 @@ k_PCB_ptr k_PCB_init(int p_pid, int p_status, int p_priority, void *k_start_addr
 
 k_message_ptr k_message_init()
 {
-	// Return pointer to allocated message
-	return ((k_message_ptr) malloc(sizeof(k_message)));
+	// Allocate space for message envelope fields and text field.
+	k_message_ptr msg= (k_message_ptr) malloc(sizeof(k_message));
+	msg->msg_text = (char *) malloc(sizeof(char) * MSG_ENV_SIZE);
+	return msg;
 }	
 
 k_queue_ptr k_queue_init()
@@ -119,4 +121,13 @@ k_itable_ptr k_itable_init(int process_num, int *pid, int *priority, int *is_ipr
 		process_table->start_address[i] = start_address[i];
 	} 
 	return process_table;
+}
+
+k_io_buffer_ptr k_io_buffer_init()
+{
+	k_io_buffer_ptr myBuff = (k_io_buffer_ptr)malloc(sizeof(k_io_buffer));
+//	myBuff->bufdata = (char *)malloc(BUFFER_SIZE*sizeof(char));
+	myBuff->length = 0;
+	myBuff->wait_flag = 0;
+	return myBuff;
 }

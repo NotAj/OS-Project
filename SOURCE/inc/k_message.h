@@ -33,7 +33,7 @@ typedef struct k_message_struct
 	int msg_type;
 	int expiry_time;
 	int msg_size;
-	char msg_text[MSG_ENV_SIZE];
+	char *msg_text; // Will be initialized to MSG_ENV_SIZE
 } MsgEnv;
 
 typedef struct k_message_struct k_message;

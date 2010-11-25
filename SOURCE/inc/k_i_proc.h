@@ -11,4 +11,22 @@
 #include "api.h"
 #include "k_globals.h"
 
+/****************************************************************
+ I-Processes
+ ----------------------------------------------------------------
+ I proceses are a  solution to interrupt handling. They are triggered
+ by the Interupt Handler
+
+*****************************************************************/
+
+/*************************
+* Function Declarations
+*************************/
+
+void key_i_proc();
+
+void crt_i_proc();
+
+void timer_i_proc();
+
 #endif

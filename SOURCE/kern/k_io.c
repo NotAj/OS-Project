@@ -2,6 +2,7 @@
 #include "k_defines.h"
 #include "k_globals.h"
 #include "k_message.h"
+#include "k_ipc.h"
 
 /****************************************************************
  I/O FUNCTIONS
@@ -29,7 +30,7 @@ int get_console_chars (k_message_ptr key_in)
 	key_in->sender_pid = k_current_process->p_pid;		
 	key_in->msg_type = MSG_TYPE_INPUT_REQUEST;
 	key_in->msg_size = 0;
-	//send_message(key_in->receiver_pid, key_in);
+	k_send_message(key_in->receiver_pid, key_in);
 	return 1;
 }
 
@@ -55,7 +56,7 @@ int send_console_chars (k_message_ptr crt_out)
 	crt_out->msg_size = 0;
 	while (crt_out->msg_text[crt_out->msg_size] != '\0')
 		crt_out->msg_size++;
-	//send_message(crt_out->receiver_pid, crt_out)
+	send_message(crt_out->receiver_pid, crt_out);
 	return 1;
 
 }
