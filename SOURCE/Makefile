@@ -4,21 +4,29 @@ LDFLAGS = -g $(INC_DIR)
 
 INC_DIR = -I./inc/ -I./proc/inc -I./helpers
 
-SOURCES = k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c k_io_buffer.c k_utility.h k_scheduler.h kbd_helper.c crt_helper.c api.h k_system_proc.h k_i_proc.h user_proc.h k_init_struct.h k_init.h k_globals.h k_defines.h
+SOURCES = k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c k_io_buffer.c k_utility.h k_scheduler.h api.h k_system_proc.h k_i_proc.h user_proc.h k_init_struct.h k_init.h k_globals.h k_defines.h
+HELPER_SOURCES = k_defines.h k_io_buffer.h k_init_struct.h
 TEST_SOURCES = test_queue.h test_priority_queue.h test_message_queue.h test_tracebuffer.h
 
 # TODO Figure out proper way of linking using o files in obj/
+OBJ_DIR = obj/
+
 OBJECTS_INTER = $(SOURCES:.h=.o)
 OBJECTS = $(OBJECTS_INTER:.c=.o)
 OBJECTS_DIR = $(OBJECTS:%=$(OBJ_DIR)%) 
+
+HELPER_OBJECTS = $(HELPER_SOURCES:.h=.o)
+HELPER_OBJECTS_DIR = $(HELPER_OBJECTS:%=$(OBJ_DIR)%)
+
 TEST_OBJECTS_INTER = $(OBJECTS) $(TEST_SOURCES:.h=.o)
 TEST_OBJECTS = $(TEST_OBJECTS_INTER:.c=.o)
 TEST_OBJECTS_DIR = $(TEST_OBJECTS:%=$(OBJ_DIR)%)
-OBJ_DIR = obj/
 
 VPATH = inc:kern:test:kern/struct:init:proc:proc/inc:helpers:obj
 
 MAIN = main.c
+CRT_MAIN = helpers/crt_helper.c
+KBD_MAIN = helpers/kbd_helper.c
 TEST_Q_MAIN = test/main_queue.c
 TEST_PQ_MAIN = test/main_priority_queue.c
 TEST_MQ_MAIN = test/main_message_queue.c
@@ -30,6 +38,8 @@ TEST_KBD_MAIN = test/main_kbd.c
 TEST_CRT_MAIN = test/main_crt.c
 
 EXE = RTX 
+CRT_HELPER_EXE = crt_helper
+KBD_HELPER_EXE = kbd_helper
 TEST_Q_EXE = TEST_Q
 TEST_PQ_EXE = TEST_PQ 
 TEST_MQ_EXE = TEST_MQ
@@ -40,12 +50,22 @@ TEST_SCHEDULER_EXE = TEST_SCHEDULER
 TEST_KBD_EXE = TEST_KBD
 TEST_CRT_EXE = TEST_CRT
 
-ALL_EXECUTABLE = $(EXE) $(TEST_Q_EXE) $(TEST_PQ_EXE) $(TEST_MQ_EXE) $(TEST_TB_EXE) $(TEST_ITABLE_EXE) $(TEST_UTILITY_EXE) $(TEST_SCHEDULER_EXE) $(TEST_KBD_EXE) $(TEST_CRT_EXE)
+RTX_EXECUTABLES = $(EXE) $(CRT_HELPER_EXE) $(KBD_HELPER_EXE)
+TEST_EXECUTABLES = $(TEST_Q_EXE) $(TEST_PQ_EXE) $(TEST_MQ_EXE) $(TEST_TB_EXE) $(TEST_ITABLE_EXE) $(TEST_UTILITY_EXE) $(TEST_SCHEDULER_EXE) $(TEST_KBD_EXE) $(TEST_CRT_EXE)
+ALL_EXECUTABLES = $(RTX_EXECUTABLES) $(TEST_EXECUTABLES)
 
-all: $(ALL_EXECUTABLE)
+all: $(ALL_EXECUTABLES)
+rtx: $(RTX_EXECUTABLES)
+test: $(TEST_EXECUTABLES)
 
 $(EXE): $(OBJECTS) $(MAIN)
 	$(CC) $(LDFLAGS) $(OBJECTS_DIR) $(MAIN) -o $@
+
+$(CRT_HELPER_EXE): $(HELPER_OBJECTS) $(CRT_MAIN)
+	$(CC) $(LDFLAGS) $(HELPER_OBJECTS_DIR) $(CRT_MAIN) -o helpers/$@ 
+$(KBD_HELPER_EXE): $(HELPER_OBJECTS) $(KBD_MAIN)
+	$(CC) $(LDFLAGS) $(HELPER_OBJECTS_DIR) $(KBD_MAIN) -o helpers/$@
+
 $(TEST_Q_EXE): $(TEST_OBJECTS) $(TEST_Q_MAIN)
 	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_Q_MAIN) -o $@
 $(TEST_PQ_EXE): $(TEST_OBJECTS) $(TEST_PQ_MAIN)
@@ -89,15 +109,11 @@ k_io_buffer.o: k_io_buffer.c
 k_scheduler: k_scheduler.h k_pcb.h k_queue.h k_priority_queue.h k_globals.h
 k_utility.o: k_utility.h k_pcb.h k_queue.h k_defines.h k_globals.h
 
-kbd_helper.o: kbd_helper.c k_io_buffer.c
-crt_helper.o: crt_helper.c k_io_buffer.c
-
 api.o: api.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_scheduler.h k_message.h k_message_queue.h k_tracebuffer.h  
 
 k_system_proc.o: k_system_proc.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_scheduler.h k_message.h k_message_queue.h k_tracebuffer.h api.h 
 k_system_proc.o: k_i_proc.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_scheduler.h k_message.h k_message_queue.h k_tracebuffer.h api.h 
 user_proc.o: user_proc.h api.h
-
 
 k_globals.o: k_globals.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_init_struct.h
 k_defines.o: k_defines.h k_pcb.h 
