@@ -6,3 +6,6 @@
 *.out
 RTX
 TEST_*
+inputfile
+outputfile
+*_helper
