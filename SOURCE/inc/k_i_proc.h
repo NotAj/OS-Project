@@ -23,10 +23,10 @@
 * Function Declarations
 *************************/
 
-void key_i_proc();
+void k_key_i_proc();
 
-void crt_i_proc();
+void k_crt_i_proc();
 
-void timer_i_proc();
+void k_timer_i_proc();
 
 #endif
