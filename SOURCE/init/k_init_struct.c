@@ -126,7 +126,7 @@ k_itable_ptr k_itable_init(int process_num, int *pid, int *priority, int *is_ipr
 k_io_buffer_ptr k_io_buffer_init()
 {
 	k_io_buffer_ptr myBuff = (k_io_buffer_ptr)malloc(sizeof(k_io_buffer));
-	myBuff->bufdata = (char *)malloc(BUFFER_SIZE*sizeof(char));
+//	myBuff->bufdata = (char *)malloc(BUFFER_SIZE*sizeof(char));
 	myBuff->length = 0;
 	myBuff->wait_flag = 0;
 	return myBuff;

@@ -14,6 +14,7 @@ int main(){
 	/************Initializations************/
 	int RTX_pid = getpid();			//Store PID of RTX
 	int i;
+	char c;
 	caddr_t mmap_ptr;
 
 	extern k_io_buffer_ptr output_buf;
@@ -24,8 +25,8 @@ int main(){
 	ftruncate(fid, BUFFER_SIZE); 		//Change size of file to match buffer size
 
 	char crt_info1[20], crt_info2[20];	//Arguments for execl function
-	sprintf(kbd_info1, "%d", RTX_pid);
-	sprintf(kbd_info2, "%d", fid);
+	sprintf(crt_info1, "%d", RTX_pid);
+	sprintf(crt_info2, "%d", fid);
 
 	printf("\n\nCHECKS:\n");
 	printf("IN RTOS: RTX_pid = %d\n",RTX_pid);
@@ -35,7 +36,7 @@ int main(){
 	int newPID = fork();
 	if(newPID == 0)				//Check that fork was successful
 	{
-		i = execl("../helpers/crt_helper", "crt_helper",crt_info1, crt_info2, (char *)NULL);	
+		i = execl("./helpers/crt_helper", "crt_helper",crt_info1, crt_info2, (char *)NULL);	
 		printf("If here, execl failed.  execl = %d\n",i);
 	}
 
@@ -51,11 +52,23 @@ int main(){
 	output_buf = (k_io_buffer_ptr) mmap_ptr;	//creating pointer to the sharedmem
 
 	/************Testing helper process************/
-	
-	
-	
-	
-	
-	
-	
+	while(1)			  		//Loop forever
+	{
+		c = getchar();					//Get outputted character 
+		output_buf->length += 1;
+	 	if (c=='\n' || output_buf->length==BUFFER_SIZE)
+		{
+			//Set last character to null
+			output_buf->bufdata[output_buf->length-1] = '\0';		
+//			kill(rtx_pid,SIGUSR1);		//Signal the RTX	
+			output_buf->wait_flag = 1;	//Set wait_flag to true
+			while(output_buf->wait_flag == 1)
+			//Check every 100 miliseconds if the RTX has cleared the flag
+				usleep(10000);
+		}	//(ie: it has read from the buffer)
+		else
+		{
+			output_buf->bufdata[output_buf->length-1] = c;
+		}
+	}	
 }

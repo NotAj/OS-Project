@@ -45,13 +45,13 @@ int main (int argc, char *CRTbuffer[]){
 	{
 //		kill(rtx_pid,SIGUSR2); 			//Signal the RTX		
 		usleep(100000);				//Wait for RTX to add to the buffer
-		if (output_buf->length > 0)		//If buffer is nonempty
-		{					
+		if (output_buf->wait_flag == 1)		//If waiting on RTX
+		{
 			for(i=0;i<output_buf->length; i++)
 				printf ("%c", output_buf->bufdata[i]);	//Print all chars 
 			output_buf->length = 0;		//Set length back to zero
 			output_buf->wait_flag = 0;	//Set wait_flag back to zero
+		printf("\n");
 		}				
 	}
 }
-
