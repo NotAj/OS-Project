@@ -131,3 +131,12 @@ k_io_buffer_ptr k_io_buffer_init()
 	myBuff->wait_flag = 0;
 	return myBuff;
 }
+
+k_timeout_queue_ptr k_timeout_queue_init()
+{
+	k_timeout_queue_ptr TQ = (k_timeout_queue_ptr)malloc(sizeof(k_timeout_queue));
+	if (TQ == NULL)
+		return NULL;
+	TQ->head = NULL;
+	return TQ;
+}

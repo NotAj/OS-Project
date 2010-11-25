@@ -23,7 +23,7 @@
 *
 *****************************************************************************/
 
-void key_i_proc()
+void k_key_i_proc()
 {
 	k_message_ptr input_msg;
 	extern k_queue_ptr k_allQ;
@@ -83,7 +83,7 @@ void key_i_proc()
 *****************************************************************************/
 
 
-void crt_i_proc()
+void k_crt_i_proc()
 {
 	k_message_ptr output_msg;
 	extern k_queue_ptr k_allQ;
@@ -136,9 +136,9 @@ void crt_i_proc()
 *
 *****************************************************************************/
 
-void timer_i_proc()
+void k_timer_i_proc()
 {
-	extern k_timeout_queue TQ;    //use global timeoutQ
+	extern k_timeout_queue k_TQ;    //use global timeoutQ
 	extern int k_clock_tick;	
 	extern k_PCB_ptr k_current_process;
 	extern k_PCB_ptr k_interrupted_process;
@@ -150,23 +150,23 @@ void timer_i_proc()
 		k_clock_tick++;
 
 		//Check if there are any new timeout request messages
-		while(k_current_process->p_received_MsgEnvQ->head != NULL)  //retrieve all delay requests
-			k_timeout_queue_enqueue(receive_message(), TQ);  //enqueue received message onto local TQ
+		while(k_current_process->p_received_message_queue->head != NULL)  //retrieve all delay requests
+			k_timeout_queue_enqueue(receive_message(), k_TQ);  //enqueue received message onto local TQ
 		
 		//If timeout queue has timeout requests
-		if(TQ->head != NULL)
-			TQ->head->expiry-time--; //decrement
+		if(k_TQ->head != NULL)
+			k_TQ->head->expiry-time--; //decrement
 
-		timeout_msg = k_timeout_queue_dequeue(TQ);			
+		timeout_msg = k_timeout_queue_dequeue(k_TQ);			
 		while(timeout_msg != NULL)
 		{
 			//Send a timeout complete message 
 			timeout_msg->receiver_pid = timeout_input->sender_pid;
-			timeout_msg->sender_pid = timer_i_proc;
+			timeout_msg->sender_pid = PID_I_TIMER;
 			timeout_msg->msg_type = MSG_TYPE_WAKEUP_CODE;
 			timeout_msg->msg_size = 0;
-			k_send_message( timeout_msg->receiver_pid, timeout_msg);
-			timeout_msg = k_timeout_queue_dequeue(TQ);				
+			k_send_message(timeout_msg->receiver_pid, timeout_msg);
+			timeout_msg = k_timeout_queue_dequeue(k_TQ);				
 		}
 		//Restore context of interrupted process
 		k_context_switch(k_current_process, k_interrupted_process);
