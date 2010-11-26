@@ -13,13 +13,12 @@
 * Assumptions   : 
 *
 *****************************************************************************/
-
 void k_key_i_proc()
 {
 	k_message_ptr input_msg;
 	extern k_PCB_ptr k_interrupted_process;
 	extern k_PCB_ptr k_current_process;
-	extern k_io_buffer_ptr input_buf;
+	extern k_io_buffer_ptr k_input_buf;
 
 //	while (1) //loop forever
 //	{
@@ -32,9 +31,9 @@ void k_key_i_proc()
 		
 			//Copy contents of input buffer to message envelope
 			int i; 
-			for (i =0; i<input_buf->length; i++)
+			for (i =0; i<k_input_buf->length; i++)
 			{
-				input_msg->msg_text[i]  = input_buf->bufdata[i]; 
+				input_msg->msg_text[i]  = k_input_buf->bufdata[i]; 
 			}
 		
 			//send message to process that requested input
@@ -43,12 +42,13 @@ void k_key_i_proc()
 			input_msg->msg_type = MSG_TYPE_CONSOLE_INPUT;
 			input_msg->msg_size = input_buf->length;
 			//k_send_message (input_msg->receiver_pid, input_msg);
+
 		}	
 
 		//If user is not waiting for kb input then discard contents of buffer
 		//Discard contents of buffer after forwarding user input also
-		input_buf->length = 0;
-		input_buf->wait_flag = 0;
+		k_input_buf->length = 0;
+		k_input_buf->wait_flag = 0;
 		
 		//Restore context of interrupted process
 //		k_context_switch(k_current_process, k_interrupted_process);
@@ -71,31 +71,29 @@ void k_key_i_proc()
 * Assumptions   : 
 *
 *****************************************************************************/
-
-
 void k_crt_i_proc()
 {
 	k_message_ptr output_msg;
 	extern k_PCB_ptr k_current_process;
 	extern k_PCB_ptr k_interrupted_process;
-	extern k_io_buffer_ptr output_buf;
+	extern k_io_buffer_ptr k_output_buf;
 
 //	while (1) //loop forever
 //	{
 		//Check if bufdata is waiting to be output to crt
 		if (k_current_process->k_received_message_queue->head != NULL)
 		{
-			if (output_buf->wait_flag == 1)
+			if (k_output_buf->wait_flag == 1)
 			{
 				output_msg = k_receive_message();
 				//write to output buffer
 				int i; 
 				for (i=0; i<output_msg->msg_size; i++)
 				{
-					output_buf->bufdata[i]  = output_msg->msg_text[i]; 
+					k_output_buf->bufdata[i]  = output_msg->msg_text[i]; 
 				}
-				output_buf->length = output_msg->msg_size;
-				output_buf->wait_flag = 0;
+				k_output_buf->length = output_msg->msg_size;
+				k_output_buf->wait_flag = 0;
 			}
 		
 			//send message to process that requested input
@@ -124,7 +122,6 @@ void k_crt_i_proc()
 * Assumptions   : 
 *
 *****************************************************************************/
-
 void k_timer_i_proc()
 {
 	extern k_timeout_queue_ptr k_TQ;    //use global timeoutQ

@@ -6,14 +6,15 @@
 #include "k_ipc.h"
 
 /****************************************************************
- I/O primitives:
- Defines the functions to send and recieve I/O requests 
+ I/O FUNCTIONS
  ----------------------------------------------------------------
+ Functions that help the user proccesses send out put and recieve input 
+
+*****************************************************************/
 
 /*************************
 * Function Declarations
 *************************/
-
 int k_get_console_chars (k_message_ptr key_in);
 
 int k_send_console_chars (k_message_ptr crt_out);

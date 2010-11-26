@@ -52,9 +52,7 @@ void k_process_switch ( )
 *				: outside of the scheduler. Setting of current_process global is 
 *				: handled by context switch
 * 
-* Assumptions   : BIG NOTE: THE METHOD OF INITIALIZATION USED REQUIRES CURRENT_PROCESS
-*				: TO BE SET BY CALLING FUNCTION BEFORE CALLING CONTEXT SWITCH
-*				: Assumes processes have been pushed to required scheduling queues
+* Assumptions   : Assumes processes have been pushed to required scheduling queues
 *				: by process_switch if called through scheduler 
 ******************************************&**********************************/
 void k_context_switch (k_PCB_ptr prev_process, k_PCB_ptr next_process)
@@ -62,8 +60,8 @@ void k_context_switch (k_PCB_ptr prev_process, k_PCB_ptr next_process)
 	extern k_PCB_ptr k_current_process;
 	if (prev_process == NULL || next_process == NULL)
 	{	
-		printf("FAIL\n"); //TODO Remove once terminate implemented
-		//k_terminate(); // Context switch should always be given valid parameters
+		//k_terminate(); // Context switch should always be given valid parameters //TODO
+		assert(prev_process != NULL && next_process != NULL);
 	}
 	// Setting the current_process global here since context_switch won't work the first time unless current_process is set correctly, and don't want to forget it outside
 	k_current_process = next_process;
