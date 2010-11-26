@@ -1,4 +1,5 @@
 #include "k_init.h"
+#include <stdio.h>
 
 void k_global_init()
 {
@@ -10,6 +11,10 @@ void k_global_init()
 	extern int k_clock_s;			
 	extern int k_clock_tick;			
 	extern int k_display_clock;			
+	extern int k_kbd_helper_pid;
+	extern int k_crt_helper_pid;
+	extern int k_inputfile_fid;
+	extern int k_outputfile_fid;
 
 	k_current_process = NULL;
 	k_interrupted_process = NULL;
@@ -19,11 +24,101 @@ void k_global_init()
 	k_clock_s = 0;
 	k_clock_tick = 0;
 	k_display_clock = 0;
+	k_RTX_pid = getpid();
+	k_kbd_helper_pid = 0;
+	k_crt_helper_pid = 0;
+	k_inputfile_fid = 0;
+	k_outputfile_fid = 0;
 }
 
 void k_helper_init()
 {
-	//TODO
+	int result;
+	caddr_t mmap_ptr;
+
+	extern k_io_buffer_ptr k_input_buf; 
+	extern k_io_buffer_ptr k_output_buf;
+	extern int k_RTX_pid;
+	extern int k_kbd_helper_pid;
+	extern int k_crt_helper_pid;
+	extern int k_inputfile_fid;
+	extern int k_outputfile_fid;	
+
+	// Name shared mem files
+	char *k_inputfile_name = "helpers/inputfile";		
+	char *k_outputfile_name = "helpers/outputfile";	
+
+	//Create files
+	k_inputfile_fid = open(k_inputfile_name, O_RDWR | O_CREAT , (mode_t) 0756);
+	k_outputfile_fid = open(k_outputfile_name, O_RDWR | O_CREAT, (mode_t) 0756); 
+	if ( k_outputfile_fid <= 0 || k_inputfile_fid <= 0)
+	{
+		//k_terminate() //TODO 
+		assert(k_outputfile_fid > 0);
+		assert(k_inputfile_fid > 0);
+	}
+	//Change size of files to match buffer size
+	ftruncate(k_outputfile_fid, BUFFER_SIZE); 			
+	ftruncate(k_inputfile_fid, BUFFER_SIZE);
+
+	// Arguments for execl function
+	char rtx_pid[10],inputfile_fid[10], outputfile_fid[10];		
+	sprintf(rtx_pid, "%d", k_RTX_pid);
+	sprintf(inputfile_fid, "%d", k_inputfile_fid);
+	sprintf(outputfile_fid, "%d", k_outputfile_fid);
+	/************Forking into Keyboard Helper************/
+	k_kbd_helper_pid = fork();
+	
+	if(k_kbd_helper_pid == 0)				//Check that fork was successful
+	{
+		result = execl("./helpers/kbd_helper", "kbd_helper", rtx_pid, inputfile_fid, (char *)0);
+		if (result < 0)
+		{
+			//k_terminate() //TODO
+			assert(result >= 0);
+		}	
+	}
+
+	k_crt_helper_pid = fork();
+	if(k_crt_helper_pid == 0)				//Check that fork was successful
+	{
+		result = execl("./helpers/crt_helper", "crt_helper", rtx_pid, outputfile_fid, (char *)0);
+		if (result < 0)
+		{
+			//k_terminate() //TODO
+			assert(result >= 0);
+		}
+	}
+
+	/************Mapping memory to the file************/
+	mmap_ptr = mmap((caddr_t) 0,	// Memory Location, 0 lets OS choose
+			BUFFER_SIZE,			// How many bytes to mmap
+			PROT_READ | PROT_WRITE, // Read and write permissions
+			MAP_SHARED,    			// Accessible by another process
+			k_inputfile_fid,      	// Which file is associated with mmap
+			(off_t) 0);				// Offset in page frame
+	if (mmap_ptr == MAP_FAILED)
+	{
+		//k_terminate(); //TODO
+		assert(mmap_ptr != MAP_FAILED);
+	}
+	
+	k_input_buf = (k_io_buffer_ptr) mmap_ptr;		//Creating pointer to the sharedmem
+
+	mmap_ptr = mmap((caddr_t) 0,	// Memory Location, 0 lets OS choose
+			BUFFER_SIZE,			// How many bytes to mmap
+			PROT_READ | PROT_WRITE, // Read and write permissions
+			MAP_SHARED,    			// Accessible by another process
+			k_outputfile_fid,      	// Which file is associated with mmap
+			(off_t) 0);				// Offset in page frame
+	if (mmap_ptr == MAP_FAILED)
+	{
+		//k_terminate(); //TODO
+		assert(mmap_ptr != MAP_FAILED);
+	}
+
+	k_output_buf = (k_io_buffer_ptr) mmap_ptr;		//Creating pointer to the sharedmem
+
 }
 
 void k_scheduler_init()
@@ -141,7 +236,7 @@ void k_init()
 
 	k_global_init(); // Set initial value of globals
 
-	k_helper_init(); //TODO
+	k_helper_init(); 
 	
 	k_ipc_init(MSG_ENV_NUM); // Initialize free message queue
 	
@@ -153,23 +248,24 @@ void k_init()
 	is_iprocess[0] = 0; 
 	start_address[0] = &(proc_null);
 	
-	pid[0] = PID_USER_A;
-	priority[0] = PRIORITY_NUM - 1; // Set to lowest priority
-	is_iprocess[0] = 0; 
-	start_address[0] = &(proc_A);
+	pid[1] = PID_USER_A;
+	priority[1] = PRIORITY_NUM - 1; // Set to lowest priority
+	is_iprocess[1] = 0; 
+	start_address[1] = &(proc_A);
 
-	pid[0] = PID_USER_B;
-	priority[0] = PRIORITY_NUM - 1; // Set to lowest priority
-	is_iprocess[0] = 0; 
-	start_address[0] = &(proc_B);
+	pid[2] = PID_USER_B;
+	priority[2] = PRIORITY_NUM - 1; // Set to lowest priority
+	is_iprocess[2] = 0; 
+	start_address[2] = &(proc_B);
 
-	pid[0] = PID_USER_C;
-	priority[0] = PRIORITY_NUM - 1; // Set to lowest priority
-	is_iprocess[0] = 0; 
-	start_address[0] = &(proc_C);
+	pid[3] = PID_USER_C;
+	priority[3] = PRIORITY_NUM - 1; // Set to lowest priority
+	is_iprocess[3] = 0; 
+	start_address[3] = &(proc_C);
 
-	init_table = k_itable_init(PROCESS_NUM, pid, priority, is_iprocess, start_address);	
-	k_process_init(PROCESS_NUM, init_table); // Initialize all processes using itable
+	init_table = k_itable_init(4, pid, priority, is_iprocess, start_address);	//TODO
+	k_process_init(4, init_table); // Initialize all processes using itable //TODO
+
 	// NOTE: Normally cannot longjmp if the function that setjmp was called in has returned, but since we've set up a different stack for each process, this is not a problem.
 
 	k_signal_init(); // Set up signals

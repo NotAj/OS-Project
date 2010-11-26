@@ -17,9 +17,9 @@ int main(){
 	char c;
 	caddr_t mmap_ptr;
 
-	extern k_io_buffer_ptr output_buf;
-	output_buf = k_io_buffer_init();	//Initializing output buffer
-	char *outputfile = "outputfile";	//Naming sharedmem file	
+	extern k_io_buffer_ptr k_output_buf;
+	k_output_buf = k_io_buffer_init();	//Initializing output buffer
+	char *outputfile = "helpers/outputfile";	//Naming sharedmem file	
 	int fid = open(outputfile, O_RDWR | O_CREAT, (mode_t) 0755);	//Create file 
 	assert(fid>0);
 	ftruncate(fid, BUFFER_SIZE); 		//Change size of file to match buffer size
@@ -49,26 +49,26 @@ int main(){
 			(off_t) 0);			// Offset in page frame
 	assert(mmap_ptr != MAP_FAILED);
 	
-	output_buf = (k_io_buffer_ptr) mmap_ptr;	//creating pointer to the sharedmem
+	k_output_buf = (k_io_buffer_ptr) mmap_ptr;	//creating pointer to the sharedmem
 
 	/************Testing helper process************/
 	while(1)			  		//Loop forever
 	{
 		c = getchar();					//Get outputted character 
-		output_buf->length += 1;
-	 	if (c=='\n' || output_buf->length==BUFFER_SIZE)
+		k_output_buf->length += 1;
+	 	if (c=='\n' || k_output_buf->length==BUFFER_SIZE)
 		{
 			//Set last character to null
-			output_buf->bufdata[output_buf->length-1] = '\0';		
+			k_output_buf->bufdata[k_output_buf->length-1] = '\0';		
 //			kill(rtx_pid,SIGUSR1);		//Signal the RTX	
-			output_buf->wait_flag = 1;	//Set wait_flag to true
-			while(output_buf->wait_flag == 1)
+			k_output_buf->wait_flag = 1;	//Set wait_flag to true
+			while(k_output_buf->wait_flag == 1)
 			//Check every 100 miliseconds if the RTX has cleared the flag
 				usleep(10000);
 		}	//(ie: it has read from the buffer)
 		else
 		{
-			output_buf->bufdata[output_buf->length-1] = c;
+			k_output_buf->bufdata[k_output_buf->length-1] = c;
 		}
 	}	
 }

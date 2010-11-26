@@ -8,7 +8,7 @@ SOURCES = k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_t
 HELPER_SOURCES = k_defines.h k_io_buffer.h k_init_struct.h
 TEST_SOURCES = test_queue.h test_priority_queue.h test_message_queue.h test_tracebuffer.h
 
-MEM_FILES = inputfile outputfile
+MEM_FILES = helpers/inputfile helpers/outputfile
 
 # TODO Figure out proper way of linking using o files in obj/
 OBJ_DIR = obj/

@@ -17,9 +17,9 @@ int main(){
 	int i;
 	caddr_t mmap_ptr;
 
-	extern k_io_buffer_ptr input_buf; 
-	input_buf = k_io_buffer_init();		//Initializing input buffer
-	char *inputfile = "inputfile";		//Naming sharedmem file	
+	extern k_io_buffer_ptr k_input_buf; 
+	k_input_buf = k_io_buffer_init();		//Initializing input buffer
+	char *inputfile = "helpers/inputfile";		//Naming sharedmem file	
 	int fid = open(inputfile, O_RDWR | O_CREAT , (mode_t) 0755);	//Create file
 	assert(fid>0);
 	ftruncate(fid, BUFFER_SIZE); 		//Change size of file to match buffer size
@@ -45,22 +45,22 @@ int main(){
 			(off_t) 0);		// Offset in page frame
 	assert(mmap_ptr != MAP_FAILED);
 	
-	input_buf = (k_io_buffer_ptr) mmap_ptr;		//Creating pointer to the sharedmem
+	k_input_buf = (k_io_buffer_ptr) mmap_ptr;		//Creating pointer to the sharedmem
 
 	/************Testing helper process************/
 	while(1)
 	{
-		if(input_buf->wait_flag == 1)			//While buffer is nonempty
+		if(k_input_buf->wait_flag == 1)			//While buffer is nonempty
 		{
 			printf("User input:  ");		
-			for(i=0;i<input_buf->length;i++)	 
+			for(i=0;i<k_input_buf->length;i++)	 
 			{
-				c = input_buf->bufdata[i];	
+				c = k_input_buf->bufdata[i];	
 				printf("%c",c);		
 			}
 			printf("\n");
-			input_buf->wait_flag = 0;
-			input_buf->length = 0;
+			k_input_buf->wait_flag = 0;
+			k_input_buf->length = 0;
 		}
 	}
 
