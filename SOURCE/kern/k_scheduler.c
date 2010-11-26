@@ -62,8 +62,8 @@ void k_context_switch (k_PCB_ptr prev_process, k_PCB_ptr next_process)
 	extern k_PCB_ptr k_current_process;
 	if (prev_process == NULL || next_process == NULL)
 	{	
-		printf("FAIL\n"); //TODO Remove once terminate implemented
-		//k_terminate(); // Context switch should always be given valid parameters
+		//k_terminate(); // Context switch should always be given valid parameters //TODO
+		assert(prev_process != NULL && next_process != NULL);
 	}
 	// Setting the current_process global here since context_switch won't work the first time unless current_process is set correctly, and don't want to forget it outside
 	k_current_process = next_process;
