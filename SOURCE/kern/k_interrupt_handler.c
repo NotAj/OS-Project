@@ -12,19 +12,16 @@ void k_interrupt_handler (sig_no)
 
 	switch(sig_no) 
 	{
-	case (SIGALRM): 	printf("SIGALRM WORKS \n");
-				//k_interrupted_process = k_current_process;
-				//k_context_switch(k_current_process, pid_to_PCB_ptr(PID_I_TIMER));
+	case (SIGALRM): 	k_interrupted_process = k_current_process;
+				k_context_switch(k_current_process, pid_to_PCB_ptr(PID_I_TIMER));
 				break;
 
-	case (SIGUSR1): 	printf("SIGUSR1 WORKS \n");
-				//k_interrupted_process = k_current_process;
-				//k_context_switch(k_current_process, pid_to_PCB_ptr(PID_I_KB));
+	case (SIGUSR1): 	k_interrupted_process = k_current_process;
+				k_context_switch(k_current_process, pid_to_PCB_ptr(PID_I_KB));
 				break;
 
-	case (SIGUSR2): 	printf("SIGUSR2 WORKS \n");
-				//k_interrupted_process = k_current_process;
-				//k_context_switch(k_current_process, pid_to_PCB_ptr(PID_I_CRT));
+	case (SIGUSR2): 	k_interrupted_process = k_current_process;
+				k_context_switch(k_current_process, pid_to_PCB_ptr(PID_I_CRT));
 				break;
 	}
 }
