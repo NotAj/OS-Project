@@ -8,6 +8,14 @@
 *****************************************************************/
 
 /***************************************************************************
+* Function      : k_die 
+****************************************************************************
+* Description   : This function  
+*              
+* Assumptions   : Will return NULL if PCB with that PID doesn't exist.
+*****************************************************************************/
+
+/***************************************************************************
 * Function      : k_terminate 
 ****************************************************************************
 * Description   : This function performs cleanup, then terminates the OS
@@ -16,7 +24,7 @@
 *              
 * Assumptions   : Will return NULL if PCB with that PID doesn't exist.
 *****************************************************************************/
-void k_terminate(int error)
+void k_terminate()
 {
 	extern int k_kbd_helper_pid;
 	extern int k_crt_helper_pid;
@@ -37,9 +45,6 @@ void k_terminate(int error)
 	// Unlink (delete) both mmap files
 	unlink(k_inputfile_path);
 	unlink(k_outputfile_path);
-
-	// Handling for error messages here	
-	//TODO
 
 	//Stop RTX Execution and return control to UNIX
 	exit(0);	

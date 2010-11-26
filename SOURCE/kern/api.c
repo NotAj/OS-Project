@@ -29,11 +29,25 @@ int request_process_status(MsgEnv *msg_env_ptr)
 
 int terminate()
 {
+	
+	printf("Process %d requested terminate. Exiting\n", current_process->p_pid);
+
 	//atomic(on);
-	k_terminate(ERROR_NONE);
+	k_terminate();
 	//atomic(off);
 	// Should never return since terminate kills the process. Return to stop compile warnings
-	return 0; }
+	return 0; 
+}
+
+void die(int code)
+{
+		
+	//atomic(on);
+	k_terminate(code);
+	//atomic(off);
+	// Should never return since terminate kills the process. Return to stop compile warnings
+	return 0; 
+}
 
 int change_priority(int new_priority, int target_process_id)
 {
