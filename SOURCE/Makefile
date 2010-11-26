@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -g $(INC_DIR) 
 LDFLAGS = -g $(INC_DIR) 
 
-INC_DIR = -I./inc/ -I./proc/inc 
+INC_DIR = -I./inc/ -I./proc/
 
 SOURCES = k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_timeout_queue.h k_tracebuffer.h k_itable.c k_io_buffer.c k_utility.h k_scheduler.h k_ipc.h k_io.h api.h k_system_proc.h k_i_proc.h user_proc.h k_init_struct.h k_init.h k_globals.h k_defines.h k_interrupt_handler.h 
 
@@ -162,6 +162,9 @@ k_ipc.o: k_ipc.h k_scheduler.h k_pcb.h k_message_queue.h k_message.h k_tracebuff
 
 k_init_struct.o: k_init_struct.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c
 k_init.o: k_init.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c k_init_struct.h k_system_proc.h k_defines.h k_globals.h
+
+k_init_struct.o: k_init_struct.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c
+k_init.o: k_init.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c k_init_struct.h k_system_proc.h k_i_proc.h user_proc.h k_defines.h k_globals.h
 
 k_globals.o: k_globals.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_init_struct.h
 k_defines.o: k_defines.h k_pcb.h 

@@ -1,14 +1,11 @@
 #ifndef API_H
 #define API_H
 
-#include "k_pcb.h"
-#include "k_queue.h"
-#include "k_priority_queue.h"
 #include "k_scheduler.h"
-#include "k_message.h"
-#include "k_message_queue.h"
-#include "k_tracebuffer.h"
+#include "k_ipc.h"
+#include "k_init_struct.h"
 #include "k_globals.h"
+#include "k_defines.h"
 
 /****************************************************************
  User API
@@ -42,6 +39,14 @@ MsgEnv *request_msg_env();
 int release_msg_env(MsgEnv *msg_env_ptr);
 
 int get_trace_buffers(MsgEnv *message_envelope);
+
+MsgEnv_queue_ptr MsgEnv_queue_init();
+
+int MsgEnv_queue_is_empty(MsgEnv_queue_ptr MQ);
+
+void MsgEnv_queue_enqueue(MsgEnv *message, MsgEnv_queue_ptr MQ); 
+
+MsgEnv *MsgEnv_queue_dequeue(MsgEnv_queue_ptr MQ);
 
 /*************************
 * Timing primitives 
