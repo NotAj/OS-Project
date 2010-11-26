@@ -73,5 +73,8 @@ void proc_C()
 
 void proc_D()
 {
-	terminate();
+	while(1)
+	{
+		//terminate();
+	}
 }

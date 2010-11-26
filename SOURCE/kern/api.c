@@ -33,7 +33,16 @@ int terminate()
 	k_terminate(ERROR_NONE);
 	//atomic(off);
 	// Should never return since terminate kills the process. Return to stop compile warnings
-	return 0; }
+	return 0;
+}
+
+// Terminate function for handling all non-user shutdowns
+void die(int code)
+{
+	//atomic(on);
+	k_terminate(code);
+	//atomic(off);
+}
 
 int change_priority(int new_priority, int target_process_id)
 {

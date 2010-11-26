@@ -1,5 +1,4 @@
 #include "k_init.h"
-#include <stdio.h>
 
 void k_global_init()
 {
@@ -222,14 +221,24 @@ void k_process_init(int num_process, k_itable_ptr init_table)
 
 void k_signal_init()
 {
-	//TODO
 	// Set up signal handling
-	//sigset (SIGINT, terminate());	// Set ctrl + c to terminate OS
+
+	sigset(SIGINT, die); 	// Catch kill signals
+	sigset(SIGBUS, die); 	// Catch bus errors
+	sigset(SIGHUP, die);
+	sigset(SIGILL, die); 	// Illegal instruction
+	sigset(SIGQUIT, die);
+	sigset(SIGABRT, die);
+	sigset(SIGTERM, die);
+	sigset(SIGSEGV, die); 	// Catch segmentation faults
+	sigset(SIGINT, die);	// Set ctrl + c to terminate OS
+
 	//Runs the interrupt handler whenever the signal is fired
-	//sigset (SIGALRM, interrupt_handler(14)); // Linux clock signal
-	//sigset (SIGUSR1, interrupt_handler(30)); // Keyboard helper signal
-	//sigset (SIGUSR2, interrupt_handler(31)); // Crt helper signal
-	//ualarm(100000, 100000);	// Sets a SIGALRM to be fired every 100 ms
+	sigset (SIGALRM, k_interrupt_handler); // Linux clock signal
+	sigset (SIGUSR1, k_interrupt_handler); // Keyboard helper signal
+	sigset (SIGUSR2, k_interrupt_handler); // Crt helper signal
+
+	ualarm(100000, 100000);	// Sets a SIGALRM to be fired every 100 ms
 }
 
 void k_init()

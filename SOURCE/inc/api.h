@@ -26,6 +26,8 @@ int request_process_status(MsgEnv *msg_env_ptr);
 
 int terminate();
 
+void die();
+
 int change_priority(int new_priority, int target_process_id);
 
 /*************************
