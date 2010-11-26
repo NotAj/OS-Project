@@ -30,10 +30,9 @@ int request_process_status(MsgEnv *msg_env_ptr)
 int terminate()
 {
 	
-	printf("Process %d requested terminate. Exiting\n", current_process->p_pid); //TODO
-
+	//printf("Process %d requested terminate. Exiting\n", k_current_process->p_pid); //TODO
 	//atomic(on);
-	k_terminate();
+	k_terminate(ERROR_NONE);
 	//atomic(off);
 	// Should never return since terminate kills the process. Return to stop compile warnings
 	return 0; 

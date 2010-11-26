@@ -8,14 +8,6 @@
 *****************************************************************/
 
 /***************************************************************************
-* Function      : k_die 
-****************************************************************************
-* Description   : This function  
-*              
-* Assumptions   : Will return NULL if PCB with that PID doesn't exist.
-*****************************************************************************/
-
-/***************************************************************************
 * Function      : k_terminate 
 ****************************************************************************
 * Description   : This function performs cleanup, then terminates the OS
@@ -24,7 +16,7 @@
 *              
 * Assumptions   : Will return NULL if PCB with that PID doesn't exist.
 *****************************************************************************/
-void k_terminate()
+void k_terminate(int error)
 {
 	extern int k_kbd_helper_pid;
 	extern int k_crt_helper_pid;
