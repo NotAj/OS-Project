@@ -13,8 +13,6 @@
 #include "k_init_struct.h"
 #include "k_defines.h"
 #include "k_globals.h"
-#include <signal.h>
-#include <setjmp.h>
 #include "k_system_proc.h"
 #include "k_i_proc.h"
 #include "user_proc.h"
@@ -23,8 +21,10 @@
 #include <unistd.h>
 #include <sys/mman.h>
 #include <fcntl.h>
+#include <signal.h>
+#include <setjmp.h>
 #include <assert.h>
-#
+
 /****************************************************************
  Struct Initalizations
  ----------------------------------------------------------------

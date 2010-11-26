@@ -15,7 +15,8 @@ int main()
 	extern k_io_buffer_ptr k_input_buf;
 	char c;
 	int i;
-		
+
+	k_global_init();		
 	k_helper_init();
 	/************Testing helper process************/
 	while(1)

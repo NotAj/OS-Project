@@ -70,3 +70,8 @@ void proc_C()
 		release_processor();
 	}
 }
+
+void proc_D()
+{
+	terminate();
+}

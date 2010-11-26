@@ -34,5 +34,7 @@ int k_kbd_helper_pid;			// PID of the kdb helper, used to signal termination
 int k_crt_helper_pid;			// PID of the crt helper, used to signal termination
 int k_inputfile_fid;			// FID of the shared mem file, used in termination
 int k_outputfile_fid;			// FID of the shared mem file, used in termination
+char *k_inputfile_path;			// Path of the shared mem file
+char *k_outputfile_path;		// Path of the shared mem file
 
 #endif

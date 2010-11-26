@@ -119,7 +119,7 @@ k_itable.o:
 k_io_buffer.o: k_io_buffer.c
 
 k_scheduler: k_scheduler.h k_pcb.h k_queue.h k_priority_queue.h k_globals.h
-k_utility.o: k_utility.h k_pcb.h k_queue.h k_defines.h k_globals.h
+k_utility.o: k_utility.h k_pcb.h k_queue.h k_io_buffer.c k_defines.h k_globals.h
 k_ipc.o: k_ipc.h k_scheduler.h k_pcb.h k_message_queue.h k_message.h k_tracebuffer.h k_defines.h k_utility.h
 
 api.o: api.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_scheduler.h k_message.h k_message_queue.h k_tracebuffer.h  

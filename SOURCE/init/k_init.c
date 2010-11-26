@@ -15,6 +15,8 @@ void k_global_init()
 	extern int k_crt_helper_pid;
 	extern int k_inputfile_fid;
 	extern int k_outputfile_fid;
+	extern char *k_inputfile_path;
+	extern char *k_outputfile_path;
 
 	k_current_process = NULL;
 	k_interrupted_process = NULL;
@@ -24,11 +26,17 @@ void k_global_init()
 	k_clock_s = 0;
 	k_clock_tick = 0;
 	k_display_clock = 0;
-	k_RTX_pid = getpid();
 	k_kbd_helper_pid = 0;
 	k_crt_helper_pid = 0;
 	k_inputfile_fid = 0;
 	k_outputfile_fid = 0;
+	// Name shared mem files
+	// Only things known at the start, so do it here
+	k_RTX_pid = getpid();
+	k_inputfile_path = (char *) malloc(sizeof("helper/inputfile"));
+	k_inputfile_path = "helpers/inputfile";
+	k_outputfile_path = (char *) malloc(sizeof("helper/outputfile"));
+	k_outputfile_path = "helpers/outputfile";
 }
 
 void k_helper_init()
@@ -43,14 +51,12 @@ void k_helper_init()
 	extern int k_crt_helper_pid;
 	extern int k_inputfile_fid;
 	extern int k_outputfile_fid;	
-
-	// Name shared mem files
-	char *k_inputfile_name = "helpers/inputfile";		
-	char *k_outputfile_name = "helpers/outputfile";	
-
+	extern char *k_inputfile_path;
+	extern char *k_outputfile_path;
+	
 	//Create files
-	k_inputfile_fid = open(k_inputfile_name, O_RDWR | O_CREAT , (mode_t) 0756);
-	k_outputfile_fid = open(k_outputfile_name, O_RDWR | O_CREAT, (mode_t) 0756); 
+	k_inputfile_fid = open(k_inputfile_path, O_RDWR | O_CREAT , (mode_t) 0756);
+	k_outputfile_fid = open(k_outputfile_path, O_RDWR | O_CREAT, (mode_t) 0756); 
 	if ( k_outputfile_fid <= 0 || k_inputfile_fid <= 0)
 	{
 		//k_terminate() //TODO 
@@ -126,6 +132,7 @@ void k_scheduler_init()
 	extern k_queue_ptr k_allQ;
 	extern k_priority_queue_ptr k_readyPQ;
 	extern k_priority_queue_ptr k_blockedPQ;
+
 	// Initialize all 3 scheduling queues
 	k_allQ = k_queue_init();
 	k_readyPQ = k_priority_queue_init();
@@ -262,9 +269,14 @@ void k_init()
 	priority[3] = PRIORITY_NUM - 1; // Set to lowest priority
 	is_iprocess[3] = 0; 
 	start_address[3] = &(proc_C);
+	
+	pid[4] = PID_USER_D;
+	priority[4] = 0;
+	is_iprocess[4] = 0;
+	start_address[4] = &(proc_D);
 
-	init_table = k_itable_init(4, pid, priority, is_iprocess, start_address);	//TODO
-	k_process_init(4, init_table); // Initialize all processes using itable //TODO
+	init_table = k_itable_init(5, pid, priority, is_iprocess, start_address);	//TODO
+	k_process_init(5, init_table); // Initialize all processes using itable //TODO
 
 	// NOTE: Normally cannot longjmp if the function that setjmp was called in has returned, but since we've set up a different stack for each process, this is not a problem.
 

@@ -29,9 +29,11 @@ int request_process_status(MsgEnv *msg_env_ptr)
 
 int terminate()
 {
-	return 1;
-}
-
+	//atomic(on);
+	k_terminate(ERROR_NONE);
+	//atomic(off);
+	// Should never return since terminate kills the process. Return to stop compile warnings
+	return 0; }
 
 int change_priority(int new_priority, int target_process_id)
 {
@@ -63,7 +65,6 @@ MsgEnv *receive_message()
 	return msg;
 }
 
-
 int release_msg_env(MsgEnv *msg_env_ptr)
 {
 	int code;
@@ -72,6 +73,7 @@ int release_msg_env(MsgEnv *msg_env_ptr)
 	//atomic(off);
 	return code;
 }
+
 MsgEnv *request_msg_env()
 {
 	MsgEnv *msg;

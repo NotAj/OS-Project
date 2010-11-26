@@ -9,4 +9,6 @@ void proc_B();
 
 void proc_C();
 
+void proc_D();
+
 #endif
