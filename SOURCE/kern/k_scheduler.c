@@ -52,9 +52,7 @@ void k_process_switch ( )
 *				: outside of the scheduler. Setting of current_process global is 
 *				: handled by context switch
 * 
-* Assumptions   : BIG NOTE: THE METHOD OF INITIALIZATION USED REQUIRES CURRENT_PROCESS
-*				: TO BE SET BY CALLING FUNCTION BEFORE CALLING CONTEXT SWITCH
-*				: Assumes processes have been pushed to required scheduling queues
+* Assumptions   : Assumes processes have been pushed to required scheduling queues
 *				: by process_switch if called through scheduler 
 ******************************************&**********************************/
 void k_context_switch (k_PCB_ptr prev_process, k_PCB_ptr next_process)

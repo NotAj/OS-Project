@@ -10,6 +10,7 @@
 #include "k_tracebuffer.h"
 #include "k_itable.c"
 #include "k_io_buffer.c"
+#include "k_timeout_queue.h"
 
 /****************************************************************
  Struct Initalizations
@@ -42,4 +43,6 @@ k_tracebuffer_ptr k_tracebuffer_init();
 k_itable_ptr k_itable_init(int process_num, int *pid, int *priority, int *is_iprocess, void **start_address);
 
 k_io_buffer_ptr k_io_buffer_init();
+
+k_timeout_queue_ptr k_timeout_queue_init();
 #endif

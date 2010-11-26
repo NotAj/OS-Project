@@ -1,5 +1,4 @@
 #include "k_init.h"
-#include <stdio.h>
 
 void k_global_init()
 {
@@ -222,14 +221,24 @@ void k_process_init(int num_process, k_itable_ptr init_table)
 
 void k_signal_init()
 {
-	//TODO
 	// Set up signal handling
-	//sigset (SIGINT, terminate());	// Set ctrl + c to terminate OS
+
+	sigset(SIGINT, die); 	// Catch kill signals
+	sigset(SIGBUS, die); 	// Catch bus errors
+	sigset(SIGHUP, die);
+	sigset(SIGILL, die); 	// Illegal instruction
+	sigset(SIGQUIT, die);
+	sigset(SIGABRT, die);
+	sigset(SIGTERM, die);
+	sigset(SIGSEGV, die); 	// Catch segmentation faults
+	sigset(SIGINT, die);	// Set ctrl + c to terminate OS
+
 	//Runs the interrupt handler whenever the signal is fired
-	//sigset (SIGALRM, interrupt_handler(14)); // Linux clock signal
-	//sigset (SIGUSR1, interrupt_handler(30)); // Keyboard helper signal
-	//sigset (SIGUSR2, interrupt_handler(31)); // Crt helper signal
-	//ualarm(100000, 100000);	// Sets a SIGALRM to be fired every 100 ms
+	sigset (SIGALRM, k_interrupt_handler); // Linux clock signal
+	sigset (SIGUSR1, k_interrupt_handler); // Keyboard helper signal
+	sigset (SIGUSR2, k_interrupt_handler); // Crt helper signal
+
+	ualarm(100000, 100000);	// Sets a SIGALRM to be fired every 100 ms
 }
 
 void k_init()
@@ -275,8 +284,23 @@ void k_init()
 	is_iprocess[4] = 0;
 	start_address[4] = &(proc_D);
 
-	init_table = k_itable_init(5, pid, priority, is_iprocess, start_address);	//TODO
-	k_process_init(5, init_table); // Initialize all processes using itable //TODO
+	pid[5] = PID_I_CRT;
+	priority[5] = 0; 
+	is_iprocess[5] = 1; 
+	start_address[5] = &(k_crt_i_proc);
+
+	pid[6] = PID_I_KB;
+	priority[6] = 0; // Set to lowest priority
+	is_iprocess[6] = 1; 
+	start_address[6] = &(k_key_i_proc);
+	
+	pid[7] = PID_I_TIMER;
+	priority[7] = 0;
+	is_iprocess[7] = 1;
+	start_address[7] = &(k_timer_i_proc);
+
+	init_table = k_itable_init(8, pid, priority, is_iprocess, start_address);	//TODO
+	k_process_init(8, init_table); // Initialize all processes using itable //TODO
 
 	// NOTE: Normally cannot longjmp if the function that setjmp was called in has returned, but since we've set up a different stack for each process, this is not a problem.
 

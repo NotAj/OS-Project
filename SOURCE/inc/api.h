@@ -3,6 +3,7 @@
 
 #include "k_scheduler.h"
 #include "k_ipc.h"
+#include "k_io.h"
 #include "k_init_struct.h"
 #include "k_globals.h"
 #include "k_defines.h"
@@ -24,6 +25,8 @@ int release_processor();
 int request_process_status(MsgEnv *msg_env_ptr);
 
 int terminate();
+
+void die();
 
 int change_priority(int new_priority, int target_process_id);
 
