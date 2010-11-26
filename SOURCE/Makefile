@@ -50,6 +50,7 @@ TEST_KBD_MAIN = test/main_kbd.c
 TEST_CRT_MAIN = test/main_crt.c
 TEST_IPC_MAIN = test/main_ipc.c
 TEST_IH_MAIN = test/main_interrupt_handler.c
+TEST_IPROC_MAIN = test/main_i_proc.c
 
 EXE = RTX 
 
@@ -66,13 +67,14 @@ TEST_UTILITY_EXE = TEST_UTILITY
 TEST_SCHEDULER_EXE = TEST_SCHEDULER
 TEST_IO_EXE = TEST_IO
 TEST_IH_EXE = TEST_IH
+TEST_IPROC_EXE = TEST_IPROC
 
 ALL_EXECUTABLE = $(EXE) $(TEST_Q_EXE) $(TEST_PQ_EXE) $(TEST_MQ_EXE) $(TEST_TQ_EXE) $(TEST_TB_EXE) $(TEST_ITABLE_EXE) $(TEST_UTILITY_EXE) $(TEST_SCHEDULER_EXE) $(TEST_IO_EXE)
 
 
 TEST_IPC_EXE = TEST_IPC
 
-ALL_EXECUTABLE = $(EXE) $(TEST_Q_EXE) $(TEST_PQ_EXE) $(TEST_MQ_EXE) $(TEST_TB_EXE) $(TEST_ITABLE_EXE) $(TEST_UTILITY_EXE) $(TEST_SCHEDULER_EXE) $(TEST_IPC_EXE) $(TEST_IH_EXE)
+ALL_EXECUTABLE = $(EXE) $(TEST_Q_EXE) $(TEST_PQ_EXE) $(TEST_MQ_EXE) $(TEST_TB_EXE) $(TEST_ITABLE_EXE) $(TEST_UTILITY_EXE) $(TEST_SCHEDULER_EXE) $(TEST_IPC_EXE) $(TEST_IH_EXE)  $(TEST_IPROC_EXE)
 
 TEST_KBD_EXE = TEST_KBD
 TEST_CRT_EXE = TEST_CRT
@@ -120,6 +122,9 @@ $(TEST_CRT_EXE): $(TEST_OBJECTS) $(TEST_CRT_MAIN)
 	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_CRT_MAIN) -o $@
 $(TEST_IH_EXE): $(TEST_OBJECTS) $(TEST_IH_MAIN)
 	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_IH_MAIN) -o $@
+$(TEST_IPROC_EXE): $(TEST_OBJECTS) $(TEST_IPROC_MAIN)
+	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_IPROC_MAIN) -o $@
+
 
 $(OBJECTS): | $(OBJ_DIR)
 $(TEST_OBJECTS): | $(OBJ_DIR)
@@ -155,7 +160,8 @@ api.o: api.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_scheduler.h k_me
 k_system_proc.o: k_system_proc.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_scheduler.h k_message.h k_message_queue.h k_tracebuffer.h api.h 
 k_system_proc.o: k_i_proc.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_scheduler.h k_message.h k_message_queue.h k_tracebuffer.h api.h 
 user_proc.o: user_proc.h api.h
-k_interrupt_handler.o: k_defines.h k_globals.h k_scheduler.h k_interrupt_handler.h k_timeout_queue.h
+k_interrupt_handler.o: k_defines.h k_globals.h k_scheduler.h k_interrupt_handler.h k_timeout_queue.h k_utility.h
+k_i_proc.o: k_pcb.h k_queue.h k_priority_queue.h k_scheduler.h k_message.h k_message_queue.h k_tracebuffer.h api.h k_globals.h k_ipc.h k_init_struct.h k_defines.h k_io_buffer.c k_timeout_queue.h k_utility.h
 
 
 k_ipc.o: k_ipc.h k_scheduler.h k_pcb.h k_message_queue.h k_message.h k_tracebuffer.h k_defines.h k_utility.h
