@@ -66,7 +66,7 @@ void k_helper_init()
 	sprintf(rtx_pid, "%d", k_RTX_pid);
 	sprintf(inputfile_fid, "%d", k_inputfile_fid);
 	sprintf(outputfile_fid, "%d", k_outputfile_fid);
-	/************Forking into Keyboard Helper************/
+	// Forking into Keyboard Helper
 	k_kbd_helper_pid = fork();
 	
 	if(k_kbd_helper_pid == 0)				//Check that fork was successful
@@ -90,7 +90,7 @@ void k_helper_init()
 		}
 	}
 
-	/************Mapping memory to the file************/
+	// Mapping memory to the file
 	mmap_ptr = mmap((caddr_t) 0,	// Memory Location, 0 lets OS choose
 			BUFFER_SIZE,			// How many bytes to mmap
 			PROT_READ | PROT_WRITE, // Read and write permissions
