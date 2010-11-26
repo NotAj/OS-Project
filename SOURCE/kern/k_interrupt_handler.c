@@ -1,7 +1,10 @@
 #include "k_defines.h"
 #include "k_globals.h"
 #include "k_scheduler.h"
+#include "k_utility.h"
 #include "k_interrupt_handler.h"
+#include "k_pcb.h"
+
 #include <signal.h>
 #include <stdio.h>
 
@@ -13,9 +16,8 @@ void k_interrupt_handler (sig_no)
 	switch(sig_no) 
 	{
 		case (SIGALRM): // Context switch to timeout iprocess 
- 			//TODO
-			//k_interrupted_process = k_current_process;			
-			//k_context_switch(k_current_process, k_pid_to_PCB_ptr(PID_I_TIMER));
+ 			k_interrupted_process = k_current_process;			
+			k_context_switch(k_current_process, k_pid_to_PCB_ptr(PID_I_TIMER));
 			break;
 
 		case (SIGUSR1): // Context switch to kbd iprocess 
