@@ -16,6 +16,7 @@
 #include "k_defines.h"
 #include "k_io_buffer.c"
 #include "k_timeout_queue.h"
+#include <stdio.h>
 
 /****************************************************************
  I-Processes

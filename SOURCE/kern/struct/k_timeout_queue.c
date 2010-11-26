@@ -82,6 +82,10 @@ void k_timeout_queue_enqueue(k_message_ptr msg, k_timeout_queue_ptr TQ)
 
 k_message_ptr k_timeout_queue_dequeue (k_timeout_queue_ptr TQ)
 {
+	if (TQ == NULL)
+		return;
+	if (TQ->head == NULL)
+		return;	
 	if (TQ->head->expiry_time <= 0) //if element has expired
 	{
 		k_message_ptr TO_msg;

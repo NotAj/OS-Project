@@ -304,7 +304,5 @@ void k_init()
 
 	// NOTE: Normally cannot longjmp if the function that setjmp was called in has returned, but since we've set up a different stack for each process, this is not a problem.
 
-	k_signal_init(); // Set up signals
-	
-	k_process_switch(); // At this point, process_switch to the first ready process, OS starts
+	k_signal_init(); // Set up signals	
 } 
