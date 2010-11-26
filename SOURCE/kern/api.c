@@ -138,7 +138,11 @@ MsgEnv *MsgEnv_queue_dequeue(MsgEnv_queue_ptr MQ)
 *************************/
 int request_delay(int time_delay, int wakeup_code, MsgEnv *message_envelope)
 {
-	return 1;
+	int code;
+	//atomic(on);
+	code = k_request_delay(time_delay, wakeup_code, message_envelope);
+	//atomic(off);
+	return code;
 }
 
 /*************************

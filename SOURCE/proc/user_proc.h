@@ -2,6 +2,7 @@
 #define USER_PROC_H
 
 #include "api.h"
+#include "k_defines.h"
 
 void proc_A();
 
@@ -10,5 +11,7 @@ void proc_B();
 void proc_C();
 
 void proc_D();
+
+void proc_E();
 
 #endif

@@ -74,15 +74,34 @@ void proc_C()
 void proc_D()
 {
 	MsgEnv *msg = request_msg_env();
+	MsgEnv *msg2 = request_msg_env();
+	atomic(1);
 	while(1)
 	{
-		get_console_chars(msg);
-		
-		if (msg->msg_text[0] != '\0')
+		//get_console_chars(msg);
+		msg->msg_text = "1 second delay";
+		//request_delay(5,1,msg2);
+		//msg2 = receive_message();
+		send_console_chars(msg);
+		msg = receive_message();
+		printf("here\n");
+		/*	if (msg->msg_text[0] != '\0')
 		{	
 			send_console_chars(msg);
-		}
+			while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+			msg->msg_text[0] = '\0';
+			request_delay(10,10, msg);
+			receive_message();
+		}*/
 	//		terminate();
 	//	request_delay(10,1,msg);
+	}
+}
+
+void proc_E()
+{
+	while(1)
+	{
+		release_processor();
 	}
 }

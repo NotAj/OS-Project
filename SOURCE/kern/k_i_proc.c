@@ -150,8 +150,6 @@ void k_timer_i_proc()
 			//Send a timeout complete message 
 			timeout_msg->receiver_pid = timeout_msg->sender_pid;
 			timeout_msg->sender_pid = PID_I_TIMER;
-			timeout_msg->msg_type = MSG_TYPE_WAKEUP_CODE;
-			timeout_msg->msg_size = 0;
 			k_send_message(timeout_msg->receiver_pid, timeout_msg);
 			timeout_msg = k_timeout_queue_dequeue(&timeoutQ);				
 		}

@@ -14,8 +14,7 @@ MEM_FILES = helpers/inputfile helpers/outputfile
 OBJ_DIR = obj/
 HELPER_DIR = helpers/
 
-VPATH = inc:kern:test:kern/struct:init:proc:proc/inc:helpers:obj
-
+VPATH = inc:kern:test:kern/struct:init:proc:proc/inc:helpers:obj 
 OBJECTS_INTER = $(SOURCES:.h=.o)
 OBJECTS = $(OBJECTS_INTER:.c=.o)
 OBJECTS_DIR = $(OBJECTS:%=$(OBJ_DIR)%) 
@@ -75,7 +74,7 @@ RTX_EXECUTABLES = $(EXE) $(CRT_HELPER_EXE) $(KBD_HELPER_EXE)
 TEST_EXECUTABLES = $(TEST_Q_EXE) $(TEST_PQ_EXE) $(TEST_MQ_EXE) $(TEST_TQ_EXE) $(TEST_TB_EXE) $(TEST_ITABLE_EXE) $(TEST_UTILITY_EXE) $(TEST_SCHEDULER_EXE) $(TEST_IPC_EXE) $(TEST_IO_EXE) $(TEST_IH_EXE)  $(TEST_KBD_EXE) $(TEST_CRT_EXE) $(TEST_IPROC_EXE)
 ALL_EXECUTABLES = $(RTX_EXECUTABLES) $(TEST_EXECUTABLES)
 
-all: $(ALL_EXECUTABLES)
+all: $(RTX_EXECUTABLES) 
 rtx: $(RTX_EXECUTABLES)
 test: $(TEST_EXECUTABLES)
 
@@ -141,7 +140,7 @@ k_itable.o:
 k_io_buffer.o: k_io_buffer.c
 
 k_scheduler: k_scheduler.h k_pcb.h k_queue.h k_priority_queue.h k_globals.h
-k_utility.o: k_utility.h k_pcb.h k_queue.h k_defines.h k_globals.h
+k_utility.o: k_utility.h k_pcb.h k_queue.h k_ipc.h k_defines.h k_globals.h
 k_io.o: k_io.h k_defines.h k_globals.h k_message.h k_ipc.h
 k_ipc.o: k_ipc.h k_scheduler.h k_pcb.h k_message_queue.h k_message.h k_tracebuffer.h k_defines.h k_utility.h
 
