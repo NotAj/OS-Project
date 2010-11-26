@@ -306,5 +306,4 @@ void k_init()
 
 	k_signal_init(); // Set up signals
 	
-	k_process_switch(); // At this point, process_switch to the first ready process, OS starts
 } 
