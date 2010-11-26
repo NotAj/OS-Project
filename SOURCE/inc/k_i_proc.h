@@ -10,6 +10,11 @@
 #include "k_tracebuffer.h"
 #include "api.h"
 #include "k_globals.h"
+#include "k_ipc.h"
+#include "k_init_struct.h"
+#include "k_defines.h"
+#include "k_io_buffer.c"
+#include "k_timeout_queue.h"
 
 /****************************************************************
  I-Processes

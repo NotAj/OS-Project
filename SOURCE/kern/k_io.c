@@ -20,7 +20,7 @@ Functions that help the user proccesses send out put and recieve input
 * Assumptions   : 
 *****************************************************************************/
 
-int get_console_chars (k_message_ptr key_in)
+int k_get_console_chars (k_message_ptr key_in)
 {
 	if (key_in == NULL) //check null case
 		return 0;	
@@ -44,7 +44,7 @@ int get_console_chars (k_message_ptr key_in)
 * Assumptions   : 
 *****************************************************************************/
 
-int send_console_chars (k_message_ptr crt_out)
+int k_send_console_chars (k_message_ptr crt_out)
 {
 	if (crt_out == NULL)
 		return 0;
@@ -56,7 +56,7 @@ int send_console_chars (k_message_ptr crt_out)
 	crt_out->msg_size = 0;
 	while (crt_out->msg_text[crt_out->msg_size] != '\0')
 		crt_out->msg_size++;
-	send_message(crt_out->receiver_pid, crt_out);
+	k_send_message(crt_out->receiver_pid, crt_out);
 	return 1;
 
 }

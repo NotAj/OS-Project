@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include "k_message.h"
+#include "k_ipc.h"
 
 /****************************************************************
  I/O primitives:
@@ -13,8 +14,8 @@
 * Function Declarations
 *************************/
 
-int get_console_chars (k_message_ptr key_in);
+int k_get_console_chars (k_message_ptr key_in);
 
-int send_console_chars (k_message_ptr crt_out);
+int k_send_console_chars (k_message_ptr crt_out);
 
 #endif
