@@ -7,8 +7,7 @@
 #include "k_priority_queue.h"
 #include "k_globals.h"
 #include "k_defines.h"
-
-#include <assert.h> //TODO
+#include "api.h"
 
 /****************************************************************
  Scheduler
