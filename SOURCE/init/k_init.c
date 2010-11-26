@@ -108,7 +108,9 @@ void k_helper_init()
 		assert(mmap_ptr != MAP_FAILED);
 	}
 	
-	k_input_buf = (k_io_buffer_ptr) mmap_ptr;		//Creating pointer to the sharedmem
+	k_input_buf = (k_io_buffer_ptr) mmap_ptr;	//Creating pointer to the sharedmem
+	k_input_buf->wait_flag = 0;
+	k_input_buf->length = 0;
 
 	mmap_ptr = mmap((caddr_t) 0,	// Memory Location, 0 lets OS choose
 			BUFFER_SIZE,			// How many bytes to mmap
@@ -122,8 +124,9 @@ void k_helper_init()
 		assert(mmap_ptr != MAP_FAILED);
 	}
 
-	k_output_buf = (k_io_buffer_ptr) mmap_ptr;		//Creating pointer to the sharedmem
-
+	k_output_buf = (k_io_buffer_ptr) mmap_ptr;	//Creating pointer to the sharedmem
+	k_output_buf->wait_flag = 1;
+	k_output_buf->length = 0;
 }
 
 void k_scheduler_init()

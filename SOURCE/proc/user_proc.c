@@ -73,8 +73,16 @@ void proc_C()
 
 void proc_D()
 {
+	MsgEnv *msg = request_msg_env();
 	while(1)
 	{
-		//terminate();
+		get_console_chars(msg);
+		
+		if (msg->msg_text[0] != '\0')
+		{	
+			send_console_chars(msg);
+		}
+	//		terminate();
+	//	request_delay(10,1,msg);
 	}
 }
