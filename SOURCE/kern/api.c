@@ -29,9 +29,11 @@ int request_process_status(MsgEnv *msg_env_ptr)
 
 int terminate()
 {
-	return 1;
-}
-
+	//atomic(on);
+	k_terminate(ERROR_NONE);
+	//atomic(off);
+	// Should never return since terminate kills the process. Return to stop compile warnings
+	return 0; }
 
 int change_priority(int new_priority, int target_process_id)
 {
@@ -63,7 +65,6 @@ MsgEnv *receive_message()
 	return msg;
 }
 
-
 int release_msg_env(MsgEnv *msg_env_ptr)
 {
 	int code;
@@ -72,6 +73,7 @@ int release_msg_env(MsgEnv *msg_env_ptr)
 	//atomic(off);
 	return code;
 }
+
 MsgEnv *request_msg_env()
 {
 	MsgEnv *msg;
@@ -88,22 +90,37 @@ int get_trace_buffers(MsgEnv *message_envelope)
 
 MsgEnv_queue_ptr MsgEnv_queue_init()
 {
-	return (k_message_queue_init());
+	MsgEnv_queue_ptr messageQ;
+	//atomic(on);
+	messageQ = k_message_queue_init();
+	//atomic(off);
+	return messageQ;
 }
 
 int MsgEnv_queue_is_empty(MsgEnv_queue_ptr MQ)
 {
-	return (k_message_queue_is_empty(MQ));
+	int code;
+	//atomic(on);
+	code = k_message_queue_is_empty(MQ);
+	//atomic(off);
+	return code;
 }
 
 void MsgEnv_queue_enqueue(MsgEnv *message, MsgEnv_queue_ptr MQ) 
 {
+	//atomic(on);
 	k_message_queue_enqueue(message, MQ);
+	//atomic(off);
+	return;
 }
 
 MsgEnv *MsgEnv_queue_dequeue(MsgEnv_queue_ptr MQ)
 {
-	return (k_message_queue_dequeue(MQ));
+	MsgEnv *msg;
+	//atomic(on);
+	msg = k_message_queue_dequeue(MQ);
+	//atomic(off);
+	return msg;
 }
 /*************************
 * Timing primitives 
@@ -118,10 +135,18 @@ int request_delay(int time_delay, int wakeup_code, MsgEnv *message_envelope)
 *************************/
 int send_console_chars(MsgEnv *message_envelope)
 {
-	return 1;
+	int code;
+	//atomic(on);
+	code = k_send_console_chars(message_envelope);
+	//atomic(off);
+	return code;
 }
 
 int get_console_chars(MsgEnv *message_envelope)
 {
-	return 0;
+	int code;
+	//atomic(on);
+	code = k_get_console_chars(message_envelope);
+	//atomic(off);
+	return code;
 }

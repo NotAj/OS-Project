@@ -1,9 +1,8 @@
 #ifndef K_INIT_H
 #define K_INIT_H
 
-#include <stdlib.h>
 #include "k_scheduler.h"
-//#include "k_ipc.h"
+#include "k_ipc.h"
 #include "k_pcb.h"
 #include "k_message.h"
 #include "k_queue.h"
@@ -14,11 +13,17 @@
 #include "k_init_struct.h"
 #include "k_defines.h"
 #include "k_globals.h"
-#include <signal.h>
-#include <setjmp.h>
 #include "k_system_proc.h"
 #include "k_i_proc.h"
 #include "user_proc.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <setjmp.h>
+#include <assert.h>
 
 /****************************************************************
  Struct Initalizations
