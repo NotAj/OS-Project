@@ -57,7 +57,7 @@ void proc_1()
 		message1->msg_size = 3;		
 		j = k_send_message(2, message1);
 		
-		assert(j == 1);
+		assert(j == ERROR_NONE);
 	
 		i = 2;
 		message1 = NULL;
@@ -102,7 +102,7 @@ void proc_1()
 		i = 22;
 		j = 0;
 		j = k_send_message(2, message1);
-		assert(j == 1);
+		assert(j == ERROR_NONE);
 		message1 = NULL;
 		k_release_processor();
 
@@ -132,7 +132,7 @@ void proc_2()
 		j = 0;		
 		j = k_release_msg_env(message2_1);
 		assert(i == 2);
-		assert(j == 1);
+		assert(j == ERROR_NONE);
 		message2_1 = NULL;
 		printf("---->PASS\n\n");
 /***********************************************************************/
@@ -156,7 +156,7 @@ void proc_2()
 		i = 7;
 		j = 0;
 		j = k_release_msg_env(message2_1);
-		assert(j == 1);
+		assert(j == ERROR_NONE);
 		message2_1 = NULL;
 		printf("Envelope Released");
 		k_release_processor();
@@ -168,7 +168,7 @@ void proc_2()
 		i = 9;
 		j = 0;
 		j = k_release_msg_env(message2_2);
-		assert(j == 1);
+		assert(j == ERROR_NONE);
 		message2_2 = NULL;
 		printf("Envelope Released");
 		k_release_processor();
@@ -200,19 +200,19 @@ void proc_2()
 /*CASE 11*/	j = 2;
 		printf("TESTING FAILED SEND ON NONEXISTANT PID");
 		j = k_send_message(5, message2_2);
-		assert(j == 0);
+		assert(j == ERROR_INVALID_PARAMETERS);
 		printf("---->PASS\n");		
 /***********************************************************************/
 /*CASE 12*/	j = 2;
 		printf("TESTING FAILED SEND ON NULL MESSAGE");
 		j = k_send_message(1, NULL);
-		assert(j == 0);
+		assert(j == ERROR_INVALID_PARAMETERS);
 		printf("---->PASS\n");		
 /***********************************************************************/
 /*CASE 13*/	j = 2;
 		printf("TESTING FAILED RELEASE");		
 		j = k_release_msg_env(NULL);
-		assert(j == 0);
+		assert(j == ERROR_INVALID_PARAMETERS);
 		printf("---->PASS\n\n");		
 /***********************************************************************/
 /*IPROCESS*/	k_current_process->p_status = STATUS_READY;  
@@ -258,7 +258,7 @@ void proc_3()
 		printf(" and is blocked\n");
 		j = 0;
 		j = k_release_msg_env(message3);
-		assert(j == 1);
+		assert(j == ERROR_NONE);
 		message3 = NULL;
 		printf("Process 3 Releases an Envelope");
 		i = 13;
@@ -273,7 +273,7 @@ void proc_3()
 		printf("Process 2 is Still Blocked\n");
 		j = 0;
 		j = k_release_msg_env(message3);
-		assert(j == 1);
+		assert(j == ERROR_NONE);
 		message3 = NULL;
 		printf("Envelope Released");
 		i = 16;
