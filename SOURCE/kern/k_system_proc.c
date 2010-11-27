@@ -24,46 +24,31 @@ void proc_wall_clock()
 	extern int k_clock_s;
 	extern int k_display_clock;
 
-	//Allocate messages to be reused for requesting delay and outputting to crt
+	// Allocate messages to be reused for requesting delay and outputting to crt
 	MsgEnv *delay_msg = k_request_msg_env(); 
 	MsgEnv *output_msg = k_request_msg_env();	
-	int i;
-	
-	while(1)						//Loop forever
+	k_display_clock = 1;	
+	while(1)
 	{
-printf("heyyy buddyyy - %d\n",k_current_process->k_atomic_count);
 		request_delay(10, MSG_TYPE_WAKEUP_CODE, delay_msg);	//Request 1 second delay
-		//Block process till wakeup message received
-		delay_msg = k_receive_message();	
-		
-		//If wakeup message received, update clock
-		if(delay_msg->msg_type == MSG_TYPE_WAKEUP_CODE) 
+		// Block process till wakeup message received
+		while(receive_message()->msg_type != MSG_TYPE_WAKEUP_CODE);	
+		// Update clock
+		k_clock_s = (k_clock_s + 1) % 60;
+		if(k_clock_s == 0) // Seconds rolled over. Increment minute
 		{
-printf("received wakeup code\n");
-			(k_clock_s++ % 60);
-			if(k_clock_s == 0)		//Seconds rolled over. Increment minute
-			{
-				(k_clock_m++ % 60);
-				if (k_clock_m == 0)	//Minutes rolled over. Increment hour
-					//No action taken on hours rolling over
-					//Time will already read 00:00:00
-					(k_clock_h++ % 24); 				
-			}
-printf("updated code\n");
-			if(k_display_clock == 1) 	//If display flag set, send time to crt
-			{
-				i = sprintf(output_msg->msg_text, "%d:%d:%d", k_clock_h, k_clock_m, k_clock_s); 
-				output_msg->msg_size = i;
-				send_console_chars(output_msg);
-			}
+			k_clock_m = (k_clock_m + 1) % 60;
+			if (k_clock_m == 0)	// Minutes rolled over. Increment hour
+				// No action taken on hours rolling over
+				// Time will already read 00:00:00
+				k_clock_h = (k_clock_h + 1) % 24;
 		}
-		//If display_ack message received, assign pointer to output_msg so we don't lose allocated envelope
-		else if(delay_msg->msg_type == MSG_TYPE_DISPLAY_ACK)	
+		if(k_display_clock == 1) // If display flag set, send time to crt
 		{
-printf("display ack received\n");	
-			output_msg = delay_msg;
+			output_msg->msg_size = sprintf(output_msg->msg_text, "%02d:%02d:%02d", k_clock_h, k_clock_m, k_clock_s); 
+			send_console_chars(output_msg);
+			while(receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 		}
-		//If neither, we don't care.  Do nothing
 		release_processor();
 	}
 }
