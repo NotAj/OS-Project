@@ -232,6 +232,7 @@ void k_signal_init()
 {
 	// Set up signal handling
 
+
 	sigset(SIGINT, die); 	// Catch kill signals
 /*	sigset(SIGBUS, die); 	// Catch bus errors
 	sigset(SIGHUP, die);
@@ -241,6 +242,7 @@ void k_signal_init()
 	sigset(SIGSEGV, die); 	// Catch segmentation faults
 	sigset(SIGINT, die);	// Set ctrl + c to terminate OS
 */
+
 	//Runs the interrupt handler whenever the signal is fired
 	sigset (SIGALRM, k_interrupt_handler); // Linux clock signal
 	sigset (SIGUSR1, k_interrupt_handler); // Keyboard helper signal
@@ -273,17 +275,17 @@ void k_init()
 	start_address[0] = &(proc_null);
 	
 	pid[1] = PID_USER_A;
-	priority[1] = PRIORITY_NUM - 1; // Set to lowest priority
+	priority[1] = 2; // Set to lowest priority
 	is_iprocess[1] = 0; 
 	start_address[1] = &(proc_A);
 
 	pid[2] = PID_USER_B;
-	priority[2] = PRIORITY_NUM - 1; // Set to lowest priority
+	priority[2] = 2; // Set to lowest priority
 	is_iprocess[2] = 0; 
 	start_address[2] = &(proc_B);
 
 	pid[3] = PID_USER_C;
-	priority[3] = PRIORITY_NUM - 1; // Set to lowest priority
+	priority[3] = 2; // Set to lowest priority
 	is_iprocess[3] = 0; 
 	start_address[3] = &(proc_C);
 	

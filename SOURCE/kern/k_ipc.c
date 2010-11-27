@@ -1,7 +1,7 @@
 #include "k_ipc.h"
 
 /****************************************************************
- Template Data Structure 
+ IPC Data Structure 
  ----------------------------------------------------------------
 
  These functions provide functionality to the IPC. It allows for 

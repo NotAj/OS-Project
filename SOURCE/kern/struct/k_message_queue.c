@@ -42,6 +42,8 @@ int k_message_queue_is_empty(k_message_queue_ptr MQ)
 *****************************************************************************/
 void k_message_queue_enqueue(k_message_ptr message, k_message_queue_ptr MQ)
 {
+	if (MQ == NULL)
+		return; // If invalid queue passed, do nothing
 	if (message == NULL)
 		return; // Trying to enqueue a NULL pointer, do nothing
 	
@@ -77,6 +79,9 @@ void k_message_queue_enqueue(k_message_ptr message, k_message_queue_ptr MQ)
 *****************************************************************************/
 k_message_ptr k_message_queue_dequeue(k_message_queue_ptr MQ) 
 {
+	// Return NULL if invalid queue passed
+	if(MQ == NULL)
+		return NULL;
 	// Return NULL if Q is empty
 	if(k_message_queue_is_empty(MQ))
 		return NULL;	
@@ -84,7 +89,7 @@ k_message_ptr k_message_queue_dequeue(k_message_queue_ptr MQ)
 	k_message_ptr return_message;
 	return_message = MQ->head;
  	
-	// Set head to next message in queue
+	// Set headd to next message in queue
 	MQ->head = return_message->k_queue_next;	
 		
 	// Check is queue is now empty
@@ -92,6 +97,7 @@ k_message_ptr k_message_queue_dequeue(k_message_queue_ptr MQ)
 	{
 		MQ->tail = NULL; // It is, so set tail to NULL too
 	}
+
 	return_message->k_queue_next = NULL; // Message no longer on a queue so set next field to NULL
 	
 	// Return pointer to dequeued message
