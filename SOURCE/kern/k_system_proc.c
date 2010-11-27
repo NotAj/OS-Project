@@ -64,28 +64,29 @@ void proc_CCI()
 	while (1)	//loop forever
 	{
 		crt_out->msg_text = "CCI:";		//prompt user for input
-		send_console_chars(crt_out);			
-		crt_out = receive_message();		
-		
-		get_console_chars(key_in);		//get ready to receive  input
-		key_in = receive_message();		//get queued msg
-		
+		if (send_console_chars(crt_out)==ERROR_NONE)	
+			crt_out = receive_message();
+printf("1");
+		if (get_console_chars(key_in)==ERROR_NONE)		//get ready to receive  input
+			key_in = receive_message();		//get queued msg
+printf("2");		
 		char command[5];
 
 		if (key_in->msg_type == MSG_TYPE_CONSOLE_INPUT && sscanf(key_in->msg_text,"%s", command) == 1)	//check whether the received envelope is an input and could succesfully get command
-		{							
+		{	printf("%s", command);			 			
 			if (strncmp(command,"s",1)==0) 
 			{
 				MsgEnv *proc_a;	//create and send an empty envelope 
 				proc_a = request_msg_env(); 	//to user process A
 				send_message(PID_USER_A, proc_a);
+				printf("4");
 			}
 			
 			else if (strncmp(command,"ps",2)==0) 
 			{
-				request_process_status(crt_out);
-				send_console_chars(crt_out);
-				crt_out = receive_message();
+printf("5");				request_process_status(crt_out);
+				if (send_console_chars(crt_out)==ERROR_NONE)
+					crt_out = receive_message();
 			}
 
 			else if (strncmp(command,"c",1)==0) 
@@ -102,15 +103,15 @@ void proc_CCI()
 					else
 					{
 						sscanf("INVALID_INPUT" ,"%s", crt_out->msg_text);
-						send_console_chars(crt_out);
-						crt_out = receive_message();
+						if (send_console_chars(crt_out)==ERROR_NONE);
+							crt_out = receive_message();
 					}
 				}
 				else
 				{
 					sscanf("INVALID_INPUT" ,"%s", crt_out->msg_text);
-					send_console_chars(crt_out);
-					crt_out = receive_message();
+					if (send_console_chars(crt_out)==ERROR_NONE)
+						crt_out = receive_message();
 				}	
 			}
 
@@ -127,8 +128,8 @@ void proc_CCI()
 			else if (strncmp(command,"b",1)==0) 		
 			{
 				get_trace_buffers(crt_out);
-				send_console_chars(crt_out);
-				crt_out  = receive_message();	
+				if (send_console_chars(crt_out)==ERROR_NONE)
+					crt_out  = receive_message();	
 			}
 	
 			else if (strncmp(command,"t",1)==0) 	
@@ -148,23 +149,23 @@ void proc_CCI()
 					else
 					{
 						sscanf("INVALID_INPUT" ,"%s", crt_out->msg_text);
-						send_console_chars(crt_out);
-						crt_out = receive_message();
+						if (send_console_chars(crt_out)==ERROR_NONE)
+							crt_out  = receive_message();
 					}
 				}
 				else
 				{
 					sscanf("INVALID_INPUT" ,"%s", crt_out->msg_text);
-					send_console_chars(crt_out);
-					crt_out = receive_message();
+					if (send_console_chars(crt_out)==ERROR_NONE)
+						crt_out  = receive_message();
 				}			
 			}
 
 			else
 			{
 				sscanf("INVALID_INPUT" ,"%s", crt_out->msg_text);
-				send_console_chars(crt_out);
-				crt_out = receive_message();
+				if (send_console_chars(crt_out)==ERROR_NONE)
+					crt_out  = receive_message();
 			}	
 		}
 		release_processor();
