@@ -99,7 +99,6 @@ void k_crt_i_proc()
 				output_msg->msg_type = MSG_TYPE_DISPLAY_ACK;
 				output_msg->msg_size = 0;
 				k_send_message(output_msg->receiver_pid, output_msg);
-				puts("CRT SET");
 				k_output_buf->wait_flag = 0;
 			}
 		}	

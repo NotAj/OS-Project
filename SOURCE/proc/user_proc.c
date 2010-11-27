@@ -67,13 +67,21 @@ void proc_C()
 					printf("Printing3\n");
 					msg = receive_message();
 					if (msg->msg_type == MSG_TYPE_WAKEUP_10)
+					{
+						// Only release message if finished with it
+						release_msg_env(msg); 						
 						break;
+					}
 					else
 						MsgEnv_queue_enqueue(msg, localMQ); 
 				}
-			}	
+			}
+			else
+			{
+				// Release msg if we're not going to do anything with it, so we don't run out
+				release_msg_env(msg); 	
+			}
 		}
-		release_msg_env(msg);
 		release_processor();
 	}
 }
@@ -88,8 +96,8 @@ void proc_D()
 	{
 		int delay = 10;
 		sprintf(msg->msg_text, "Waiting for User Input:\n");
-		request_delay(delay,MSG_TYPE_WAKEUP_CODE,msg2);
-		while (receive_message()->msg_type != MSG_TYPE_WAKEUP_CODE);
+		//request_delay(delay,MSG_TYPE_WAKEUP_CODE,msg2);
+		//while (receive_message()->msg_type != MSG_TYPE_WAKEUP_CODE);
 		send_console_chars(msg);
 		while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 	
