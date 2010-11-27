@@ -133,6 +133,8 @@ void k_timer_i_proc()
  
 	while(1) //loop forever	
 	{
+	
+printf("test message.  plz ssee this");
 		//update RTX internal time stamp clock
 		k_clock_tick++;
 

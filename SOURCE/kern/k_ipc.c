@@ -59,7 +59,7 @@ MsgEnv* k_receive_message ()
 			return NULL;
 		k_current_process->p_status = STATUS_BLOCKED_ON_RECEIVE;
 		
-//		printf("Blocking process %d|%d--->%d\n", k_current_process->p_pid, k_current_process->p_status, k_atomic_count);
+		printf("Blocking process %d|%d--->%d\n", k_current_process->p_pid, k_current_process->p_status, k_atomic_count);
 		
 		//This will perform a process switch to the next ready process
 		k_process_switch();

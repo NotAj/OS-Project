@@ -78,9 +78,10 @@ void proc_D()
 //	change_priority(3,PID_USER_A);
 //	k_message_queue_enqueue(msg2, k_current_process->k_received_message_queue);
 //	receive_message();
+//	k_display_clock = 1;
 	while(1)
 	{
-		int delay = 10;
+/*		int delay = 10;
 		sprintf(msg->msg_text, "%d second delay", delay/10);
 		request_delay(delay,MSG_TYPE_WAKEUP_CODE,msg2);
 		while (receive_message()->msg_type != MSG_TYPE_WAKEUP_CODE);
@@ -94,6 +95,8 @@ void proc_D()
 		} while (msg2->msg_type != MSG_TYPE_CONSOLE_INPUT);
 		send_console_chars(msg2);
 		while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+*/
+		release_processor();
 	}
 /*		do
 		{

@@ -31,6 +31,7 @@ void proc_wall_clock()
 	
 	while(1)						//Loop forever
 	{
+printf("heyyy buddyyy - %d\n",k_current_process->k_atomic_count);
 		request_delay(10, MSG_TYPE_WAKEUP_CODE, delay_msg);	//Request 1 second delay
 		//Block process till wakeup message received
 		delay_msg = k_receive_message();	
@@ -38,6 +39,7 @@ void proc_wall_clock()
 		//If wakeup message received, update clock
 		if(delay_msg->msg_type == MSG_TYPE_WAKEUP_CODE) 
 		{
+printf("received wakeup code\n");
 			(k_clock_s++ % 60);
 			if(k_clock_s == 0)		//Seconds rolled over. Increment minute
 			{
@@ -47,6 +49,7 @@ void proc_wall_clock()
 					//Time will already read 00:00:00
 					(k_clock_h++ % 24); 				
 			}
+printf("updated code\n");
 			if(k_display_clock == 1) 	//If display flag set, send time to crt
 			{
 				i = sprintf(output_msg->msg_text, "%d:%d:%d", k_clock_h, k_clock_m, k_clock_s); 
@@ -56,9 +59,11 @@ void proc_wall_clock()
 		}
 		//If display_ack message received, assign pointer to output_msg so we don't lose allocated envelope
 		else if(delay_msg->msg_type == MSG_TYPE_DISPLAY_ACK)	
-		{	
+		{
+printf("display ack received\n");	
 			output_msg = delay_msg;
 		}
 		//If neither, we don't care.  Do nothing
+		release_processor();
 	}
 }
