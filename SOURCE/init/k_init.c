@@ -167,6 +167,7 @@ void k_process_init(int num_process, k_itable_ptr init_table)
 	extern k_priority_queue_ptr k_readyPQ;
 	extern k_queue_ptr k_allQ;
 	extern k_PCB_ptr k_current_process;
+	extern int k_atomic_count;
 
 	k_PCB_ptr pcb;
 	int i;
@@ -207,11 +208,13 @@ void k_process_init(int num_process, k_itable_ptr init_table)
 				// Note that the pointer to pcb has been overwritten by the loop. 
 				// Will be here if switched from the scheduler, so current_process global holds the process we're intested in.
 				void (*fp)() = k_current_process->k_start_address;
-				//atomic(off); //TODO// Enable interrupts for the first time
+				k_atomic_count = 1; // Reset atomic count for the first time.
+				if (k_current_process->p_status != STATUS_IPROCESS)
+					atomic(0); // Enable interrupts.
 				fp(); // This will start execution from start_address()
 				//TODO assert(0); 
 				// NOTE that a process can never return here so this init approach requires that all processes never end (ie. House all processes in an infinite loop)
-				//k_terminate();
+				die(ERROR_CRITICAL);
 			}
 		}		
 	}
@@ -317,6 +320,7 @@ void k_init()
 
 	// NOTE: Normally cannot longjmp if the function that setjmp was called in has returned, but since we've set up a different stack for each process, this is not a problem.
 	k_signal_init(); // Set up signals	
+	
+	//atomic(0); // Enable interrupts for the first time
 
-	atomic(0);
 } 

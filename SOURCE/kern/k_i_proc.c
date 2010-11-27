@@ -79,7 +79,6 @@ void k_crt_i_proc()
 
 	while (1) //loop forever
 	{
-		printf("CRT\n");
 		//Check if bufdata is waiting to be output to crt
 		if (k_current_process->k_received_message_queue->head != NULL)
 		{
@@ -104,7 +103,7 @@ void k_crt_i_proc()
 				k_output_buf->wait_flag = 0;
 			}
 		}	
-		//Restore context of interrupted process
+		// Restore context of interrupted process
 		k_context_switch(k_current_process, k_interrupted_process);
 	}
 }

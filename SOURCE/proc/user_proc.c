@@ -64,7 +64,7 @@ void proc_C()
 					else
 						MsgEnv_queue_enqueue(msg, localMQ); 
 				}
-			}
+			}	
 		}
 		release_msg_env(msg);
 		release_processor();
@@ -75,27 +75,25 @@ void proc_D()
 {
 	MsgEnv *msg = request_msg_env();
 	MsgEnv *msg2 = request_msg_env();
-	msg->msg_text = "1 second delay";
-	change_priority(3,PID_USER_A);
-	k_message_queue_enqueue(msg2, k_current_process->k_received_message_queue);
-	receive_message();
-	receive_message();
+//	change_priority(3,PID_USER_A);
+//	k_message_queue_enqueue(msg2, k_current_process->k_received_message_queue);
+//	receive_message();
 	while(1)
 	{
-				
-		//get_console_chars(msg);
-/*		printf("%d\n",request_delay(5,1,msg2));
-		printf("msg%d\n",msg2->expiry_time);
+		get_console_chars(msg2);
 		do
 		{
-			printf("wait timeout%p\n", msg2);
 			msg2 = receive_message();
-			printf("wait timeout%p\n", msg2);
-		} while (msg2->msg_type != 1);
-			printf("wait timeout\n");
-		printf("msg%d\n",msg2->expiry_time);
-*/		send_console_chars(msg);
-		
+		} while (msg2->msg_type != MSG_TYPE_CONSOLE_INPUT);
+		send_console_chars(msg2);
+		while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+		int delay = msg2->msg_text[0];
+		sprintf(msg->msg_text, "%d second delay", delay);
+		request_delay(delay,MSG_TYPE_WAKEUP_CODE,msg2);
+		while (receive_message()->msg_type != MSG_TYPE_WAKEUP_CODE);
+		send_console_chars(msg);
+		while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+	}
 /*		do
 		{
 			msg = receive_message();
@@ -111,9 +109,9 @@ void proc_D()
 		}*/
 	//		terminate();
 	//	request_delay(10,1,msg);
-	}
-}
+//	}
 
+}
 void proc_E()
 {
 	while(1)

@@ -64,6 +64,9 @@ void k_context_switch (k_PCB_ptr prev_process, k_PCB_ptr next_process)
 	}
 	// Setting the current_process global here since context_switch won't work the first time unless current_process is set correctly, and don't want to forget it outside
 	k_current_process = next_process;
+//	if (prev_process->p_pid != 0 && next_process->p_pid != 4 && next_process->p_pid != 5 && next_process->p_pid != 6)
+//		printf("Jumping from %d|%d -> %d|%d---> %d\n", prev_process->p_pid,prev_process->p_priority, next_process->p_pid,next_process->p_priority, k_atomic_count);
+
 
 	// Save the context of the previous process.
 	// Status is 0, signifying that context has just been saved

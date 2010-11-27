@@ -43,7 +43,7 @@ void atomic(int on)
 			// Unblock the signals
 			sigprocmask(SIG_SETMASK, &oldmask, NULL);
 		} 
-		else // If atomic count > 1
+		else if (k_atomic_count > 1) // If atomic count > 1
 		{
 			k_atomic_count--; // Otherwise just decrement
 		}
@@ -54,7 +54,6 @@ void atomic(int on)
 
 void k_interrupt_handler (sig_no)
 {
-	printf("here\n");
 	extern k_PCB_ptr k_current_process;
 	extern k_PCB_ptr k_interrupted_process;
  	k_interrupted_process = k_current_process;			
