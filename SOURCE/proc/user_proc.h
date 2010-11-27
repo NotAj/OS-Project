@@ -3,4 +3,12 @@
 
 #include "api.h"
 
+void proc_A();
+
+void proc_B();
+
+void proc_C();
+
+void proc_D();
+
 #endif

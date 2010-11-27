@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <signal.h>
 #include <assert.h>
 #include "k_io_buffer.c"
 #include "k_defines.h"
@@ -52,7 +53,7 @@ int main (int argc, char *KBbuffer[]){
 		{
 			//Set last character to null
 			input_buf->bufdata[input_buf->length-1] = '\0';		
-//			kill(rtx_pid,SIGUSR1);		//Signal the RTX	
+			kill(rtx_pid,SIGUSR1);		//Signal the RTX	
 			input_buf->wait_flag = 1;	//Set wait_flag to true
 			while(input_buf->wait_flag == 1)
 			//Check every 100 miliseconds if the RTX has cleared the flag

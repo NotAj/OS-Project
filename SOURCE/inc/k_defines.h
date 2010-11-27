@@ -34,7 +34,10 @@
 #define PID_I_TIMER 12 		// PID of Timer iprocess
 #define PID_I_CRT 13 		// PID of CRT iprocess
 #define PID_I_KB 14 		// PID of KB iprocess
-
+#define PID_USER_A 1		// PID of User Process A
+#define PID_USER_B 2		// PID of User Process B
+#define PID_USER_C 3		// PID of User Process C
+#define PID_USER_D 4		// PID of User Process D
 /***************************************
  Status Defines
 ****************************************/
@@ -52,6 +55,9 @@
 #define MSG_TYPE_INPUT_REQUEST 1	// Used by get_console_chars()
 #define MSG_TYPE_CONSOLE_INPUT 2	// Used by KB iprocess
 #define MSG_TYPE_WAKEUP_CODE 3		// Used by Timer iprocess
+#define MSG_TYPE_DISPLAY_ACK 4		// Used by CRT iprocess
+#define MSG_TYPE_COUNT_REPORT 5 	// Used by User Process A
+#define MSG_TYPE_WAKEUP_10 6		// Used by User Process C
 
 /***************************************
  ERROR Type Defines
@@ -60,5 +66,7 @@
 #define ERROR_INVALID_PARAMETERS 1
 #define ERROR_MALLOC_FAILED 2
 #define ERROR_CRITICAL 3
+#define ERROR_CONTEXT_SWITCH 4
+#define ERROR_SCHEDULING_QUEUE 5
 
 #endif

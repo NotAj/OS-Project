@@ -52,9 +52,7 @@ void k_process_switch ( )
 *				: outside of the scheduler. Setting of current_process global is 
 *				: handled by context switch
 * 
-* Assumptions   : BIG NOTE: THE METHOD OF INITIALIZATION USED REQUIRES CURRENT_PROCESS
-*				: TO BE SET BY CALLING FUNCTION BEFORE CALLING CONTEXT SWITCH
-*				: Assumes processes have been pushed to required scheduling queues
+* Assumptions   : Assumes processes have been pushed to required scheduling queues
 *				: by process_switch if called through scheduler 
 ******************************************&**********************************/
 void k_context_switch (k_PCB_ptr prev_process, k_PCB_ptr next_process)
@@ -62,8 +60,7 @@ void k_context_switch (k_PCB_ptr prev_process, k_PCB_ptr next_process)
 	extern k_PCB_ptr k_current_process;
 	if (prev_process == NULL || next_process == NULL)
 	{	
-		printf("FAIL\n"); //TODO Remove once terminate implemented
-		//k_terminate(); // Context switch should always be given valid parameters
+		die(ERROR_CONTEXT_SWITCH); // Context switch should always be given valid parameters
 	}
 	// Setting the current_process global here since context_switch won't work the first time unless current_process is set correctly, and don't want to forget it outside
 	k_current_process = next_process;
@@ -142,7 +139,7 @@ int k_change_priority(int new_priority, int target_process_id)
 		changed_pcb  = k_priority_queue_remove(target_process_id, k_readyPQ);
 		// If process not on respective queue, OS is in invalid state, terminate
 		if (changed_pcb == NULL)
-			return ERROR_CRITICAL; //TODO k_terminate()
+			die(ERROR_SCHEDULING_QUEUE);
 		// Change the priority of target process
 		changed_pcb->p_priority = new_priority;
 		// Enqueue onto readyQ
@@ -155,7 +152,7 @@ int k_change_priority(int new_priority, int target_process_id)
 		changed_pcb  = k_priority_queue_remove(target_process_id, k_blockedPQ);
 		// If process not on respective queue, OS is in invalid state, terminate
 		if (changed_pcb == NULL)
-			return ERROR_CRITICAL; //TODO k_terminate()
+			die(ERROR_SCHEDULING_QUEUE);
 		// Change the priority of target process
 		changed_pcb->p_priority = new_priority;
 		// Enqueue onto readyQ

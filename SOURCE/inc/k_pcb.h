@@ -42,6 +42,5 @@ typedef struct k_PCB_struct
 /*************************
 * Function Declarations
 *************************/
-//k_PCB_ptr pid_to_PCB_ptr (int pid, k_queue_ptr Q);
 
 #endif

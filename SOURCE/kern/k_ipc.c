@@ -1,10 +1,4 @@
-#include "k_message.h"
-#include "k_pcb.h"
-#include "k_message_queue.h"
-#include "k_scheduler.h"
-#include "k_tracebuffer.h"
-#include "k_defines.h"
-#include "k_utility.h"
+#include "k_ipc.h"
 
 /****************************************************************
  Template Data Structure 
@@ -33,7 +27,7 @@ int k_send_message (int dest_process_id, MsgEnv * msg_env_ptr)
 	//Function takes a PID, and returns a pointer to its PCB
 	dest_PCB = k_pid_to_PCB_ptr(dest_process_id);
 	if(dest_PCB == NULL || msg_env_ptr == NULL)
-		return 0; 
+		return ERROR_INVALID_PARAMETERS; 
 	msg_env_ptr->sender_pid = k_current_process->p_pid;
 	msg_env_ptr->receiver_pid = dest_process_id;
 		
@@ -44,7 +38,7 @@ int k_send_message (int dest_process_id, MsgEnv * msg_env_ptr)
 		k_priority_queue_enqueue(dest_PCB, k_readyPQ);
 	}
 	k_tracebuffer_update(k_current_process->p_pid, dest_process_id, msg_env_ptr->msg_type, k_sendTB); 
-	return 1;
+	return ERROR_NONE;
  }  
 
 /****************************************************************************
@@ -115,7 +109,7 @@ MsgEnv* k_request_msg_env ()
 int k_release_msg_env (MsgEnv * msg_env_ptr) 
  {
 	if(msg_env_ptr == NULL)
-		return 0;
+		return ERROR_INVALID_PARAMETERS;
 	msg_env_ptr->sender_pid = 0;
 	msg_env_ptr->receiver_pid = 0;
 	msg_env_ptr->msg_type = 0;
@@ -131,5 +125,5 @@ int k_release_msg_env (MsgEnv * msg_env_ptr)
 		ready_process->p_status = STATUS_READY;
 		k_priority_queue_enqueue(ready_process, k_readyPQ); 
 	 }
-	return 1;
+	return ERROR_NONE;
  }
