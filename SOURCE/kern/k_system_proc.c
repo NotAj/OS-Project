@@ -45,7 +45,7 @@ void proc_wall_clock()
 		}
 		if(k_display_clock == 1) // If display flag set, send time to crt
 		{
-			output_msg->msg_size = sprintf(output_msg->msg_text, "%02d:%02d:%02d", k_clock_h, k_clock_m, k_clock_s); 
+			output_msg->msg_size = sprintf(output_msg->msg_text, "%02d:%02d:%02d\n", k_clock_h, k_clock_m, k_clock_s); 
 			send_console_chars(output_msg);
 			while(receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 		}

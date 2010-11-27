@@ -80,7 +80,7 @@ void k_crt_i_proc()
 	while (1) //loop forever
 	{
 		//Check if bufdata is waiting to be output to crt
-		if (k_current_process->k_received_message_queue->head != NULL)
+		if (!k_message_queue_is_empty(k_current_process->k_received_message_queue))
 		{
 			//flag of 1 means i-process is to run. O means helper is to run			
 			if (k_output_buf->wait_flag == 1)
@@ -88,18 +88,18 @@ void k_crt_i_proc()
 				output_msg = k_receive_message();
 				//write to output buffer
 				int i; 
-				for (i=0; i<output_msg->msg_size; i++)
+		/*		for (i=0; i<output_msg->msg_size; i++)
 				{
 					k_output_buf->bufdata[i]  = output_msg->msg_text[i]; 
 				}
-				k_output_buf->length = output_msg->msg_size;
-			
+		*/		k_output_buf->length = sprintf(k_output_buf->bufdata, "%s", output_msg->msg_text);
 				//send message to process that requested input
 				output_msg->receiver_pid = output_msg->sender_pid;
 				output_msg->sender_pid = PID_I_CRT;
 				output_msg->msg_type = MSG_TYPE_DISPLAY_ACK;
 				output_msg->msg_size = 0;
 				k_send_message(output_msg->receiver_pid, output_msg);
+				puts("CRT SET");
 				k_output_buf->wait_flag = 0;
 			}
 		}	

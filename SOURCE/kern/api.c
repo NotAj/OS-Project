@@ -44,7 +44,7 @@ int terminate()
 // Terminate function for handling all non-user shutdowns
 void die(int code)
 {
-	MsgEnv *msg = request_msg_env(); //Assuming this doesn block TODO
+/*	MsgEnv *msg = request_msg_env(); //Assuming this doesn block TODO
 
 	k_current_process->k_atomic_count = 1;
 	atomic(0);
@@ -62,6 +62,7 @@ void die(int code)
 			break;
 	}
 	send_console_chars(msg);
+*/	printf("CurrProc=%d, outBuf=%d\n", k_current_process->p_pid,k_output_buf->wait_flag);
 	atomic(1);
 	k_terminate();
 	atomic(0);

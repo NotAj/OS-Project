@@ -232,14 +232,14 @@ void k_signal_init()
 {
 	// Set up signal handling
 
-	sigset(SIGINT, die); 	// Catch kill signals
+/*	sigset(SIGINT, die); 	// Catch kill signals
 	sigset(SIGBUS, die); 	// Catch bus errors
 	sigset(SIGHUP, die);
 	sigset(SIGILL, die); 	// Illegal instruction
 	sigset(SIGABRT, die);
 	sigset(SIGTERM, die);
 	sigset(SIGSEGV, die); 	// Catch segmentation faults
-	sigset(SIGINT, die);	// Set ctrl + c to terminate OS
+*/	sigset(SIGINT, die);	// Set ctrl + c to terminate OS
 
 	//Runs the interrupt handler whenever the signal is fired
 	sigset (SIGALRM, k_interrupt_handler); // Linux clock signal
@@ -273,17 +273,17 @@ void k_init()
 	start_address[0] = &(proc_null);
 	
 	pid[1] = PID_USER_A;
-	priority[1] = PRIORITY_NUM - 1; // Set to lowest priority
+	priority[1] = 2; // Set to lowest priority
 	is_iprocess[1] = 0; 
 	start_address[1] = &(proc_A);
 
 	pid[2] = PID_USER_B;
-	priority[2] = PRIORITY_NUM - 1; // Set to lowest priority
+	priority[2] = 2; // Set to lowest priority
 	is_iprocess[2] = 0; 
 	start_address[2] = &(proc_B);
 
 	pid[3] = PID_USER_C;
-	priority[3] = PRIORITY_NUM - 1; // Set to lowest priority
+	priority[3] = 2; // Set to lowest priority
 	is_iprocess[3] = 0; 
 	start_address[3] = &(proc_C);
 	
@@ -308,12 +308,12 @@ void k_init()
 	start_address[7] = &(k_timer_i_proc);
 
 	pid[8] = PID_USER_E;
-	priority[8] = 1;
+	priority[8] = 3;
 	is_iprocess[8] = 0;
 	start_address[8] = &(proc_E);
 
 	pid[9] = PID_USER_F;
-	priority[9] = 1;
+	priority[9] = 3;
 	is_iprocess[9] = 0;
 	start_address[9] = &(proc_F);
 
