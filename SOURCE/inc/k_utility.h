@@ -20,7 +20,7 @@
 /*************************
 * Function Declarations
 *************************/
-void k_terminate(int error);
+void k_terminate();
 
 k_PCB_ptr k_pid_to_PCB_ptr (int pid);
 

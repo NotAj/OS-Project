@@ -79,6 +79,7 @@ void k_crt_i_proc()
 
 	while (1) //loop forever
 	{
+		printf("CRT\n");
 		//Check if bufdata is waiting to be output to crt
 		if (k_current_process->k_received_message_queue->head != NULL)
 		{
@@ -126,7 +127,7 @@ void k_timer_i_proc()
 {
 	k_timeout_queue timeoutQ;    //use global timeoutQ
 	(&timeoutQ)->head = NULL;
-	extern int k_clock_tick;	
+	extern long k_clock_tick;	
 	extern k_PCB_ptr k_current_process;
 	extern k_PCB_ptr k_interrupted_process;
 	k_message_ptr timeout_msg;

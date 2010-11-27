@@ -4,11 +4,11 @@ void k_global_init()
 {
 	extern k_PCB_ptr k_current_process;
 	extern k_PCB_ptr k_interrupted_process;
-	extern int k_atomic_flag;		
+	extern int k_atomic_count;		
 	extern int k_clock_h;	
 	extern int k_clock_m;		
 	extern int k_clock_s;			
-	extern int k_clock_tick;			
+	extern long k_clock_tick;			
 	extern int k_display_clock;			
 	extern int k_kbd_helper_pid;
 	extern int k_crt_helper_pid;
@@ -19,7 +19,7 @@ void k_global_init()
 
 	k_current_process = NULL;
 	k_interrupted_process = NULL;
-	k_atomic_flag = 0;
+	k_atomic_count = 1;
 	k_clock_h = 0;
 	k_clock_m = 0;
 	k_clock_s = 0;
@@ -303,14 +303,20 @@ void k_init()
 	start_address[7] = &(k_timer_i_proc);
 
 	pid[8] = PID_USER_E;
-	priority[8] = 0;
-	is_iprocess[8] = 1;
+	priority[8] = 1;
+	is_iprocess[8] = 0;
 	start_address[8] = &(proc_E);
 
-	init_table = k_itable_init(9, pid, priority, is_iprocess, start_address);	//TODO
-	k_process_init(9, init_table); // Initialize all processes using itable //TODO
+	pid[9] = PID_USER_F;
+	priority[9] = 1;
+	is_iprocess[9] = 0;
+	start_address[9] = &(proc_F);
+
+	init_table = k_itable_init(10, pid, priority, is_iprocess, start_address);	//TODO
+	k_process_init(10, init_table); // Initialize all processes using itable //TODO
 
 	// NOTE: Normally cannot longjmp if the function that setjmp was called in has returned, but since we've set up a different stack for each process, this is not a problem.
-
 	k_signal_init(); // Set up signals	
+
+	atomic(0);
 } 

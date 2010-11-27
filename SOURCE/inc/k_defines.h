@@ -39,6 +39,7 @@
 #define PID_USER_C 3		// PID of User Process C
 #define PID_USER_D 4		// PID of User Process D
 #define PID_USER_E 5		// PID of User Process E
+#define PID_USER_F 6		// PID of User Process F
 /***************************************
  Status Defines
 ****************************************/

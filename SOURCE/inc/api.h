@@ -8,7 +8,8 @@
 #include "k_init_struct.h"
 #include "k_globals.h"
 #include "k_defines.h"
-
+#include "k_interrupt_handler.h"
+#include <stdio.h>
 /****************************************************************
  User API
  ----------------------------------------------------------------
@@ -27,7 +28,7 @@ int request_process_status(MsgEnv *msg_env_ptr);
 
 int terminate();
 
-void die();
+void die(int code);
 
 int change_priority(int new_priority, int target_process_id);
 

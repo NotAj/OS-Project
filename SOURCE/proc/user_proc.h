@@ -14,4 +14,6 @@ void proc_D();
 
 void proc_E();
 
+void proc_F();
+
 #endif

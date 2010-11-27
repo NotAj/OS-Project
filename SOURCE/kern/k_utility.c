@@ -16,7 +16,7 @@
 *              
 * Assumptions   : Will return NULL if PCB with that PID doesn't exist.
 *****************************************************************************/
-void k_terminate(int error)
+void k_terminate()
 {
 	extern int k_kbd_helper_pid;
 	extern int k_crt_helper_pid;
