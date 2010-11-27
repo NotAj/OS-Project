@@ -103,7 +103,7 @@ void k_crt_i_proc()
 				k_output_buf->wait_flag = 0;
 			}
 		}	
-		//Restore context of interrupted process
+		// Restore context of interrupted process
 		k_context_switch(k_current_process, k_interrupted_process);
 	}
 }
@@ -126,7 +126,7 @@ void k_timer_i_proc()
 {
 	k_timeout_queue timeoutQ;    //use global timeoutQ
 	(&timeoutQ)->head = NULL;
-	extern int k_clock_tick;	
+	extern long k_clock_tick;	
 	extern k_PCB_ptr k_current_process;
 	extern k_PCB_ptr k_interrupted_process;
 	k_message_ptr timeout_msg;
@@ -150,8 +150,6 @@ void k_timer_i_proc()
 			//Send a timeout complete message 
 			timeout_msg->receiver_pid = timeout_msg->sender_pid;
 			timeout_msg->sender_pid = PID_I_TIMER;
-			timeout_msg->msg_type = MSG_TYPE_WAKEUP_CODE;
-			timeout_msg->msg_size = 0;
 			k_send_message(timeout_msg->receiver_pid, timeout_msg);
 			timeout_msg = k_timeout_queue_dequeue(&timeoutQ);				
 		}

@@ -20,8 +20,10 @@
 /*************************
 * Function Declarations
 *************************/
-void k_terminate(int error);
+void k_terminate();
 
 k_PCB_ptr k_pid_to_PCB_ptr (int pid);
+
+int k_request_delay(int delay_time, int wakeup_code, MsgEnv *message_envelope);
 
 #endif
