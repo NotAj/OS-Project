@@ -4,7 +4,7 @@
 #include "api.h"
 #include "k_defines.h"
 #include "k_globals.h"
-
+//#include <string.h>
 
 void proc_null()
 {
@@ -51,4 +51,122 @@ void proc_wall_clock()
 		}
 		release_processor();
 	}
+}
+
+void proc_CCI()
+{
+	MsgEnv *key_in; 			//assign input/output envelope and allocate space
+	key_in = request_msg_env();
+
+	MsgEnv *crt_out;
+	crt_out = request_msg_env();
+
+	while (1)	//loop forever
+	{
+		crt_out->msg_text = "CCI:";		//prompt user for input
+		send_console_chars(crt_out);			
+		crt_out = receive_message();		
+		
+		get_console_chars(key_in);		//get ready to receive  input
+		key_in = receive_message();		//get queued msg
+		
+		char command[5];
+
+		if (key_in->msg_type == MSG_TYPE_CONSOLE_INPUT && sscanf(key_in->msg_text,"%s", command) == 1)	//check whether the received envelope is an input and could succesfully get command
+		{							
+			if (strncmp(command,"s",1)==0) 
+			{
+				MsgEnv *proc_a;	//create and send an empty envelope 
+				proc_a = request_msg_env(); 	//to user process A
+				send_message(PID_USER_A, proc_a);
+			}
+			
+			else if (strncmp(command,"ps",2)==0) 
+			{
+				request_process_status(crt_out);
+				send_console_chars(crt_out);
+				crt_out = receive_message();
+			}
+
+			else if (strncmp(command,"c",1)==0) 
+			{
+				int hh, mm, ss;
+				if (sscanf(key_in->msg_text, "%*s %d %*c %d %*c %d", &hh, &mm, &ss) == 3)				
+				{				
+					if (hh<24 && mm<60 && ss<60 && hh>=0 && mm>=0 && ss>=0)
+ 					{
+						k_clock_h = hh;
+						k_clock_m = mm;
+						k_clock_s = ss;
+					}
+					else
+					{
+						sscanf("INVALID_INPUT" ,"%s", crt_out->msg_text);
+						send_console_chars(crt_out);
+						crt_out = receive_message();
+					}
+				}
+				else
+				{
+					sscanf("INVALID_INPUT" ,"%s", crt_out->msg_text);
+					send_console_chars(crt_out);
+					crt_out = receive_message();
+				}	
+			}
+
+			else if (strncmp(command,"cd",2)==0) 	
+			{
+				k_display_clock = 1;
+			}
+			
+			else if (strncmp(command,"ct",2)==0) 	
+			{
+				k_display_clock = 0;
+			}
+	
+			else if (strncmp(command,"b",1)==0) 		
+			{
+				get_trace_buffers(crt_out);
+				send_console_chars(crt_out);
+				crt_out  = receive_message();	
+			}
+	
+			else if (strncmp(command,"t",1)==0) 	
+			{
+				terminate();		
+			}
+
+			else if (strncmp(command,"n",1)==0) 	
+			{	
+				int new_priority, process_id;
+				if (sscanf(key_in->msg_text, "%*s %d %d", &new_priority, &process_id) == 2)				
+				{				
+					if (new_priority>=0)
+ 					{
+						change_priority (new_priority, process_id);				
+					}
+					else
+					{
+						sscanf("INVALID_INPUT" ,"%s", crt_out->msg_text);
+						send_console_chars(crt_out);
+						crt_out = receive_message();
+					}
+				}
+				else
+				{
+					sscanf("INVALID_INPUT" ,"%s", crt_out->msg_text);
+					send_console_chars(crt_out);
+					crt_out = receive_message();
+				}			
+			}
+
+			else
+			{
+				sscanf("INVALID_INPUT" ,"%s", crt_out->msg_text);
+				send_console_chars(crt_out);
+				crt_out = receive_message();
+			}	
+		}
+		release_processor();
+	}	
 }
