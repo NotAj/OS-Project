@@ -56,15 +56,12 @@ void proc_C()
 		{
 			if ((msg->msg_text[1] % 20) == 0)
 			{	
-				printf("Printing\n");
 				sprintf(msg->msg_text, "Process C->%d\n", msg->msg_text[1]);
 				send_console_chars(msg);
 				while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
-				printf("Printing2\n");
 				request_delay(100, MSG_TYPE_WAKEUP_10, msg); // Request 10sec delay
 				while (1)
 				{
-					printf("Printing3\n");
 					msg = receive_message();
 					if (msg->msg_type == MSG_TYPE_WAKEUP_10)
 					{
@@ -94,13 +91,14 @@ void proc_D()
 	send_message(PID_USER_A, msg3);
 	while(1)
 	{
-		int delay = 10;
-		sprintf(msg->msg_text, "Waiting for User Input:\n");
-		//request_delay(delay,MSG_TYPE_WAKEUP_CODE,msg2);
-		//while (receive_message()->msg_type != MSG_TYPE_WAKEUP_CODE);
+		int delay = 50;
+	//	sprintf(msg->msg_text, "Waiting for User Input:\n");
+		sprintf(msg->msg_text, "5 second timeout:\n");
+		request_delay(delay,MSG_TYPE_WAKEUP_CODE,msg2);
+		while (receive_message()->msg_type != MSG_TYPE_WAKEUP_CODE);
 		send_console_chars(msg);
 		while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
-	
+/*	
 		get_console_chars(msg2);
 		do
 		{
@@ -108,7 +106,7 @@ void proc_D()
 		} while (msg2->msg_type != MSG_TYPE_CONSOLE_INPUT);
 		send_console_chars(msg2);
 		while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
-		release_processor();
+*/		release_processor();
 	}
 /*		do
 		{
@@ -130,9 +128,19 @@ void proc_D()
 }
 void proc_E()
 {
+	MsgEnv *msg = request_msg_env();
+	MsgEnv *msg2 = request_msg_env();	
 	while(1)
 	{
-		release_processor();
+		int delay = 70;
+	//	sprintf(msg->msg_text, "Waiting for User Input:\n");
+		sprintf(msg->msg_text, "7 second timeout:\n");
+	
+		request_delay(delay,MSG_TYPE_WAKEUP_CODE,msg2);
+		while (receive_message()->msg_type != MSG_TYPE_WAKEUP_CODE);
+		send_console_chars(msg);
+		while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+		release_processor();	
 	}
 }
 

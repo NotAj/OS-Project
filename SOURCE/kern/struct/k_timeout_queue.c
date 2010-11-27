@@ -91,6 +91,7 @@ k_message_ptr k_timeout_queue_dequeue (k_timeout_queue_ptr TQ)
 		k_message_ptr TO_msg;
 		TO_msg = TQ->head;
 		TQ->head = TQ->head->k_queue_next;
+		TO_msg->k_queue_next = NULL; // Always set next pointer to NULL when dequeing
 		return TO_msg;
 	}
 	//if there is nothing to return

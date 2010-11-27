@@ -30,9 +30,9 @@ void proc_wall_clock()
 	k_display_clock = 1;	
 	while(1)
 	{
-		request_delay(10, MSG_TYPE_WAKEUP_CODE, delay_msg);	//Request 1 second delay
+		request_delay(10, MSG_TYPE_WALLCLOCK_DELAY, delay_msg);	//Request 1 second delay
 		// Block process till wakeup message received
-		while(receive_message()->msg_type != MSG_TYPE_WAKEUP_CODE);	
+		while(receive_message()->msg_type != MSG_TYPE_WALLCLOCK_DELAY);	
 		// Update clock
 		k_clock_s = (k_clock_s + 1) % 60;
 		if(k_clock_s == 0) // Seconds rolled over. Increment minute

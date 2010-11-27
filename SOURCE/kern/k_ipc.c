@@ -59,7 +59,7 @@ MsgEnv* k_receive_message ()
 			return NULL;
 		k_current_process->p_status = STATUS_BLOCKED_ON_RECEIVE;
 		
-		printf("Blocking process %d|%s--->%d\n", k_current_process->p_pid,"receive" , k_atomic_count);
+//		printf("Blocking process %d|%s--->%d\n", k_current_process->p_pid,"receive" , k_atomic_count);
 
 		//This will perform a process switch to the next ready process
 		k_process_switch();
@@ -88,7 +88,7 @@ MsgEnv* k_request_msg_env ()
 		k_priority_queue_enqueue(k_current_process, k_blockedPQ);
 		k_current_process->p_status = STATUS_BLOCKED_ON_RESOURCE;
 		
-		printf("Blocking process %d|%s--->%d\n", k_current_process->p_pid, "request", k_atomic_count);
+//		printf("Blocking process %d|%s--->%d\n", k_current_process->p_pid, "request", k_atomic_count);
 
 		//This will perform a process switch to next ready process
 		k_process_switch();	
@@ -129,7 +129,7 @@ int k_release_msg_env (MsgEnv * msg_env_ptr)
 		ready_process->p_status = STATUS_READY;
 		k_priority_queue_enqueue(ready_process, k_readyPQ); 
 		
-		printf("Freeing process %d|%s--->%d\n", k_current_process->p_pid, "release", k_atomic_count);
+//		printf("Freeing process %d|%s--->%d\n", k_current_process->p_pid, "release", k_atomic_count);
 	 }
 	return ERROR_NONE;
  }

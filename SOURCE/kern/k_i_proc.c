@@ -132,14 +132,14 @@ void k_timer_i_proc()
  
 	while(1) //loop forever	
 	{
-	
 		//update RTX internal time stamp clock
 		k_clock_tick++;
 
 		//Check if there are any new timeout request messages
 		while(k_current_process->k_received_message_queue->head != NULL)  //retrieve all delay requests
+		{	
 			k_timeout_queue_enqueue(receive_message(), &timeoutQ);  //enqueue received message onto local TQ
-		
+		}
 		//If timeout queue has timeout requests
 		if((&timeoutQ)->head != NULL)
 			(&timeoutQ)->head->expiry_time--; //decrement
