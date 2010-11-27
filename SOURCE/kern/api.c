@@ -32,11 +32,8 @@ int terminate()
 	MsgEnv *msg = request_msg_env(); //Assuming this doesn block TODO
 	sprintf(msg->msg_text, "Process %d requested a terminate. Exiting\n", k_current_process->p_pid); 
 	send_console_chars(msg);
-	printf("Process %d requested a terminate. Exiting\n", k_current_process->p_pid);
-//	do //TODO 
-//	{
-//		msg = receive_message();
-//	} while(msg->msg_type != MSG_TYPE_DISPLAY_ACK);
+	while(receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+
 	atomic(1);
 	k_terminate(ERROR_NONE);
 	atomic(0);
@@ -49,32 +46,22 @@ void die(int code)
 {
 	MsgEnv *msg = request_msg_env(); //Assuming this doesn block TODO
 
-	while (k_atomic_count > 0)
-		atomic(0);
+	k_current_process->k_atomic_count = 1;
+	atomic(0);
 
 	switch (code)
 	{
 		case SIGINT:
-			printf("Current Process = %d\n", k_current_process->p_pid);
-			sprintf(msg->msg_text, "Current Process = %d, Interruped process = %d\n", k_current_process->p_pid, k_interrupted_process->p_pid);
-			send_console_chars(msg);
+			sprintf(msg->msg_text, "User Requested Shutdown.\nExiting RTX. Current Process = %d\n", k_current_process->p_pid);
 			break;
 		case SIGQUIT:
-			printf("Current Process = %d", k_current_process->p_pid);
-			sprintf(msg->msg_text, "Current Process = %d, Interruped process = %d\n", k_current_process->p_pid, k_interrupted_process->p_pid);
-			send_console_chars(msg);
+			sprintf(msg->msg_text, "User Requested Shutdown.\nExiting RTX. Current Process = %d\n", k_current_process->p_pid);
 			break;
 		default:
-			printf("ERROR CRITICAL: Current Process = %d, Interruped process = %d\n", k_current_process->p_pid, k_current_process->p_pid);
+			sprintf(msg->msg_text, "CRITICAL ERROR.\nExiting RTX. Current Process = %d\n", k_current_process->p_pid);
 			break;
 	}
-/*	msg=receive_message(); // returning null, shouldn't be`
-	do 
-	{
-		msg = receive_message();
-		printf("msg%p\n", msg);
-	} while(msg == NULL);
-*/
+	send_console_chars(msg);
 	atomic(1);
 	k_terminate();
 	atomic(0);

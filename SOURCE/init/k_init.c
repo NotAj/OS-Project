@@ -207,12 +207,15 @@ void k_process_init(int num_process, k_itable_ptr init_table)
 				// Create a function pointer containing start addr of the current pcb
 				// Note that the pointer to pcb has been overwritten by the loop. 
 				// Will be here if switched from the scheduler, so current_process global holds the process we're intested in.
-				void (*fp)() = k_current_process->k_start_address;
-				k_atomic_count = 1; // Reset atomic count for the first time.
+				
+				// Reset atomic count for the first time.
+				k_current_process->k_atomic_count = 1; 
 				if (k_current_process->p_status != STATUS_IPROCESS)
-					atomic(0); // Enable interrupts.
+					atomic(0); // Enable interrupts if normal process
+				
+				void (*fp)() = k_current_process->k_start_address;
 				fp(); // This will start execution from start_address()
-				//TODO assert(0); 
+				
 				// NOTE that a process can never return here so this init approach requires that all processes never end (ie. House all processes in an infinite loop)
 				die(ERROR_CRITICAL);
 			}
@@ -233,7 +236,6 @@ void k_signal_init()
 	sigset(SIGBUS, die); 	// Catch bus errors
 	sigset(SIGHUP, die);
 	sigset(SIGILL, die); 	// Illegal instruction
-	sigset(SIGQUIT, die);
 	sigset(SIGABRT, die);
 	sigset(SIGTERM, die);
 	sigset(SIGSEGV, die); 	// Catch segmentation faults
@@ -320,7 +322,4 @@ void k_init()
 
 	// NOTE: Normally cannot longjmp if the function that setjmp was called in has returned, but since we've set up a different stack for each process, this is not a problem.
 	k_signal_init(); // Set up signals	
-	
-	//atomic(0); // Enable interrupts for the first time
-
 } 

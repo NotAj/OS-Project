@@ -34,6 +34,7 @@ typedef struct k_PCB_struct
 	int p_pid ;
 	int p_priority;
 	int p_status;
+	int k_atomic_count;
 	void *k_stack_pointer;
 	jmp_buf k_jmp_buf;
 	void *k_start_address;

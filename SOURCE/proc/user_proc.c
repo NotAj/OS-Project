@@ -80,18 +80,19 @@ void proc_D()
 //	receive_message();
 	while(1)
 	{
+		int delay = 10;
+		sprintf(msg->msg_text, "%d second delay", delay/10);
+		request_delay(delay,MSG_TYPE_WAKEUP_CODE,msg2);
+		while (receive_message()->msg_type != MSG_TYPE_WAKEUP_CODE);
+		send_console_chars(msg);
+		while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+	
 		get_console_chars(msg2);
 		do
 		{
 			msg2 = receive_message();
 		} while (msg2->msg_type != MSG_TYPE_CONSOLE_INPUT);
 		send_console_chars(msg2);
-		while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
-		int delay = msg2->msg_text[0];
-		sprintf(msg->msg_text, "%d second delay", delay);
-		request_delay(delay,MSG_TYPE_WAKEUP_CODE,msg2);
-		while (receive_message()->msg_type != MSG_TYPE_WAKEUP_CODE);
-		send_console_chars(msg);
 		while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 	}
 /*		do

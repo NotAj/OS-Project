@@ -17,12 +17,13 @@ void atomic(int on)
 	if (on)
 	{
 		//Only mask signals if count is 0
-		if (k_atomic_count  == 0) 
+		if (k_current_process->k_atomic_count  == 0) 
 		{
 			// Increment the atomic count
-			k_atomic_count++;
+			k_current_process->k_atomic_count++;
 			// Block the signals
 			sigemptyset(&newmask);
+			sigaddset(&newmask, SIGINT);
 			sigaddset(&newmask, SIGALRM);	//the alarm signal
 			sigaddset(&newmask, SIGUSR1); 	// the KB signal
 			sigaddset(&newmask, SIGUSR2); 	// the CRT signal
@@ -30,26 +31,27 @@ void atomic(int on)
 		}
 		else // If count > 0 
 		{
-			k_atomic_count++; // Just increment count
+			k_current_process->k_atomic_count++; // Just increment count
 		}
 	}
 	// If calling atomic off
 	else
 	{
-		if (k_atomic_count == 1)
+		if (k_current_process->k_atomic_count == 1)
 		{
 			// Decrement the atomic count
-			k_atomic_count--;
+			k_current_process->k_atomic_count--;
 			// Unblock the signals
 			sigprocmask(SIG_SETMASK, &oldmask, NULL);
 		} 
-		else if (k_atomic_count > 1) // If atomic count > 1
+		else if (k_current_process->k_atomic_count > 1) // If atomic count > 1
 		{
-			k_atomic_count--; // Otherwise just decrement
+			k_current_process->k_atomic_count--; // Otherwise just decrement
 		}
+		// Do nothing if atomic_count is zero, assume interrupts already reenabled
 	} 
 	if (k_atomic_count < 0)
-		die(ERROR_CRITICAL);
+		die(ERROR_CRITICAL); // Should never be in this state, terminate RTX
 }
 
 void k_interrupt_handler (sig_no)
