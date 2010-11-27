@@ -233,14 +233,14 @@ void k_signal_init()
 	// Set up signal handling
 
 	sigset(SIGINT, die); 	// Catch kill signals
-	sigset(SIGBUS, die); 	// Catch bus errors
+/*	sigset(SIGBUS, die); 	// Catch bus errors
 	sigset(SIGHUP, die);
 	sigset(SIGILL, die); 	// Illegal instruction
 	sigset(SIGABRT, die);
 	sigset(SIGTERM, die);
 	sigset(SIGSEGV, die); 	// Catch segmentation faults
 	sigset(SIGINT, die);	// Set ctrl + c to terminate OS
-
+*/
 	//Runs the interrupt handler whenever the signal is fired
 	sigset (SIGALRM, k_interrupt_handler); // Linux clock signal
 	sigset (SIGUSR1, k_interrupt_handler); // Keyboard helper signal
@@ -289,7 +289,7 @@ void k_init()
 	
 	pid[4] = PID_USER_D;
 	priority[4] = 0;
-	is_iprocess[4] = 0;
+	is_iprocess[4] = 1;
 	start_address[4] = &(proc_D);
 
 	pid[5] = PID_I_CRT;
@@ -309,12 +309,12 @@ void k_init()
 
 	pid[8] = PID_USER_E;
 	priority[8] = 1;
-	is_iprocess[8] = 0;
+	is_iprocess[8] = 1;
 	start_address[8] = &(proc_E);
 
 	pid[9] = PID_USER_F;
 	priority[9] = 1;
-	is_iprocess[9] = 0;
+	is_iprocess[9] = 1;
 	start_address[9] = &(proc_F);
 
 	pid[10] = PID_WALL_CLOCK;

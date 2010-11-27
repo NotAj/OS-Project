@@ -65,33 +65,34 @@ void proc_CCI()
 	{
 		crt_out->msg_text = "CCI:";		//prompt user for input
 		if (send_console_chars(crt_out)==ERROR_NONE)	
-			crt_out = receive_message();
-printf("1");
+			while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK){}
+printf("1\n");
 		if (get_console_chars(key_in)==ERROR_NONE)		//get ready to receive  input
-			key_in = receive_message();		//get queued msg
-printf("2");		
+			while (receive_message()->msg_type != MSG_TYPE_CONSOLE_INPUT){}
+printf("2\n");		
+printf("%s \n", key_in->msg_text);
 		char command[5];
 
 		if (key_in->msg_type == MSG_TYPE_CONSOLE_INPUT && sscanf(key_in->msg_text,"%s", command) == 1)	//check whether the received envelope is an input and could succesfully get command
-		{	printf("%s", command);			 			
+		{	printf("%s \n", command);			 			
 			if (strncmp(command,"s",1)==0) 
 			{
 				MsgEnv *proc_a;	//create and send an empty envelope 
 				proc_a = request_msg_env(); 	//to user process A
 				send_message(PID_USER_A, proc_a);
-				printf("4");
+				printf("3\n");
 			}
 			
 			else if (strncmp(command,"ps",2)==0) 
 			{
-printf("5");				request_process_status(crt_out);
+printf("5\n");				request_process_status(crt_out);
 				if (send_console_chars(crt_out)==ERROR_NONE)
-					crt_out = receive_message();
+					while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK){}
 			}
 
 			else if (strncmp(command,"c",1)==0) 
 			{
-				int hh, mm, ss;
+	printf("6\n");			int hh, mm, ss;
 				if (sscanf(key_in->msg_text, "%*s %d %*c %d %*c %d", &hh, &mm, &ss) == 3)				
 				{				
 					if (hh<24 && mm<60 && ss<60 && hh>=0 && mm>=0 && ss>=0)
@@ -104,42 +105,42 @@ printf("5");				request_process_status(crt_out);
 					{
 						sscanf("INVALID_INPUT" ,"%s", crt_out->msg_text);
 						if (send_console_chars(crt_out)==ERROR_NONE);
-							crt_out = receive_message();
+							while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK){}
 					}
 				}
 				else
 				{
 					sscanf("INVALID_INPUT" ,"%s", crt_out->msg_text);
 					if (send_console_chars(crt_out)==ERROR_NONE)
-						crt_out = receive_message();
+						while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK){}
 				}	
 			}
 
 			else if (strncmp(command,"cd",2)==0) 	
 			{
-				k_display_clock = 1;
+		printf("7\n");		k_display_clock = 1;
 			}
 			
 			else if (strncmp(command,"ct",2)==0) 	
 			{
-				k_display_clock = 0;
+			printf("8\n");	k_display_clock = 0;
 			}
 	
 			else if (strncmp(command,"b",1)==0) 		
 			{
-				get_trace_buffers(crt_out);
+			printf("9\n");	get_trace_buffers(crt_out);
 				if (send_console_chars(crt_out)==ERROR_NONE)
-					crt_out  = receive_message();	
+					while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK){}	
 			}
 	
 			else if (strncmp(command,"t",1)==0) 	
 			{
-				terminate();		
+		printf("10\n");		terminate();		
 			}
 
 			else if (strncmp(command,"n",1)==0) 	
 			{	
-				int new_priority, process_id;
+			printf("11\n");	int new_priority, process_id;
 				if (sscanf(key_in->msg_text, "%*s %d %d", &new_priority, &process_id) == 2)				
 				{				
 					if (new_priority>=0)
@@ -150,22 +151,22 @@ printf("5");				request_process_status(crt_out);
 					{
 						sscanf("INVALID_INPUT" ,"%s", crt_out->msg_text);
 						if (send_console_chars(crt_out)==ERROR_NONE)
-							crt_out  = receive_message();
+							while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK){}
 					}
 				}
 				else
 				{
 					sscanf("INVALID_INPUT" ,"%s", crt_out->msg_text);
 					if (send_console_chars(crt_out)==ERROR_NONE)
-						crt_out  = receive_message();
+						while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK){}
 				}			
 			}
 
 			else
 			{
-				sscanf("INVALID_INPUT" ,"%s", crt_out->msg_text);
+		printf("12\n");	sscanf("INVALID_INPUT" ,"%s", crt_out->msg_text);
 				if (send_console_chars(crt_out)==ERROR_NONE)
-					crt_out  = receive_message();
+					while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK){}
 			}	
 		}
 		release_processor();
