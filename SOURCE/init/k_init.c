@@ -233,15 +233,15 @@ void k_signal_init()
 	// Set up signal handling
 
 
-	sigset(SIGINT, die); 	// Catch kill signals
-/*	sigset(SIGBUS, die); 	// Catch bus errors
+/*	sigset(SIGINT, die); 	// Catch kill signals
+	sigset(SIGBUS, die); 	// Catch bus errors
 	sigset(SIGHUP, die);
 	sigset(SIGILL, die); 	// Illegal instruction
 	sigset(SIGABRT, die);
 	sigset(SIGTERM, die);
 	sigset(SIGSEGV, die); 	// Catch segmentation faults
-	sigset(SIGINT, die);	// Set ctrl + c to terminate OS
-*/
+*/	sigset(SIGINT, die);	// Set ctrl + c to terminate OS
+
 
 	//Runs the interrupt handler whenever the signal is fired
 	sigset (SIGALRM, k_interrupt_handler); // Linux clock signal
@@ -325,9 +325,9 @@ void k_init()
 	start_address[10] = &(proc_wall_clock);
 
 	pid[11] = PID_CCI;
-	priority[10] = 0;
-	is_iprocess[10] = 0;
-	start_address[10] = &(proc_CCI);
+	priority[11] = 0;
+	is_iprocess[11] = 0;
+	start_address[11] = &(proc_CCI);
 
 	init_table = k_itable_init(12, pid, priority, is_iprocess, start_address);	//TODO
 	k_process_init(12, init_table); // Initialize all processes using itable //TODO

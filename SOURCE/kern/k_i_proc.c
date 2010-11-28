@@ -35,7 +35,6 @@ void k_key_i_proc()
 			{
 				input_msg->msg_text[i]  = k_input_buf->bufdata[i]; 
 			}
-		
 			//send message to process that requested input
 			input_msg->receiver_pid = input_msg->sender_pid;
 			input_msg->sender_pid = PID_I_KB;
@@ -99,7 +98,6 @@ void k_crt_i_proc()
 				output_msg->msg_type = MSG_TYPE_DISPLAY_ACK;
 				output_msg->msg_size = 0;
 				k_send_message(output_msg->receiver_pid, output_msg);
-				puts("CRT SET");
 				k_output_buf->wait_flag = 0;
 			}
 		}	
@@ -133,7 +131,6 @@ void k_timer_i_proc()
  
 	while(1) //loop forever	
 	{
-	
 		//update RTX internal time stamp clock
 		k_clock_tick++;
 
