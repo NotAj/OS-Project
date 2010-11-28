@@ -33,11 +33,6 @@ int request_process_status(MsgEnv *msg_env_ptr)
 
 int terminate()
 {
-/*	MsgEnv *msg = request_msg_env(); //Assuming this doesn block TODO
-	sprintf(msg->msg_text, "Process %d requested a terminate. Exiting\n", k_current_process->p_pid); 
-	send_console_chars(msg);
-	while(receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
-*/
 	k_atomic(1);
 	k_terminate(ERROR_NONE);
 	k_atomic(0);

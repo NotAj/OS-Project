@@ -10,7 +10,6 @@ TEST_SOURCES = test_queue.h test_priority_queue.h test_message_queue.h test_trac
 
 MEM_FILES = helpers/inputfile helpers/outputfile
 
-# TODO Figure out proper way of linking using o files in obj/
 OBJ_DIR = obj/
 HELPER_DIR = helpers/
 

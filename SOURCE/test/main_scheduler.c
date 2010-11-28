@@ -15,8 +15,6 @@
 #include "test_queue.h"
 #include "test_priority_queue.h"
 
-//#define DEBUG//TODO
-
 /****************************************************************
  Test cases 
  ----------------------------------------------------------------
@@ -181,7 +179,6 @@ void proc_3()
 		assert(pcb2->p_priority == 3);
 		assert(k_readyPQ->array[3]->head == pcb2);
 		assert(k_readyPQ->array[3]->tail == pcb);
-		//TODO add handling for ready or blocked_on_resource pcb not on respective queue
 		printf("---->PASS\n");
 		MsgEnv *msg = request_msg_env();
 		request_process_status(msg);
