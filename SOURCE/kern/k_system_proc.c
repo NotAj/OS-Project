@@ -62,7 +62,7 @@ void proc_CCI()
 	crt_out = request_msg_env();
 	while (1)	//loop forever
 	{
-		crt_out->msg_text = "CCI: \n";		//prompt user for input
+		strcpy(crt_out->msg_text, "CCI: \n");		//prompt user for input
 		if (send_console_chars(crt_out)==ERROR_NONE)	
 			while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 		if (get_console_chars(key_in)==ERROR_NONE)		//get ready to receive  input
@@ -84,7 +84,7 @@ void proc_CCI()
 				MsgEnv *proc_a;	//create and send an empty envelope 
 				proc_a = request_msg_env(); 	//to user process A
 				send_message(PID_USER_A, proc_a);
-				crt_out->msg_text = "MESSAGE SENT TO USER PROCESS A\n";
+				strcpy(crt_out->msg_text, "MESSAGE SENT TO USER PROCESS A\n");
 				if (send_console_chars(crt_out)==ERROR_NONE);
 					while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 			}
@@ -104,14 +104,14 @@ void proc_CCI()
 			{
 				if (k_display_clock == 0)
 				{	
-					crt_out->msg_text = "DISPLAYING WALL CLOCK... \n";
+					strcpy(crt_out->msg_text, "DISPLAYING WALL CLOCK... \n");
 					if (send_console_chars(crt_out)==ERROR_NONE);
 						while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);			
 					k_display_clock = 1;
 				}
 				else 
 				{
-					crt_out->msg_text = "ALREADY DISPLAYING WALL CLOCK.....DUH \n";
+					strcpy(crt_out->msg_text, "ALREADY DISPLAYING WALL CLOCK.....DUH \n");
 					if (send_console_chars(crt_out)==ERROR_NONE);
 							while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 				}
@@ -121,14 +121,14 @@ void proc_CCI()
 			{
 				if (k_display_clock == 1)
 				{	
-					crt_out->msg_text = "HIDING WALL CLOCK... \n";
+					strcpy(crt_out->msg_text, "HIDING WALL CLOCK... \n");
 					if (send_console_chars(crt_out)==ERROR_NONE);
 						while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);	
 					k_display_clock = 0;
 				}
 				else 
 				{
-					crt_out->msg_text = "WALL CLOCK ALREADY HIDDEN.....DUH \n";
+					strcpy(crt_out->msg_text, "WALL CLOCK ALREADY HIDDEN.....DUH \n");
 					if (send_console_chars(crt_out)==ERROR_NONE);
 							while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 				}
@@ -145,20 +145,20 @@ void proc_CCI()
 						k_clock_h = hh;
 						k_clock_m = mm;
 						k_clock_s = ss;
-						crt_out->msg_text = "WALL CLOCK SET\n";
+						strcpy(crt_out->msg_text, "WALL CLOCK SET\n");
 						if (send_console_chars(crt_out)==ERROR_NONE);
 							while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 					}
 					else
 					{
-						crt_out->msg_text = "INVALID_INPUT \n";
+						strcpy(crt_out->msg_text, "INVALID_INPUT \n");
 						if (send_console_chars(crt_out)==ERROR_NONE);
 							while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 					}
 				}
 				else
 				{
-					crt_out->msg_text = "INVALID_INPUT \n";
+					strcpy(crt_out->msg_text, "INVALID_INPUT \n");
 					if (send_console_chars(crt_out)==ERROR_NONE)
 						while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 				}	
@@ -187,27 +187,28 @@ void proc_CCI()
  					{
 						if (change_priority (new_priority, process_id) == ERROR_NONE)
 						{		
-							crt_out->msg_text = "PRIORITY UPDATED \n";
+
+							strcpy(crt_out->msg_text, "PRIORITY CHANGED \n");
 							if (send_console_chars(crt_out)==ERROR_NONE)
 								while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 						}
 						else
 						{
-							crt_out->msg_text = "INVALID_INPUT \n";
+							strcpy(crt_out->msg_text, "INVALID_INPUT \n");
 							if (send_console_chars(crt_out)==ERROR_NONE)
 								while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 						}
 					}
 					else
 					{
-						crt_out->msg_text = "INVALID_INPUT \n";
+						strcpy(crt_out->msg_text, "INVALID_INPUT \n");
 						if (send_console_chars(crt_out)==ERROR_NONE)
 							while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 					}
 				}
 				else
 				{
-					crt_out->msg_text = "INVALID_INPUT \n";
+					strcpy(crt_out->msg_text, "INVALID_INPUT \n");
 					if (send_console_chars(crt_out)==ERROR_NONE)
 						while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 				}			
@@ -215,7 +216,7 @@ void proc_CCI()
 
 			else
 			{
-				crt_out->msg_text = "INVALID_INPUT \n";
+				strcpy(crt_out->msg_text, "INVALID_INPUT \n");
 				if (send_console_chars(crt_out)==ERROR_NONE)
 					while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 			}	
