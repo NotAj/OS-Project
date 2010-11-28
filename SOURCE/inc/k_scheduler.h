@@ -35,4 +35,6 @@ int k_release_processor ();
 
 int k_change_priority (int new_priority, int target_process_id);
 
+int k_request_process_status(k_message_ptr crt_out);
+
 #endif

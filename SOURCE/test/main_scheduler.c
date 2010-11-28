@@ -183,6 +183,8 @@ void proc_3()
 		assert(k_readyPQ->array[3]->tail == pcb);
 		//TODO add handling for ready or blocked_on_resource pcb not on respective queue
 		printf("---->PASS\n");
+		MsgEnv *msg = request_msg_env();
+		request_process_status(msg);
 		printf("SCHEDULER PASSED\n\n");
 		exit(0);	
 	}

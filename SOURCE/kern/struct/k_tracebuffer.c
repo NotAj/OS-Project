@@ -39,3 +39,6 @@ void k_tracebuffer_update (int sender_pid, int receiver_pid, int msg_type, k_tra
 	TB->buffer[TB->head]->msg_type = msg_type;
 	TB->buffer[TB->head]->timestamp = k_clock_tick;
 }
+
+
+

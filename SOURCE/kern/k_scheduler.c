@@ -170,3 +170,43 @@ int k_change_priority(int new_priority, int target_process_id)
 	return ERROR_NONE;
 }
 
+
+/****************************************************************************
+* Function      :  k_request_process_status
+******************************************************************************
+* Description   : This function accepts a msg env pointer and goes through the queue
+*		: of all PCB's adding the PID, priority, and status of each to the 
+*		: text of the message. 
+* 
+* Assumptions   :  
+*****************************************************************************/
+int k_request_process_status(k_message_ptr crt_out)
+{
+	if (crt_out == NULL)
+	{	
+		die(ERROR_CONTEXT_SWITCH); // request process status should always be given valid parameters
+	}
+	extern k_queue_ptr k_allQ;
+	k_PCB_ptr current_pcb;
+	current_pcb = k_allQ->head;  //create a node to traverse k_allQ
+	int pid, pri, sta, offset;
+	offset = 0;
+	offset += sprintf(crt_out->msg_text + offset, "%24s\n", "PROCESS STATUS");
+	offset += sprintf(crt_out->msg_text + offset, "%8s %8s %8s\n", "PID", "Priority", "Status");
+
+	while(current_pcb != NULL)
+	{			
+		//data will be written to a derefrenced pointer…all subsequent
+		//writes are to an incremented memory location 
+		//Populate Crt_out->msg_text field with process info of Curr_PCB
+		pid = current_pcb->p_pid;
+		pri = current_pcb->p_priority;
+		sta = current_pcb->p_status;
+		offset += sprintf(crt_out->msg_text+offset, "%8d %8d %8d\n", pid, pri, sta); 
+
+		current_pcb = current_pcb->k_all_queue_next; //point to the next process
+	}
+
+	return ERROR_NONE; 	//once the message envelope is populated with the
+					//information for all processes
+}

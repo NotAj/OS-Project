@@ -195,12 +195,7 @@ void proc_2()
 /***********************************************************************/
 /*CASE 10*/	assert(i == 23);		
 		assert(message2_2 != NULL);
-		printf("---->PASS\n");	
-
-
-
-k_get_trace_buffers(message2_1);
-	
+		printf("---->PASS\n");		
 /***********************************************************************/
 /*CASE 11*/	j = 2;
 		printf("TESTING FAILED SEND ON NONEXISTANT PID");
@@ -319,9 +314,6 @@ void proc_4()
 		assert(message4 == NULL);
 		printf("---->PASS\n\n");
 /***********************************************************************/
-
-		
-
 		exit(0);
 	}
 }
@@ -373,6 +365,7 @@ int main()
 	pcb4 = k_pid_to_PCB_ptr(4);
 	
 	i=1;
+	
 	k_process_switch();
 }
 

@@ -129,3 +129,55 @@ int k_release_msg_env (MsgEnv * msg_env_ptr)
 	 }
 	return ERROR_NONE;
  }
+
+/****************************************************************************
+* Function      :  k_request_process_status
+******************************************************************************
+* Description   : This function accepts a msg env pointer and goes through the queue
+*		: of all PCB's adding the PID, priority, and status of each to the 
+*		: text of the message. 
+* 
+* Assumptions   :  
+*****************************************************************************/
+int k_get_trace_buffers(MsgEnv * message_envelope)
+{
+	if (message_envelope == NULL)
+	{	
+		die(ERROR_CONTEXT_SWITCH); // request process status should always be given valid parameters
+	}
+
+	k_trace_ptr tb;
+	int i,place, offset, spid, rpid, msgtyp, time;
+	i = k_sendTB->head;
+	tb = k_sendTB->buffer[i];  //create a node to traverse k_allQ
+	offset = 0;
+	offset += sprintf(message_envelope->msg_text + offset, "%30s\n%10s %10s %10s %10s\n","SENT MESSAGES", "Sndr PID",  "Rcvr PID",  "Msg Type",  "Timestamp");
+
+	do 
+	{			
+		tb = k_sendTB->buffer[i];
+		spid = tb->sender_pid;		
+		rpid = tb->receiver_pid;
+		msgtyp = tb->msg_type;
+		time = tb->timestamp;
+		offset += sprintf(message_envelope->msg_text + offset, "%10d %10d %10d %10d\n", spid, rpid, msgtyp, time); 
+		i = (i+1)%16;
+	} while(i != k_sendTB->head);
+	
+	offset += sprintf(message_envelope->msg_text + offset, "\n");
+	offset += sprintf(message_envelope->msg_text + offset, "%30s\n%10s %10s %10s %10s\n","RECEIVED MESSAGES", "Sndr PID",  "Rcvr PID",  "Msg Type",  "Timestamp");
+	do
+	{		
+		tb = k_receiveTB->buffer[i]; 	
+		spid = tb->sender_pid;		
+		rpid = tb->receiver_pid;
+		msgtyp = tb->msg_type;
+		offset += sprintf(message_envelope->msg_text + offset, "%10d %10d %10d %10d\n", spid, rpid, msgtyp, time); 
+		time = tb->timestamp;
+
+		i = (i+1)%16;
+	} while(i != k_receiveTB->head);
+		
+	return ERROR_NONE; 	//once the message envelope is populated with the
+					//information for all processes
+}
