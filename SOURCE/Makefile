@@ -117,7 +117,6 @@ $(TEST_IH_EXE): $(TEST_OBJECTS) $(TEST_IH_MAIN)
 $(TEST_IPROC_EXE): $(TEST_OBJECTS) $(TEST_IPROC_MAIN)
 	$(CC) $(LDFLAGS) $(TEST_OBJECTS_DIR) $(TEST_IPROC_MAIN) -o $@
 
-
 $(OBJECTS): | $(OBJ_DIR)
 $(TEST_OBJECTS): | $(OBJ_DIR)
 
@@ -130,7 +129,7 @@ $(OBJ_DIR):
 .h.o:
 	$(CC) $(CFLAGS) -c -o $(OBJ_DIR)$@ $<
 
-k_pcb.o: k_pcb.h k_defines.h
+k_pcb.o: k_pcb.h k_message_queue.h k_defines.h
 k_message.o: k_message.h k_defines.h
 
 k_queue.o: k_queue.h k_pcb.h 
@@ -138,8 +137,8 @@ k_priority_queue.o : k_priority_queue.h k_queue.h k_pcb.h k_utility.h k_defines.
 k_message_queue.o: k_message_queue.h k_message.h
 k_timeout_queue.o: k_timeout_queue.h k_message.h
 k_tracebuffer.o: k_tracebuffer.h k_defines.h
-k_itable.o: 
-k_io_buffer.o: k_io_buffer.c
+k_itable.o: k_itable.c 
+k_io_buffer.o: k_io_buffer.c k_defines.h
 
 k_scheduler: k_scheduler.h k_pcb.h k_queue.h k_priority_queue.h k_globals.h
 k_utility.o: k_utility.h k_pcb.h k_queue.h k_ipc.h k_defines.h k_globals.h
