@@ -75,10 +75,9 @@ void proc_CCI()
 		int cmd_no;
 
 		cmd_no = sscanf(key_in->msg_text,"%2s %8s %3s %1s", command, param1, param2, param3);
-
 		if (key_in->msg_type == MSG_TYPE_CONSOLE_INPUT)	//check whether the received envelope is an input and could succesfully get command
 		{				 			
-			if ((strncmp(command,"s",1)==0 || strncmp(command,"S",1)==0) && cmd_no == 1) 
+			if ((strncmp(command,"s",2)==0 || strncmp(command,"S",2)==0) && cmd_no == 1) 
 			{
 				MsgEnv *proc_a;	//create and send an empty envelope 
 				proc_a = request_msg_env(); 	//to user process A
@@ -107,7 +106,7 @@ void proc_CCI()
 				}
 				else 
 				{
-					strcpy(crt_out->msg_text, "ALREADY DISPLAYING WALL CLOCK.....DUH \n");
+					strcpy(crt_out->msg_text, "ALREADY DISPLAYING WALL CLOCK... \n");
 					if (send_console_chars(crt_out)==ERROR_NONE);
 							while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 				}
@@ -125,13 +124,13 @@ void proc_CCI()
 				}
 				else 
 				{
-					strcpy(crt_out->msg_text, "WALL CLOCK ALREADY HIDDEN.....DUH \n");
+					strcpy(crt_out->msg_text, "WALL CLOCK ALREADY HIDDEN.... \n");
 					if (send_console_chars(crt_out)==ERROR_NONE);
 							while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 				}
 			}
 	
-			else if ((strncmp(command,"c",1)==0 || strncmp(command,"C",1)==0) && cmd_no == 2) 
+			else if ((strncmp(command,"c",2)==0 || strncmp(command,"C",2)==0) && cmd_no == 2) 
 			{
 				int hh, mm, ss;
 				char a, b;
@@ -161,7 +160,7 @@ void proc_CCI()
 				}	
 			}
 
-			else if ((strncmp(command,"b",1)==0 || strncmp(command,"B",1)==0) && cmd_no == 1) 		
+			else if ((strncmp(command,"b",2)==0 || strncmp(command,"B",2)==0) && cmd_no == 1) 		
 			{
 				if (get_trace_buffers(crt_out) == ERROR_NONE)
 				{
@@ -170,12 +169,12 @@ void proc_CCI()
 				}	
 			}
 	
-			else if ((strncmp(command,"t",1)==0 || strncmp(command,"T",1)==0) && cmd_no == 1) 	
+			else if ((strncmp(command,"t",2)==0 || strncmp(command,"T",2)==0) && cmd_no == 1) 	
 			{
 				terminate();		
 			}
 
-			else if ((strncmp(command,"n",1)==0 || strncmp(command,"N",1)==0) && cmd_no == 3) 	
+			else if ((strncmp(command,"n",2)==0 || strncmp(command,"N",2)==0) && cmd_no == 3) 	
 			{	
 				int new_priority, process_id;
 				if (sscanf(key_in->msg_text, "%*s %d %d", &new_priority, &process_id) == 2)				
