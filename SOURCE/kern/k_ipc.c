@@ -146,44 +146,37 @@ int k_get_trace_buffers(MsgEnv * message_envelope)
 	}
 
 	k_trace_ptr tb;
-	int i, place, offset, spid, rpid, msgtyp, time;
-	place = k_sendTB->head;
-	tb = k_sendTB->buffer[place];  //create a node to traverse k_allQ
+	int i,place, offset, spid, rpid, msgtyp, time;
+	i = k_sendTB->head;
+	tb = k_sendTB->buffer[i];  //create a node to traverse k_allQ
 	offset = 0;
-	i = 0;
-	offset += sprintf(message_envelope->msg_text, "SENT MESSAGES:\nSnd PID,  Rec PID,  Msg Type,  Timestamp:\n");
+	offset += sprintf(message_envelope->msg_text + offset, "%30s\n%10s %10s %10s %10s\n","SENT MESSAGES", "Sndr PID",  "Rcvr PID",  "Msg Type",  "Timestamp");
 
-	while(place != k_sendTB->head || i == 0)
+	do 
 	{			
+		tb = k_sendTB->buffer[i];
 		spid = tb->sender_pid;		
 		rpid = tb->receiver_pid;
 		msgtyp = tb->msg_type;
 		time = tb->timestamp;
-		offset += sprintf(message_envelope->msg_text+offset, "  %d<t>%d<t>%d<t>%d<cr>", spid, rpid, msgtyp, time); 
-
-		place = (place+1)%16;
-		tb = k_sendTB->buffer[place];
-		i++;
-	}
-
-	place = k_receiveTB->head;
-	tb = k_receiveTB->buffer[place];  //create a node to traverse k_allQ
-	i = 0;
-	offset += sprintf(message_envelope->msg_text+offset, "\nReceived MESSAGES:\nSnd PID,  Rec PID,  Msg Type,  Timestamp:\n");
-
-	while(place != k_receiveTB->head || i == 0)
-	{			
+		offset += sprintf(message_envelope->msg_text + offset, "%10d %10d %10d %10d\n", spid, rpid, msgtyp, time); 
+		i = (i+1)%16;
+	} while(i != k_sendTB->head);
+	
+	offset += sprintf(message_envelope->msg_text + offset, "\n");
+	offset += sprintf(message_envelope->msg_text + offset, "%30s\n%10s %10s %10s %10s\n","RECEIVED MESSAGES", "Sndr PID",  "Rcvr PID",  "Msg Type",  "Timestamp");
+	do
+	{		
+		tb = k_receiveTB->buffer[i]; 	
 		spid = tb->sender_pid;		
 		rpid = tb->receiver_pid;
 		msgtyp = tb->msg_type;
+		offset += sprintf(message_envelope->msg_text + offset, "%10d %10d %10d %10d\n", spid, rpid, msgtyp, time); 
 		time = tb->timestamp;
-		offset += sprintf(message_envelope->msg_text+offset, "  %d<t>%d<t>%d<t>%d<cr>", spid, rpid, msgtyp, time); 
 
-		place = (place+1)%16;
-		tb = k_receiveTB->buffer[place];
-		i++;
-	}
-	printf("%s\n", message_envelope->msg_text);
+		i = (i+1)%16;
+	} while(i != k_receiveTB->head);
+		
 	return ERROR_NONE; 	//once the message envelope is populated with the
 					//information for all processes
 }
