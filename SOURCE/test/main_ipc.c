@@ -373,9 +373,6 @@ int main()
 	pcb4 = k_pid_to_PCB_ptr(4);
 	
 	i=1;
-//	k_message_ptr message;
-//	message = k_request_msg_env();
-//	k_request_process_status(message);
 	k_process_switch();
 }
 
