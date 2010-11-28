@@ -24,8 +24,11 @@ int release_processor()
 
 int request_process_status(MsgEnv *msg_env_ptr)
 {
-	k_request_process_status(msg_env_ptr);	
-	return 1;
+	int code;
+	atomic(1);
+	code = k_request_process_status(msg_env_ptr);	
+	atomic(0);
+	return code;
 }
 
 int terminate()
@@ -118,8 +121,11 @@ MsgEnv *request_msg_env()
 
 int get_trace_buffers(MsgEnv *message_envelope)
 {
-	k_get_trace_buffers(message_envelope);	
-	return 1;
+	int code;
+	atomic(1);
+	code = k_get_trace_buffers(message_envelope);	
+	atomic(0);
+	return code;
 }
 
 MsgEnv_queue_ptr MsgEnv_queue_init()
