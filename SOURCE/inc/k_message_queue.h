@@ -24,6 +24,8 @@ typedef struct k_message_queue_struct
 	k_message_ptr tail;
 } k_message_queue;
 
+typedef struct k_message_queue_struct MsgEnv_queue;
+
 typedef struct k_message_queue_struct *MsgEnv_queue_ptr;
 
 
