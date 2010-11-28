@@ -11,7 +11,6 @@ void proc_null()
 	{
 		// Purpose of NULL process is to always be ready to run.
 		// Process continuously gives up control, lets new free processes to run asap
-	//	printf("CCI Status: %d CCI Priority: %d\n", k_pid_to_PCB_ptr(PID_CCI)->p_status, k_pid_to_PCB_ptr(PID_CCI)->p_priority);		
 		release_processor();
 	}
 }
@@ -27,7 +26,6 @@ void proc_wall_clock()
 	// Allocate messages to be reused for requesting delay and outputting to crt
 	MsgEnv *delay_msg = k_request_msg_env(); 
 	MsgEnv *output_msg = k_request_msg_env();	
-	k_display_clock = 1;	
 	while(1)
 	{
 		request_delay(10, MSG_TYPE_WALLCLOCK_DELAY, delay_msg);	//Request 1 second delay
@@ -45,8 +43,8 @@ void proc_wall_clock()
 		}
 		if(k_display_clock == 1) // If display flag set, send time to crt
 		{
-			// Set to row 0, column 72
-			output_msg->msg_size = sprintf(output_msg->msg_text, "\033[s\033[H\033[K\033[0;72H\033[1;31m%02d:%02d:%02d\n\033[0m\033[u", k_clock_h, k_clock_m, k_clock_s); 
+			// Constantly output clock to row 0, column 72
+			output_msg->msg_size = sprintf(output_msg->msg_text, "\033[s\033[H\033[K\033[0;72H\033[1;31m%02d\033[1;33m:\033[1;31m%02d\033[1;33m:\033[1;31m%02d\033[u", k_clock_h, k_clock_m, k_clock_s); 
 			send_console_chars(output_msg);
 			while(receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 		}
@@ -149,14 +147,14 @@ void proc_CCI()
 					}
 					else
 					{
-						strcpy(crt_out->msg_text, "INVALID_INPUT \n");
+						strcpy(crt_out->msg_text, "INVALID INPUT \n");
 						if (send_console_chars(crt_out)==ERROR_NONE);
 							while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 					}
 				}
 				else
 				{
-					strcpy(crt_out->msg_text, "INVALID_INPUT \n");
+					strcpy(crt_out->msg_text, "INVALID INPUT \n");
 					if (send_console_chars(crt_out)==ERROR_NONE)
 						while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 				}	
@@ -191,7 +189,7 @@ void proc_CCI()
 						}
 						else
 						{
-							strcpy(crt_out->msg_text, "INVALID_INPUT \n");
+							strcpy(crt_out->msg_text, "INVALID INPUT \n");
 							if (send_console_chars(crt_out)==ERROR_NONE)
 								while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 						}
@@ -199,14 +197,14 @@ void proc_CCI()
 					}
 					else
 					{
-						strcpy(crt_out->msg_text, "INVALID_INPUT \n");
+						strcpy(crt_out->msg_text, "INVALID INPUT \n");
 						if (send_console_chars(crt_out)==ERROR_NONE)
 							while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 					}
 				}
 				else
 				{
-					strcpy(crt_out->msg_text, "INVALID_INPUT \n");
+					strcpy(crt_out->msg_text, "INVALID INPUT \n");
 					if (send_console_chars(crt_out)==ERROR_NONE)
 						while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 				}			
@@ -214,7 +212,7 @@ void proc_CCI()
 
 			else
 			{
-				strcpy(crt_out->msg_text, "INVALID_INPUT \n");
+				strcpy(crt_out->msg_text, "INVALID INPUT \n");
 				if (send_console_chars(crt_out)==ERROR_NONE)
 					while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 			}	

@@ -39,8 +39,7 @@ int main (int argc, char *CRTbuffer[]){
 
 	output_buf = (k_io_buffer_ptr) mmap_ptr;	//creating pointer to the shared memory
 	output_buf->length = 0;
-	output_buf->wait_flag = 0;
-	
+	output_buf->wait_flag = 1;
 	/************Printing to the screen************/
 	while(1)					//Loop forever
 	{
@@ -55,6 +54,8 @@ int main (int argc, char *CRTbuffer[]){
 		*/	printf("%s", output_buf->bufdata);
 			output_buf->length = 0;		//Set length back to zero
 			output_buf->wait_flag = 1;	//Set wait_flag back to 1
+			// Flushing the buffer so don't need a newline to print
+			fflush(stdout);
 		}				
 	}
 }

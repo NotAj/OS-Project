@@ -10,6 +10,8 @@
 #include "k_tracebuffer.h"
 #include "api.h"
 #include "k_globals.h"
+#include <stdio.h>
+#include <string.h>
 
 void proc_null();
 

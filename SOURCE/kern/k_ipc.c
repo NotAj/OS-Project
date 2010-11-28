@@ -154,7 +154,6 @@ int k_get_trace_buffers(MsgEnv * message_envelope)
 	k_trace_ptr tb;
 	int i, offset, spid, rpid, msgtyp, time;
 	i = k_sendTB->head;
-	tb = k_sendTB->buffer[i];  //create a node to traverse k_allQ
 	offset = 0;
 	offset += sprintf(message_envelope->msg_text + offset, "%30s\n%10s %10s %10s %10s\n","SENT MESSAGES", "Sndr PID",  "Rcvr PID",  "Msg Type",  "Timestamp");
 
@@ -177,8 +176,8 @@ int k_get_trace_buffers(MsgEnv * message_envelope)
 		spid = tb->sender_pid;		
 		rpid = tb->receiver_pid;
 		msgtyp = tb->msg_type;
-		offset += sprintf(message_envelope->msg_text + offset, "%10d %10d %10d %10d\n", spid, rpid, msgtyp, time); 
 		time = tb->timestamp;
+		offset += sprintf(message_envelope->msg_text + offset, "%10d %10d %10d %10d\n", spid, rpid, msgtyp, time); 
 
 		i = (i+1)%16;
 	} while(i != k_receiveTB->head);

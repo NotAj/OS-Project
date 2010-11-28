@@ -1,5 +1,6 @@
 #include "k_init.h"
 
+
 void k_global_init()
 {
 	extern k_PCB_ptr k_current_process;
@@ -58,9 +59,7 @@ void k_helper_init()
 	k_outputfile_fid = open(k_outputfile_path, O_RDWR | O_CREAT, (mode_t) 0756); 
 	if ( k_outputfile_fid <= 0 || k_inputfile_fid <= 0)
 	{
-		//k_terminate() //TODO 
-		assert(k_outputfile_fid > 0);
-		assert(k_inputfile_fid > 0);
+		k_terminate(); //TODO 
 	}
 	//Change size of files to match buffer size
 	ftruncate(k_outputfile_fid, BUFFER_SIZE); 			
@@ -79,8 +78,7 @@ void k_helper_init()
 		result = execl("./helpers/kbd_helper", "kbd_helper", rtx_pid, inputfile_fid, (char *)0);
 		if (result < 0)
 		{
-			//k_terminate() //TODO
-			assert(result >= 0);
+			k_terminate(); //TODO
 		}	
 	}
 
@@ -90,8 +88,7 @@ void k_helper_init()
 		result = execl("./helpers/crt_helper", "crt_helper", rtx_pid, outputfile_fid, (char *)0);
 		if (result < 0)
 		{
-			//k_terminate() //TODO
-			assert(result >= 0);
+			k_terminate(); //TODO
 		}
 	}
 
@@ -104,7 +101,7 @@ void k_helper_init()
 			(off_t) 0);				// Offset in page frame
 	if (mmap_ptr == MAP_FAILED)
 	{
-		//k_terminate(); //TODO
+		k_terminate(); //TODO
 		assert(mmap_ptr != MAP_FAILED);
 	}
 	
@@ -120,8 +117,7 @@ void k_helper_init()
 			(off_t) 0);				// Offset in page frame
 	if (mmap_ptr == MAP_FAILED)
 	{
-		//k_terminate(); //TODO
-		assert(mmap_ptr != MAP_FAILED);
+		k_terminate();//TODO
 	}
 
 	k_output_buf = (k_io_buffer_ptr) mmap_ptr;	//Creating pointer to the sharedmem
@@ -230,17 +226,16 @@ void k_process_init(int num_process, k_itable_ptr init_table)
 
 void k_signal_init()
 {
+	extern k_io_buffer_ptr k_output_buf;
 	// Set up signal handling
 
-
-/*	sigset(SIGINT, die); 	// Catch kill signals
 	sigset(SIGBUS, die); 	// Catch bus errors
 	sigset(SIGHUP, die);
 	sigset(SIGILL, die); 	// Illegal instruction
 	sigset(SIGABRT, die);
 	sigset(SIGTERM, die);
 	sigset(SIGSEGV, die); 	// Catch segmentation faults
-*/	sigset(SIGINT, die);	// Set ctrl + c to terminate OS
+	sigset(SIGINT, die);	// Set ctrl + c to terminate OS
 
 
 	//Runs the interrupt handler whenever the signal is fired
@@ -251,12 +246,41 @@ void k_signal_init()
 	ualarm(100000, 100000);	// Sets a SIGALRM to be fired every 100 ms
 }
 
+/*****************************************************************
+ Really bad fix for the timing issue seen on startup. Issue is that 
+ the helper processes are forked before signal handling is set up. Since
+ the CRT helper process keeps firing a USR2 signal every 100msec, sometimes
+ the startup isn't fast enough to get to signal setup before the signal fires.
+ Since the signal is unhandled, it kills the RTX process. Tried moving helper
+ initialization after signal handling, but that leads to OS initializing 
+ sometimes before the helpers fork, leading to invalid states. 
+ Here just specify a handler that does nothing, so the USR2 signal is handled
+ and doesn't cause a terminate, then signal handling is set up normally. This
+ is fine since we don't care about output this early on.
+ Better fix would be to use the temp process used in process_init and have that
+ enable atomicity to mask the USR2 signal.
+ 
+ Technically this issue is a product of simulating IO on linux, so it's not 
+ that big a deal right?
+******************************************************************/
+void fix()
+{}
+
 void k_init()
 {
 	int pid[PROCESS_NUM];
 	int priority[PROCESS_NUM];
 	int is_iprocess[PROCESS_NUM];
 	void *start_address[PROCESS_NUM];
+	extern k_PCB_ptr k_current_process;
+	k_message_ptr startup_out;	
+
+/*	setjmp(temp_pcb->k_jmp_buf);
+	k_current_process = temp_pcb;	
+	k_current_process->k_atomic_count = 0;
+	atomic(1); // Just mask signals, don't care about this count after
+*/
+	sigset (SIGUSR2, fix); // Fix for startup timing issue. Correct handler will be set up later 
 
 	k_itable_ptr init_table;	
 
@@ -267,71 +291,78 @@ void k_init()
 	k_ipc_init(MSG_ENV_NUM); // Initialize free message queue
 	
 	k_scheduler_init(); // Initialize scheduling queues
-	
-	//TODO PROCESS ITABLE SETTING HERE	
+
+	// Set up fields of ITABLE	
 	pid[0] = PID_NULL;
 	priority[0] = PRIORITY_NUM - 1; // Set to lowest priority
 	is_iprocess[0] = 0; 
 	start_address[0] = &(proc_null);
 	
 	pid[1] = PID_USER_A;
-	priority[1] = 2; // Set to lowest priority
+	priority[1] = 2;
 	is_iprocess[1] = 0; 
 	start_address[1] = &(proc_A);
 
 	pid[2] = PID_USER_B;
-	priority[2] = 2; // Set to lowest priority
+	priority[2] = 2; 
 	is_iprocess[2] = 0; 
 	start_address[2] = &(proc_B);
 
 	pid[3] = PID_USER_C;
-	priority[3] = 2; // Set to lowest priority
+	priority[3] = 2; 
 	is_iprocess[3] = 0; 
 	start_address[3] = &(proc_C);
 	
-	pid[4] = PID_USER_D;
+	pid[4] = PID_WALL_CLOCK;
 	priority[4] = 0;
-	is_iprocess[4] = 1;
-	start_address[4] = &(proc_D);
+	is_iprocess[4] = 0;
+	start_address[4] = &(proc_wall_clock);
 
-	pid[5] = PID_I_CRT;
-	priority[5] = 0; 
-	is_iprocess[5] = 1; 
-	start_address[5] = &(k_crt_i_proc);
+	pid[5] = PID_CCI;
+	priority[5] = 0;
+	is_iprocess[5] = 0;
+	start_address[5] = &(proc_CCI);
 
-	pid[6] = PID_I_KB;
-	priority[6] = 0; // Set to lowest priority
+	pid[6] = PID_I_CRT;
+	priority[6] = 0; 
 	is_iprocess[6] = 1; 
-	start_address[6] = &(k_key_i_proc);
+	start_address[6] = &(k_crt_i_proc);
+
+	pid[7] = PID_I_KB;
+	priority[7] = 0; 
+	is_iprocess[7] = 1; 
+	start_address[7] = &(k_key_i_proc);
 	
-	pid[7] = PID_I_TIMER;
-	priority[7] = 0;
-	is_iprocess[7] = 1;
-	start_address[7] = &(k_timer_i_proc);
-
-	pid[8] = PID_USER_E;
+	pid[8] = PID_I_TIMER;
 	priority[8] = 0;
-	is_iprocess[8] = 0;
-	start_address[8] = &(proc_E);
+	is_iprocess[8] = 1;
+	start_address[8] = &(k_timer_i_proc);
 
-	pid[9] = PID_USER_F;
-	priority[9] = 3;
-	is_iprocess[9] = 1;
-	start_address[9] = &(proc_F);
+// User processes used during testing.
+/*	pid[9] = PID_USER_D;
+	priority[9] = 0;
+	is_iprocess[9] = 0;
+	start_address[9] = &(proc_D);
 
-	pid[10] = PID_WALL_CLOCK;
+	pid[10] = PID_USER_E;
 	priority[10] = 0;
 	is_iprocess[10] = 0;
-	start_address[10] = &(proc_wall_clock);
+	start_address[10] = &(proc_E);
 
-	pid[11] = PID_CCI;
-	priority[11] = 0;
-	is_iprocess[11] = 0;
-	start_address[11] = &(proc_CCI);
-
-	init_table = k_itable_init(12, pid, priority, is_iprocess, start_address);	//TODO
-	k_process_init(12, init_table); // Initialize all processes using itable //TODO
+	pid[11] = PID_USER_F;
+	priority[11] = 3;
+	is_iprocess[11] = 1;
+	start_address[11] = &(proc_F);
+*/
+	init_table =k_itable_init(PROCESS_NUM, pid, priority, is_iprocess, start_address);
+	k_process_init(PROCESS_NUM, init_table); // Initialize all processes using itable 
 
 	// NOTE: Normally cannot longjmp if the function that setjmp was called in has returned, but since we've set up a different stack for each process, this is not a problem.
-	k_signal_init(); // Set up signals	
+	k_signal_init(); // Set up signals
+	// Print startup message, set system text color to red
+	startup_out = k_message_init();	
+	sprintf(startup_out->msg_text,"\033[2J\033[1;31m\033[H%s\033[1;33m%s\033[1;31m%s\033[1;33m%s\033[1;31m\n", "Initializing....\n\nWelcome to b", "O", "ri","S");
+	send_console_chars(startup_out);
+	while(receive_message()->msg_type!=MSG_TYPE_DISPLAY_ACK);
 } 
+
