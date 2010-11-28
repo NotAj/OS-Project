@@ -38,5 +38,6 @@ int k_inputfile_fid;			// FID of the shared mem file, used in termination
 int k_outputfile_fid;			// FID of the shared mem file, used in termination
 char *k_inputfile_path;			// Path of the shared mem file
 char *k_outputfile_path;		// Path of the shared mem file
+MsgEnv *term_msg;  				// Terminate message envelope 
 
 #endif

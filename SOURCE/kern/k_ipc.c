@@ -147,8 +147,8 @@ int k_release_msg_env (MsgEnv * msg_env_ptr)
 int k_get_trace_buffers(MsgEnv * message_envelope)
 {
 	if (message_envelope == NULL)
-	{	
-		die(ERROR_CONTEXT_SWITCH); // request process status should always be given valid parameters
+	{
+		return ERROR_INVALID_PARAMETERS;	
 	}
 
 	k_trace_ptr tb;

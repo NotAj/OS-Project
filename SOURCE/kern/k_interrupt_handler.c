@@ -8,7 +8,7 @@
 #include <signal.h>
 #include <stdio.h>
 
-void atomic(int on)
+void k_atomic(int on)
 {
 	static sigset_t oldmask;
 	sigset_t newmask;
@@ -51,7 +51,7 @@ void atomic(int on)
 		// Do nothing if atomic_count is zero, assume interrupts already reenabled
 	} 
 	if (k_atomic_count < 0)
-		die(ERROR_CRITICAL); // Should never be in this state, terminate RTX
+		k_terminate(ERROR_ATOMICITY); // Should never be in this state, terminate RTX
 }
 
 void k_interrupt_handler (sig_no)
@@ -59,7 +59,7 @@ void k_interrupt_handler (sig_no)
 	extern k_PCB_ptr k_current_process;
 	extern k_PCB_ptr k_interrupted_process;
  	k_interrupted_process = k_current_process;			
-	atomic(1);
+	k_atomic(1);
 	switch(sig_no) 
 	{
 		case (SIGALRM): // Context switch to timeout iprocess 
@@ -74,6 +74,6 @@ void k_interrupt_handler (sig_no)
 			k_context_switch(k_current_process, k_pid_to_PCB_ptr(PID_I_CRT));
 			break;
 	}
-	atomic(0);	
+	k_atomic(0);	
 	// Setting k_current_process is handled by context switching back here
 }

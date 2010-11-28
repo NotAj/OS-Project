@@ -59,7 +59,7 @@ void k_helper_init()
 	k_outputfile_fid = open(k_outputfile_path, O_RDWR | O_CREAT, (mode_t) 0756); 
 	if ( k_outputfile_fid <= 0 || k_inputfile_fid <= 0)
 	{
-		k_terminate(); //TODO 
+		k_terminate(ERROR_MMAP_INIT); //TODO 
 	}
 	//Change size of files to match buffer size
 	ftruncate(k_outputfile_fid, BUFFER_SIZE); 			
@@ -78,7 +78,7 @@ void k_helper_init()
 		result = execl("./helpers/kbd_helper", "kbd_helper", rtx_pid, inputfile_fid, (char *)0);
 		if (result < 0)
 		{
-			k_terminate(); //TODO
+			k_terminate(ERROR_HELPER_INIT); //TODO
 		}	
 	}
 
@@ -88,7 +88,7 @@ void k_helper_init()
 		result = execl("./helpers/crt_helper", "crt_helper", rtx_pid, outputfile_fid, (char *)0);
 		if (result < 0)
 		{
-			k_terminate(); //TODO
+			k_terminate(ERROR_HELPER_INIT); //TODO
 		}
 	}
 
@@ -101,7 +101,7 @@ void k_helper_init()
 			(off_t) 0);				// Offset in page frame
 	if (mmap_ptr == MAP_FAILED)
 	{
-		k_terminate(); //TODO
+		k_terminate(ERROR_MMAP_INIT); //TODO
 		assert(mmap_ptr != MAP_FAILED);
 	}
 	
@@ -117,7 +117,7 @@ void k_helper_init()
 			(off_t) 0);				// Offset in page frame
 	if (mmap_ptr == MAP_FAILED)
 	{
-		k_terminate();//TODO
+		k_terminate(ERROR_MMAP_INIT);//TODO
 	}
 
 	k_output_buf = (k_io_buffer_ptr) mmap_ptr;	//Creating pointer to the sharedmem
@@ -142,6 +142,7 @@ void k_ipc_init(int msg_env_num)
 	extern k_message_queue_ptr k_freeMQ;
 	extern k_tracebuffer_ptr k_sendTB;
 	extern k_tracebuffer_ptr k_receiveTB;
+	extern MsgEnv *term_msg;
 	int i;
 	k_message_ptr msg;
 	// Initialize free message envelope queue
@@ -155,6 +156,9 @@ void k_ipc_init(int msg_env_num)
 	// Initialize tracebuffers
 	k_sendTB = k_tracebuffer_init();
 	k_receiveTB = k_tracebuffer_init();	
+	
+	// Initialize terminate msg
+	term_msg = k_message_init();
 }
 
 void k_process_init(int num_process, k_itable_ptr init_table)
@@ -207,13 +211,13 @@ void k_process_init(int num_process, k_itable_ptr init_table)
 				// Reset atomic count for the first time.
 				k_current_process->k_atomic_count = 1; 
 				if (k_current_process->p_status != STATUS_IPROCESS)
-					atomic(0); // Enable interrupts if normal process
+					k_atomic(0); // Enable interrupts if normal process
 				
 				void (*fp)() = k_current_process->k_start_address;
 				fp(); // This will start execution from start_address()
 				
 				// NOTE that a process can never return here so this init approach requires that all processes never end (ie. House all processes in an infinite loop)
-				die(ERROR_CRITICAL);
+				k_terminate(ERROR_CONTEXT_SWITCH);
 			}
 		}		
 	}
@@ -235,8 +239,7 @@ void k_signal_init()
 	sigset(SIGABRT, die);
 	sigset(SIGTERM, die);
 	sigset(SIGSEGV, die); 	// Catch segmentation faults
-	sigset(SIGINT, die);	// Set ctrl + c to terminate OS
-
+	sigset(SIGINT, die);	// Set ctrl + c to terminate O
 
 	//Runs the interrupt handler whenever the signal is fired
 	sigset (SIGALRM, k_interrupt_handler); // Linux clock signal
@@ -278,7 +281,7 @@ void k_init()
 /*	setjmp(temp_pcb->k_jmp_buf);
 	k_current_process = temp_pcb;	
 	k_current_process->k_atomic_count = 0;
-	atomic(1); // Just mask signals, don't care about this count after
+	k_atomic(1); // Just mask signals, don't care about this count after
 */
 	sigset (SIGUSR2, fix); // Fix for startup timing issue. Correct handler will be set up later 
 

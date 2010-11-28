@@ -7,8 +7,11 @@
 #include "k_priority_queue.h"
 #include "k_globals.h"
 #include "k_defines.h"
+#include <stdio.h>
+#include <string.h>
+#include "k_io_buffer.c"
 #include "api.h"
-
+#include "k_interrupt_handler.h"
 /****************************************************************
  Scheduler
  ----------------------------------------------------------------
@@ -36,5 +39,7 @@ int k_release_processor ();
 int k_change_priority (int new_priority, int target_process_id);
 
 int k_request_process_status(k_message_ptr crt_out);
+
+void k_terminate(int code);
 
 #endif

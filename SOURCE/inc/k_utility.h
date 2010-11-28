@@ -5,6 +5,8 @@
 #include <signal.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <stdio.h>
+#include <string.h>
 #include "k_pcb.h"
 #include "k_queue.h"
 #include "k_io_buffer.c"
@@ -20,8 +22,6 @@
 /*************************
 * Function Declarations
 *************************/
-void k_terminate();
-
 k_PCB_ptr k_pid_to_PCB_ptr (int pid);
 
 #endif

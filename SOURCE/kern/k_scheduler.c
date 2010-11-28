@@ -61,7 +61,7 @@ void k_context_switch (k_PCB_ptr prev_process, k_PCB_ptr next_process)
 	extern k_PCB_ptr k_current_process;
 	if (prev_process == NULL || next_process == NULL)
 	{	
-		die(ERROR_CONTEXT_SWITCH); // Context switch should always be given valid parameters
+		k_terminate(ERROR_CONTEXT_SWITCH); // Context switch should always be given valid parameters
 	}
 	// Setting the current_process global here since context_switch won't work the first time unless current_process is set correctly, and don't want to forget it outside
 	k_current_process = next_process;
@@ -143,7 +143,7 @@ int k_change_priority(int new_priority, int target_process_id)
 		changed_pcb  = k_priority_queue_remove(target_process_id, k_readyPQ);
 		// If process not on respective queue, OS is in invalid state, terminate
 		if (changed_pcb == NULL)
-			die(ERROR_SCHEDULING_QUEUE);
+			k_terminate(ERROR_SCHEDULING_QUEUE);
 		// Change the priority of target process
 		changed_pcb->p_priority = new_priority;
 		// Enqueue onto readyQ
@@ -156,7 +156,7 @@ int k_change_priority(int new_priority, int target_process_id)
 		changed_pcb  = k_priority_queue_remove(target_process_id, k_blockedPQ);
 		// If process not on respective queue, OS is in invalid state, terminate
 		if (changed_pcb == NULL)
-			die(ERROR_SCHEDULING_QUEUE);
+			k_terminate(ERROR_SCHEDULING_QUEUE);
 		// Change the priority of target process
 		changed_pcb->p_priority = new_priority;
 		// Enqueue onto readyQ
@@ -175,8 +175,8 @@ int k_change_priority(int new_priority, int target_process_id)
 * Function      :  k_request_process_status
 ******************************************************************************
 * Description   : This function accepts a msg env pointer and goes through the queue
-*		: of all PCB's adding the PID, priority, and status of each to the 
-*		: text of the message. 
+*				: of all PCB's adding the PID, priority, and status of each to the 
+*				: text of the message. 
 * 
 * Assumptions   :  
 *****************************************************************************/
@@ -184,7 +184,7 @@ int k_request_process_status(k_message_ptr crt_out)
 {
 	if (crt_out == NULL)
 	{	
-		die(ERROR_CONTEXT_SWITCH); // request process status should always be given valid parameters
+		return ERROR_INVALID_PARAMETERS;
 	}
 	extern k_queue_ptr k_allQ;
 	k_PCB_ptr current_pcb;
@@ -208,4 +208,79 @@ int k_request_process_status(k_message_ptr crt_out)
 
 	return ERROR_NONE; 	//once the message envelope is populated with the
 					//information for all processes
+}
+
+/***************************************************************************
+* Function      : k_terminate 
+****************************************************************************
+* Description   : This function performs cleanup, then terminates the OS
+*				: It deletes the shared memory files, kills the child processes
+*				: then exits the OS, printing the reason why terminate was called
+*              
+* Assumptions   : Will return NULL if PCB with that PID doesn't exist.
+*****************************************************************************/
+void k_terminate(int code)
+{
+	extern k_PCB_ptr k_current_process;
+	extern int k_kbd_helper_pid;
+	extern int k_crt_helper_pid;
+	extern int k_inputfile_fid;
+	extern int k_outputfile_fid;
+	extern char *k_inputfile_path;
+	extern char *k_outputfile_path;
+	extern MsgEnv *term_msg;
+	if(code != ERROR_SIG)
+	{
+		// This should never get called from an iprocess	
+		// Turn off atomicity so can get output
+		k_current_process->k_atomic_count = 1;
+		k_atomic(0);
+		switch(code)
+		{
+			case ERROR_MMAP_INIT:
+				sprintf(term_msg->msg_text, "Error setting up shared memory files. Terminating......\n\033[0m"); 
+				break;
+			case ERROR_HELPER_INIT:
+				sprintf(term_msg->msg_text, "Error setting up helper processes. Terminating......\n\033[0m"); 
+				break;
+			case ERROR_CONTEXT_SWITCH:
+				sprintf(term_msg->msg_text, "Context switch to invalid context. Terminating......\n\033[0m"); 
+				break;
+			case ERROR_ATOMICITY:	 
+				sprintf(term_msg->msg_text, "Invalid atomic state. Terminating......\n\033[0m"); 
+				break;
+			case ERROR_SCHEDULING_QUEUE:	 
+				sprintf(term_msg->msg_text, "Scheduling queues in invalid state. Terminating......\n\033[0m"); 
+				break;
+			case ERROR_NONE:
+				sprintf(term_msg->msg_text, "Process %d requested a terminate. Terminating......\n\033[0m", k_current_process->p_pid); 
+				break;
+			default:
+				sprintf(term_msg->msg_text, "OS in invalid state. Terminating......\n\033[0m"); 
+				break;
+	
+		}
+		send_console_chars(term_msg);
+		//while(receive_message() != term_msg);
+		while(receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+		// Give output time to show
+		request_delay(5,MSG_TYPE_WAKEUP_CODE,term_msg);
+		while(receive_message()->msg_type != MSG_TYPE_WAKEUP_CODE);
+		k_atomic(1);
+	}
+	// Kill helper processes
+	kill(k_kbd_helper_pid, SIGKILL); //send a kill signal to kb helper 
+	kill(k_crt_helper_pid, SIGKILL); //send a kill signal to crt helper
+
+	// Clean shared memory 
+	// Close both mmaped files
+	close(k_inputfile_fid);
+	close(k_outputfile_fid);
+		
+	// Unlink (delete) both mmap files
+	unlink(k_inputfile_path);
+	unlink(k_outputfile_path);
+
+	//Stop RTX Execution and return control to UNIX
+	exit(0);	
 }
