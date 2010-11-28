@@ -4,8 +4,8 @@
 /***************************************
  Message Envelope Defines
 ****************************************/
-#define MSG_ENV_SIZE 256 	// Size of the Message Envelope data field (bytes)
-#define MSG_ENV_NUM 100		// Number of Message Envelopes
+#define MSG_ENV_SIZE 512 	// Size of the Message Envelope data field (bytes)
+#define MSG_ENV_NUM 8		// Number of Message Envelopes
 
 /***************************************
  Process Defines

@@ -50,9 +50,9 @@ int main (int argc, char *CRTbuffer[]){
 		// If helper is ready to run and buffer not empty
 		// (Fix for random newlines if helper not killed)
 		{
-			for(i=0;i<output_buf->length; i++)
+		/*	for(i=0;i<output_buf->length; i++)
 				printf ("%c", output_buf->bufdata[i]);	//Print all chars 
-			//printf("%s", output_buf->bufdata);
+		*/	printf("%s", output_buf->bufdata);
 			output_buf->length = 0;		//Set length back to zero
 			output_buf->wait_flag = 1;	//Set wait_flag back to 1
 		}				

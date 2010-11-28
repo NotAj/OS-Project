@@ -4,11 +4,11 @@
 * Function      : key_i_proc 
 ******************************************************************************
 * Description   : Keyboard I process only forwards user input if there is a message 
-*		: in its message received queue. It works with the get_console_chars() 
-*		: command, and assumes that if any process wants user input, it 
-*		: has called this primitive and the primitive has sent a message 
-*		: envelope to the kb i-process. The kb I process, takes this message, 
-*		: populates it with user input and sends it back to the sender. 
+*				: in its message received queue. It works with the get_console_chars 
+*				: command, and assumes that if any process wants user input, it 
+*				: has called this primitive and the primitive has sent a message 
+*				: envelope to the kb i-process. The kb I process, takes this message
+*				: populates it with user input and sends it back to the sender. 
 *		           
 * Assumptions   : 
 *
@@ -30,12 +30,12 @@ void k_key_i_proc()
 			input_msg = k_receive_message();
 		
 			//Copy contents of input buffer to message envelope
-			int i; 
+/*			int i; 
 			for (i =0; i<k_input_buf->length; i++)
 			{
 				input_msg->msg_text[i]  = k_input_buf->bufdata[i]; 
 			}
-		
+*/			input_msg->msg_size = sprintf(input_msg->msg_text, "%s", k_input_buf->bufdata);	
 			//send message to process that requested input
 			input_msg->receiver_pid = input_msg->sender_pid;
 			input_msg->sender_pid = PID_I_KB;
@@ -60,12 +60,13 @@ void k_key_i_proc()
 * Function      : crt_i_proc 
 ******************************************************************************
 * Description   : The crt iprocess is triggered by a signal sent from the crt helper 
-*		: process every 100msec. the iprocess receives output from processes 
-*		: and writes the bufdata to the output shared memory buffer. The 
-*		: iprocess checks for a message in its message received queue, 
-*		: and if there is it will attempt to copy the message to the output 
-*		: buffer. If the shared memory is busy, it switches back to the the 
-*		: interrupted process and waits until the next signal from the crt helper process.
+*				: process every 100msec. the iprocess receives output from processes 
+*				: and writes the bufdata to the output shared memory buffer. The 
+*				: iprocess checks for a message in its message received queue, 
+*				: and if there is it will attempt to copy the message to the output 
+*				: buffer. If the shared memory is busy, it switches back to the the 
+*				: interrupted process and waits until the next signal from the crt 
+*				: helper process.
 *		           
 * Assumptions   : 
 *
@@ -87,8 +88,8 @@ void k_crt_i_proc()
 			{
 				output_msg = k_receive_message();
 				//write to output buffer
-				int i; 
-		/*		for (i=0; i<output_msg->msg_size; i++)
+		/*		int i; 
+				for (i=0; i<output_msg->msg_size; i++)
 				{
 					k_output_buf->bufdata[i]  = output_msg->msg_text[i]; 
 				}
@@ -111,12 +112,13 @@ void k_crt_i_proc()
 * Function      : timer_i_proc 
 ******************************************************************************
 * Description   : The timer i-process is triggered every 100 ms by the Interrupt 
-*		: Handler. The enqueues any new timeout requests into a local queue.
-*		: Then the queue is traversed and the time remaining on each timeout 
-*		: is decremented by 1 tick (100ms). The process then checks to see 
-*		: whether any of the request are now complete (time remaining <= 0). 
-*		: If a request is complete, the same message is sent back to the 
-*		: requesting process. The message envelope is then dequeued from the local queue.
+*				: Handler. The enqueues any new timeout requests into a local queue.
+*				: Then the queue is traversed and the time remaining on each timeout 
+*				: is decremented by 1 tick (100ms). The process then checks to see 
+*				: whether any of the request are now complete (time remaining <= 0). 
+*				: If a request is complete, the same message is sent back to the 
+*				: requesting process. The message envelope is then dequeued from the
+*				: local queue.
 *		           
 * Assumptions   : 
 *
