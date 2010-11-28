@@ -76,7 +76,7 @@ void proc_CCI()
 		int cmd_no;
 
 		cmd_no = sscanf(key_in->msg_text,"%2s %8s %3s %1s", command, param1, param2, param3);
-	
+
 		if (key_in->msg_type == MSG_TYPE_CONSOLE_INPUT)	//check whether the received envelope is an input and could succesfully get command
 		{				 			
 			if ((strncmp(command,"s",1)==0 || strncmp(command,"S",1)==0) && cmd_no == 1) 
@@ -91,8 +91,11 @@ void proc_CCI()
 			
 			else if ((strncmp(command,"ps",2)==0 || strncmp(command,"PS",2)==0 || strncmp(command,"Ps",2)==0 || strncmp(command,"pS",2)==0) && cmd_no == 1) 
 			{
-				request_process_status(crt_out);
-				if (send_console_chars(crt_out)==ERROR_NONE)
+				printf("process status bitches........%p \n", crt_out);
+				MsgEnv *PS;
+				PS = request_msg_env();	
+				request_process_status(PS);
+				if (send_console_chars(PS)==ERROR_NONE)
 					while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 			
 			}
@@ -180,11 +183,11 @@ void proc_CCI()
 				int new_priority, process_id;
 				if (sscanf(key_in->msg_text, "%*s %d %d", &new_priority, &process_id) == 2)				
 				{				
-					if (new_priority>=0 && new_priority<=3)
+					if (new_priority>=0 && new_priority<=3 && process_id >0 && process_id<=11)
  					{
 						if (change_priority (new_priority, process_id) == ERROR_NONE)
 						{		
-							crt_out->msg_text = "PRIORITY CHANGED \n";
+							crt_out->msg_text = "PRIORITY UPDATED \n";
 							if (send_console_chars(crt_out)==ERROR_NONE)
 								while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 						}
@@ -194,7 +197,6 @@ void proc_CCI()
 							if (send_console_chars(crt_out)==ERROR_NONE)
 								while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 						}
-										
 					}
 					else
 					{

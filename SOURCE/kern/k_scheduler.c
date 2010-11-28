@@ -122,20 +122,20 @@ int k_change_priority(int new_priority, int target_process_id)
 	// Check if new priority is valid
 	if (new_priority < 0 || new_priority > 3)
 		return ERROR_INVALID_PARAMETERS; // Do nothing
-
+		
 	// Get the PCB of target process.
 	changed_pcb = k_pid_to_PCB_ptr(target_process_id);
 	if (changed_pcb == NULL) // Means target_pid specified is invalid
 		return ERROR_INVALID_PARAMETERS; // Do nothing 
-
+		
 	// Do nothing in the case of specifying an iprocess
 	if (changed_pcb->p_status == STATUS_IPROCESS)
 		return ERROR_INVALID_PARAMETERS; // Do nothing
-
+		
 	// Check if new priority specified equals old priority
 	if(changed_pcb->p_priority == new_priority)
-		return ERROR_INVALID_PARAMETERS; // No action required
-
+		return ERROR_NONE; // No action required
+			
 	// Check if target process is in readyQ
 	if (changed_pcb->p_status == STATUS_READY)
 	{
@@ -193,7 +193,6 @@ int k_request_process_status(k_message_ptr crt_out)
 	offset = 0;
 	offset += sprintf(crt_out->msg_text + offset, "%24s\n", "PROCESS STATUS");
 	offset += sprintf(crt_out->msg_text + offset, "%8s %8s %8s\n", "PID", "Priority", "Status");
-
 	while(current_pcb != NULL)
 	{			
 		//data will be written to a derefrenced pointer…all subsequent
