@@ -76,10 +76,10 @@ void proc_CCI()
 		int cmd_no;
 
 		cmd_no = sscanf(key_in->msg_text,"%2s %8s %3s %1s", command, param1, param2, param3);
-		
+	
 		if (key_in->msg_type == MSG_TYPE_CONSOLE_INPUT)	//check whether the received envelope is an input and could succesfully get command
 		{				 			
-			if (strncmp(command,"s",1)==0 && cmd_no == 1) 
+			if ((strncmp(command,"s",1)==0 || strncmp(command,"S",1)==0) && cmd_no == 1) 
 			{
 				MsgEnv *proc_a;	//create and send an empty envelope 
 				proc_a = request_msg_env(); 	//to user process A
@@ -89,7 +89,7 @@ void proc_CCI()
 					while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 			}
 			
-			else if (strncmp(command,"ps",2)==0 && cmd_no == 1) 
+			else if ((strncmp(command,"ps",2)==0 || strncmp(command,"PS",2)==0 || strncmp(command,"Ps",2)==0 || strncmp(command,"pS",2)==0) && cmd_no == 1) 
 			{
 				request_process_status(crt_out);
 				if (send_console_chars(crt_out)==ERROR_NONE)
@@ -97,7 +97,7 @@ void proc_CCI()
 			
 			}
 
-			else if (strncmp(command,"cd",2)==0 && cmd_no == 1) 	
+			else if ((strncmp(command,"cd",2)==0 || strncmp(command,"CD",2)==0 || strncmp(command,"Cd",2)==0 || strncmp(command,"cD",2)==0)&& cmd_no == 1) 	
 			{
 				if (k_display_clock == 0)
 				{	
@@ -114,7 +114,7 @@ void proc_CCI()
 				}
 			}
 			
-			else if (strncmp(command,"ct",2)==0 && cmd_no == 1) 	
+			else if ((strncmp(command,"ct",2)==0 || strncmp(command,"CT",2)==0 || strncmp(command,"Ct",2)==0 || strncmp(command,"cT",2)==0) && cmd_no == 1) 	
 			{
 				if (k_display_clock == 1)
 				{	
@@ -131,12 +131,13 @@ void proc_CCI()
 				}
 			}
 	
-			else if (strncmp(command,"c",1)==0 && cmd_no == 2) 
+			else if ((strncmp(command,"c",1)==0 || strncmp(command,"C",1)==0) && cmd_no == 2) 
 			{
 				int hh, mm, ss;
-				if (sscanf(key_in->msg_text, "%*s %d %*c %d %*c %d", &hh, &mm, &ss) == 3)				
-				{				
-					if (hh<24 && mm<60 && ss<60 && hh>=0 && mm>=0 && ss>=0)
+				char a, b;
+				if (sscanf(key_in->msg_text, "%*s %d %c %d %c %d", &hh, &a, &mm, &b, &ss) == 5)				
+				{		
+					if (hh<24 && mm<60 && ss<60 && hh>=0 && mm>=0 && ss>=0 && a==58 && b==58)
  					{
 						k_clock_h = hh;
 						k_clock_m = mm;
@@ -160,7 +161,7 @@ void proc_CCI()
 				}	
 			}
 
-			else if (strncmp(command,"b",1)==0 && cmd_no == 1) 		
+			else if ((strncmp(command,"b",1)==0 || strncmp(command,"B",1)==0) && cmd_no == 1) 		
 			{
 				if (get_trace_buffers(crt_out) == ERROR_NONE)
 				{
@@ -169,12 +170,12 @@ void proc_CCI()
 				}	
 			}
 	
-			else if (strncmp(command,"t",1)==0 && cmd_no == 1) 	
+			else if ((strncmp(command,"t",1)==0 || strncmp(command,"T",1)==0) && cmd_no == 1) 	
 			{
 				terminate();		
 			}
 
-			else if (strncmp(command,"n",1)==0 && cmd_no == 3) 	
+			else if ((strncmp(command,"n",1)==0 || strncmp(command,"N",1)==0) && cmd_no == 3) 	
 			{	
 				int new_priority, process_id;
 				if (sscanf(key_in->msg_text, "%*s %d %d", &new_priority, &process_id) == 2)				
