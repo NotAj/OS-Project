@@ -91,11 +91,8 @@ void proc_CCI()
 			
 			else if ((strncmp(command,"ps",2)==0 || strncmp(command,"PS",2)==0 || strncmp(command,"Ps",2)==0 || strncmp(command,"pS",2)==0) && cmd_no == 1) 
 			{
-				printf("process status bitches........%p \n", crt_out);
-				MsgEnv *PS;
-				PS = request_msg_env();	
-				request_process_status(PS);
-				if (send_console_chars(PS)==ERROR_NONE)
+				request_process_status(crt_out);
+				if (send_console_chars(crt_out)==ERROR_NONE)
 					while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 			
 			}
