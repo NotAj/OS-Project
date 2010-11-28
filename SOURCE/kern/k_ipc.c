@@ -58,6 +58,7 @@ MsgEnv* k_receive_message ()
 		if(k_current_process->p_status == STATUS_IPROCESS) //PCB is an iprocess 
 			return NULL;
 		k_current_process->p_status = STATUS_BLOCKED_ON_RECEIVE;
+	//	printf("Blocking process %d|%d--->%d\n", k_current_process->p_pid, k_current_process->p_status, k_atomic_count);
 		
 //		printf("Blocking process %d|%s--->%d\n", k_current_process->p_pid,"receive" , k_atomic_count);
 

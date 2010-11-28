@@ -5,13 +5,13 @@
 #include "k_defines.h"
 #include "k_globals.h"
 
-
 void proc_null()
 {
 	while(1)
 	{
 		// Purpose of NULL process is to always be ready to run.
 		// Process continuously gives up control, lets new free processes to run asap
+	//	printf("CCI Status: %d CCI Priority: %d\n", k_pid_to_PCB_ptr(PID_CCI)->p_status, k_pid_to_PCB_ptr(PID_CCI)->p_priority);		
 		release_processor();
 	}
 }
@@ -51,4 +51,173 @@ void proc_wall_clock()
 		}
 		release_processor();
 	}
+}
+
+void proc_CCI()
+{
+	MsgEnv *key_in; 			//assign input/output envelope and allocate space
+	key_in = request_msg_env();
+
+	MsgEnv *crt_out;
+	crt_out = request_msg_env();
+	while (1)	//loop forever
+	{
+		strcpy(crt_out->msg_text, "CCI: \n");		//prompt user for input
+		if (send_console_chars(crt_out)==ERROR_NONE)	
+			while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+		if (get_console_chars(key_in)==ERROR_NONE)		//get ready to receive  input
+			while (receive_message()->msg_type != MSG_TYPE_CONSOLE_INPUT);
+		
+		//select variables to parse your strin command into		
+		char command[2];
+		char param1[8];		
+		char param2[3];
+		char param3[1];
+		int cmd_no;
+
+		cmd_no = sscanf(key_in->msg_text,"%2s %8s %3s %1s", command, param1, param2, param3);
+	
+		if (key_in->msg_type == MSG_TYPE_CONSOLE_INPUT)	//check whether the received envelope is an input and could succesfully get command
+		{				 			
+			if ((strncmp(command,"s",1)==0 || strncmp(command,"S",1)==0) && cmd_no == 1) 
+			{
+				MsgEnv *proc_a;	//create and send an empty envelope 
+				proc_a = request_msg_env(); 	//to user process A
+				send_message(PID_USER_A, proc_a);
+				strcpy(crt_out->msg_text, "MESSAGE SENT TO USER PROCESS A\n");
+				if (send_console_chars(crt_out)==ERROR_NONE);
+					while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+			}
+			
+			else if ((strncmp(command,"ps",2)==0 || strncmp(command,"PS",2)==0 || strncmp(command,"Ps",2)==0 || strncmp(command,"pS",2)==0) && cmd_no == 1) 
+			{
+				request_process_status(crt_out);
+				if (send_console_chars(crt_out)==ERROR_NONE)
+					while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+			
+			}
+
+			else if ((strncmp(command,"cd",2)==0 || strncmp(command,"CD",2)==0 || strncmp(command,"Cd",2)==0 || strncmp(command,"cD",2)==0)&& cmd_no == 1) 	
+			{
+				if (k_display_clock == 0)
+				{	
+					strcpy(crt_out->msg_text, "DISPLAYING WALL CLOCK... \n");
+					if (send_console_chars(crt_out)==ERROR_NONE);
+						while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);			
+					k_display_clock = 1;
+				}
+				else 
+				{
+					strcpy(crt_out->msg_text, "ALREADY DISPLAYING WALL CLOCK.....DUH \n");
+					if (send_console_chars(crt_out)==ERROR_NONE);
+							while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+				}
+			}
+			
+			else if ((strncmp(command,"ct",2)==0 || strncmp(command,"CT",2)==0 || strncmp(command,"Ct",2)==0 || strncmp(command,"cT",2)==0) && cmd_no == 1) 	
+			{
+				if (k_display_clock == 1)
+				{	
+					strcpy(crt_out->msg_text, "HIDING WALL CLOCK... \n");
+					if (send_console_chars(crt_out)==ERROR_NONE);
+						while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);	
+					k_display_clock = 0;
+				}
+				else 
+				{
+					strcpy(crt_out->msg_text, "WALL CLOCK ALREADY HIDDEN.....DUH \n");
+					if (send_console_chars(crt_out)==ERROR_NONE);
+							while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+				}
+			}
+	
+			else if ((strncmp(command,"c",1)==0 || strncmp(command,"C",1)==0) && cmd_no == 2) 
+			{
+				int hh, mm, ss;
+				char a, b;
+				if (sscanf(key_in->msg_text, "%*s %d %c %d %c %d", &hh, &a, &mm, &b, &ss) == 5)				
+				{		
+					if (hh<24 && mm<60 && ss<60 && hh>=0 && mm>=0 && ss>=0 && a==58 && b==58)
+ 					{
+						k_clock_h = hh;
+						k_clock_m = mm;
+						k_clock_s = ss;
+						strcpy(crt_out->msg_text, "WALL CLOCK SET\n");
+						if (send_console_chars(crt_out)==ERROR_NONE);
+							while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+					}
+					else
+					{
+						strcpy(crt_out->msg_text, "INVALID_INPUT \n");
+						if (send_console_chars(crt_out)==ERROR_NONE);
+							while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+					}
+				}
+				else
+				{
+					strcpy(crt_out->msg_text, "INVALID_INPUT \n");
+					if (send_console_chars(crt_out)==ERROR_NONE)
+						while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+				}	
+			}
+
+			else if ((strncmp(command,"b",1)==0 || strncmp(command,"B",1)==0) && cmd_no == 1) 		
+			{
+				if (get_trace_buffers(crt_out) == ERROR_NONE)
+				{
+					if (send_console_chars(crt_out)==ERROR_NONE)
+						while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+				}	
+			}
+	
+			else if ((strncmp(command,"t",1)==0 || strncmp(command,"T",1)==0) && cmd_no == 1) 	
+			{
+				terminate();		
+			}
+
+			else if ((strncmp(command,"n",1)==0 || strncmp(command,"N",1)==0) && cmd_no == 3) 	
+			{	
+				int new_priority, process_id;
+				if (sscanf(key_in->msg_text, "%*s %d %d", &new_priority, &process_id) == 2)				
+				{				
+					if (new_priority>=0 && new_priority<=3)
+ 					{
+						if (change_priority (new_priority, process_id) == ERROR_NONE)
+						{		
+							strcpy(crt_out->msg_text, "PRIORITY CHANGED \n");
+							if (send_console_chars(crt_out)==ERROR_NONE)
+								while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+						}
+						else
+						{
+							strcpy(crt_out->msg_text, "INVALID_INPUT \n");
+							if (send_console_chars(crt_out)==ERROR_NONE)
+								while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+						}
+										
+					}
+					else
+					{
+						strcpy(crt_out->msg_text, "INVALID_INPUT \n");
+						if (send_console_chars(crt_out)==ERROR_NONE)
+							while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+					}
+				}
+				else
+				{
+					strcpy(crt_out->msg_text, "INVALID_INPUT \n");
+					if (send_console_chars(crt_out)==ERROR_NONE)
+						while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+				}			
+			}
+
+			else
+			{
+				strcpy(crt_out->msg_text, "INVALID_INPUT \n");
+				if (send_console_chars(crt_out)==ERROR_NONE)
+					while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+			}	
+		}
+		release_processor();
+	}	
 }

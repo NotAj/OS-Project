@@ -37,6 +37,7 @@ void k_process_switch ( )
 	// Since call to context_switch results in transferring control to different process, set status of next process here
 	// Update current_process global inside context_switch since it's integral to it working, and doing that won't conflict with anything
 	next_process->p_status = STATUS_EXECUTING;
+//	printf("SWITCHING TO PROCESS: %d \n", next_process->p_pid);
 	//Perform the context switch
 	k_context_switch(prev_process, next_process);
 	//At this point process has returned from having context restored, so no action necessary. Just exit function.

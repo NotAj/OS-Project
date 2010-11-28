@@ -15,4 +15,5 @@ void proc_null();
 
 void proc_wall_clock();
 
+void proc_CCI();
 #endif
