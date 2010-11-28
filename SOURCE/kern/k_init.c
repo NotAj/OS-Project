@@ -365,6 +365,7 @@ void k_init()
 	startup_out = k_message_init();	
 	sprintf(startup_out->msg_text,"\033[2J\033[1;31m\033[H%s\033[1;33m%s\033[1;31m%s\033[1;33m%s\033[1;31m\n", "Initializing....\n\nWelcome to b", "O", "ri","S");
 	send_console_chars(startup_out);
-	while(receive_message()->msg_type!=MSG_TYPE_DISPLAY_ACK);
+	// Don't wait for output confirmation
+	//while(receive_message()->msg_type!=MSG_TYPE_DISPLAY_ACK);
 } 
 
