@@ -61,7 +61,7 @@ void proc_CCI()
 	crt_out = request_msg_env();
 	while (1)	//loop forever
 	{
-		strcpy(crt_out->msg_text, "CCI: \n");		//prompt user for input
+		strcpy(crt_out->msg_text, "\033[1;33mCCI: \033[1;31m");		//prompt user for input
 		if (send_console_chars(crt_out)==ERROR_NONE)	
 			while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 		if (get_console_chars(key_in)==ERROR_NONE)		//get ready to receive  input
@@ -116,8 +116,9 @@ void proc_CCI()
 			else if ((strncmp(command,"ct",2)==0 || strncmp(command,"CT",2)==0 || strncmp(command,"Ct",2)==0 || strncmp(command,"cT",2)==0) && cmd_no == 1) 	
 			{
 				if (k_display_clock == 1)
-				{	
-					strcpy(crt_out->msg_text, "HIDING WALL CLOCK... \n");
+				{
+					// Clear wallclock, then print
+					strcpy(crt_out->msg_text, "\033[s\033[H\033[K\033[uHIDING WALL CLOCK... \n");
 					if (send_console_chars(crt_out)==ERROR_NONE);
 						while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);	
 					k_display_clock = 0;
