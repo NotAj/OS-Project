@@ -64,7 +64,7 @@ void proc_C()
 					else
 						MsgEnv_queue_enqueue(msg, localMQ); 
 				}
-			}
+			}	
 		}
 		release_msg_env(msg);
 		release_processor();
@@ -74,15 +74,56 @@ void proc_C()
 void proc_D()
 {
 	MsgEnv *msg = request_msg_env();
+	MsgEnv *msg2 = request_msg_env();
 	while(1)
 	{
-		get_console_chars(msg);
-		
-		if (msg->msg_text[0] != '\0')
+		int delay = 10;
+		sprintf(msg->msg_text, "Waiting for User Input:");
+		request_delay(delay,MSG_TYPE_WAKEUP_CODE,msg2);
+		while (receive_message()->msg_type != MSG_TYPE_WAKEUP_CODE);
+		send_console_chars(msg);
+		while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+	
+		get_console_chars(msg2);
+		do
+		{
+			msg2 = receive_message();
+		} while (msg2->msg_type != MSG_TYPE_CONSOLE_INPUT);
+		send_console_chars(msg2);
+		while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+
+		release_processor();
+	}
+/*		do
+		{
+			msg = receive_message();
+		} while (msg->msg_type != MSG_TYPE_DISPLAY_ACK);
+		//terminate();E
+*/		/*	if (msg->msg_text[0] != '\0')
 		{	
 			send_console_chars(msg);
-		}
+			while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
+			msg->msg_text[0] = '\0';
+			request_delay(10,10, msg);
+			receive_message();
+		}*/
 	//		terminate();
 	//	request_delay(10,1,msg);
+//	}
+
+}
+void proc_E()
+{
+	while(1)
+	{
+		release_processor();
+	}
+}
+
+void proc_F()
+{
+	while(1)
+	{
+		release_processor();
 	}
 }

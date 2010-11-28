@@ -58,7 +58,7 @@ MsgEnv* k_receive_message ()
 		if(k_current_process->p_status == STATUS_IPROCESS) //PCB is an iprocess 
 			return NULL;
 		k_current_process->p_status = STATUS_BLOCKED_ON_RECEIVE;
-
+		
 		//This will perform a process switch to the next ready process
 		k_process_switch();
 		//Process will resume here once when picked to execute
@@ -86,6 +86,7 @@ MsgEnv* k_request_msg_env ()
 		k_priority_queue_enqueue(k_current_process, k_blockedPQ);
 		k_current_process->p_status = STATUS_BLOCKED_ON_RESOURCE;
 		
+//		printf("Blocking process %d|%d--->%d\n", k_current_process->p_pid, k_current_process->p_status, k_atomic_count);
 		//This will perform a process switch to next ready process
 		k_process_switch();	
 		//Process will resume here when chosen to execute again
