@@ -3,6 +3,7 @@
 
 #include "k_scheduler.h"
 #include "k_ipc.h"
+#include "k_timer.h"
 #include "k_io.h"
 #include "k_utility.h"
 #include "k_init_struct.h"
