@@ -66,8 +66,8 @@ void die(int code)
 			break;
 	}
 	send_console_chars(msg);
-*/	printf("CurrProc=%d, outBuf=%d\n", k_current_process->p_pid,k_output_buf->wait_flag);
-	atomic(1);
+	printf("CurrProc=%d, outBuf=%d\n", k_current_process->p_pid,k_output_buf->wait_flag);
+*/	atomic(1);
 	k_terminate();
 	atomic(0);
 }

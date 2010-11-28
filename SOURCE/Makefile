@@ -14,7 +14,7 @@ MEM_FILES = helpers/inputfile helpers/outputfile
 OBJ_DIR = obj/
 HELPER_DIR = helpers/
 
-VPATH = inc:kern:test:kern/struct:init:proc:proc/inc:helpers:obj 
+VPATH = inc:kern:test:kern/struct:proc:proc/inc:helpers:obj 
 OBJECTS_INTER = $(SOURCES:.h=.o)
 OBJECTS = $(OBJECTS_INTER:.c=.o)
 OBJECTS_DIR = $(OBJECTS:%=$(OBJ_DIR)%) 
@@ -78,7 +78,7 @@ ALL_EXECUTABLES = $(RTX_EXECUTABLES) $(TEST_EXECUTABLES)
 
 all: $(RTX_EXECUTABLES) 
 rtx: $(RTX_EXECUTABLES)
-test: $(TEST_EXECUTABLES)
+test: $(TEST_RTX_EXECUTABLES) $(TEST_EXECUTABLES)
 
 $(EXE): $(OBJECTS) $(MAIN)
 	$(CC) $(LDFLAGS) $(OBJECTS_DIR) $(MAIN) -o $@

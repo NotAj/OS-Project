@@ -60,6 +60,8 @@ MsgEnv* k_receive_message ()
 		k_current_process->p_status = STATUS_BLOCKED_ON_RECEIVE;
 	//	printf("Blocking process %d|%d--->%d\n", k_current_process->p_pid, k_current_process->p_status, k_atomic_count);
 		
+//		printf("Blocking process %d|%s--->%d\n", k_current_process->p_pid,"receive" , k_atomic_count);
+
 		//This will perform a process switch to the next ready process
 		k_process_switch();
 		//Process will resume here once when picked to execute
@@ -87,7 +89,8 @@ MsgEnv* k_request_msg_env ()
 		k_priority_queue_enqueue(k_current_process, k_blockedPQ);
 		k_current_process->p_status = STATUS_BLOCKED_ON_RESOURCE;
 		
-	//	printf("Blocking process %d|%d--->%d\n", k_current_process->p_pid, k_current_process->p_status, k_atomic_count);
+//		printf("Blocking process %d|%s--->%d\n", k_current_process->p_pid, "request", k_atomic_count);
+
 		//This will perform a process switch to next ready process
 		k_process_switch();	
 		//Process will resume here when chosen to execute again
@@ -126,16 +129,18 @@ int k_release_msg_env (MsgEnv * msg_env_ptr)
 		ready_process = k_priority_queue_dequeue(k_blockedPQ); 
 		ready_process->p_status = STATUS_READY;
 		k_priority_queue_enqueue(ready_process, k_readyPQ); 
+		
+//		printf("Freeing process %d|%s--->%d\n", k_current_process->p_pid, "release", k_atomic_count);
 	 }
 	return ERROR_NONE;
  }
 
 /****************************************************************************
-* Function      :  k_request_process_status
+* Function      :  k_get_trace_buffers
 ******************************************************************************
 * Description   : This function accepts a msg env pointer and goes through the queue
-*		: of all PCB's adding the PID, priority, and status of each to the 
-*		: text of the message. 
+*				: of all PCB's adding the PID, priority, and status of each to the 
+*				: text of the message. 
 * 
 * Assumptions   :  
 *****************************************************************************/
@@ -147,7 +152,7 @@ int k_get_trace_buffers(MsgEnv * message_envelope)
 	}
 
 	k_trace_ptr tb;
-	int i,place, offset, spid, rpid, msgtyp, time;
+	int i, offset, spid, rpid, msgtyp, time;
 	i = k_sendTB->head;
 	tb = k_sendTB->buffer[i];  //create a node to traverse k_allQ
 	offset = 0;

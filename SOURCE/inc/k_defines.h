@@ -5,7 +5,7 @@
  Message Envelope Defines
 ****************************************/
 #define MSG_ENV_SIZE 2048	// Size of the Message Envelope data field (bytes)
-#define MSG_ENV_NUM 50 		// Number of Message Envelopes
+#define MSG_ENV_NUM 25 		// Number of Message Envelopes
 
 /***************************************
  Process Defines
@@ -60,6 +60,7 @@
 #define MSG_TYPE_DISPLAY_ACK 4		// Used by CRT iprocess
 #define MSG_TYPE_COUNT_REPORT 5 	// Used by User Process A
 #define MSG_TYPE_WAKEUP_10 6		// Used by User Process C
+#define MSG_TYPE_WALLCLOCK_DELAY 7 	// Used by Wallclock process
 
 /***************************************
  ERROR Type Defines

@@ -310,12 +310,12 @@ void k_init()
 	start_address[7] = &(k_timer_i_proc);
 
 	pid[8] = PID_USER_E;
-	priority[8] = 1;
-	is_iprocess[8] = 1;
+	priority[8] = 0;
+	is_iprocess[8] = 0;
 	start_address[8] = &(proc_E);
 
 	pid[9] = PID_USER_F;
-	priority[9] = 1;
+	priority[9] = 3;
 	is_iprocess[9] = 1;
 	start_address[9] = &(proc_F);
 
