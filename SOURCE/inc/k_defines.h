@@ -4,7 +4,7 @@
 /***************************************
  Message Envelope Defines
 ****************************************/
-#define MSG_ENV_SIZE 512 	// Size of the Message Envelope data field (bytes)
+#define MSG_ENV_SIZE 1024	// Size of the Message Envelope data field (bytes)
 #define MSG_ENV_NUM 50 		// Number of Message Envelopes
 
 /***************************************
@@ -18,7 +18,7 @@
 /***************************************
  IO Helper Defines
 ****************************************/
-#define BUFFER_SIZE 512		// Size of the shared IO buffers
+#define BUFFER_SIZE 1024	// Size of the shared IO buffers. Has to match Msg size
 
 /***************************************
  Tracebuffer Defines
