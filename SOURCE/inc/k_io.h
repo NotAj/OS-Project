@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "k_message.h"
 #include "k_ipc.h"
+#include "k_globals.h"
 
 /****************************************************************
  I/O FUNCTIONS

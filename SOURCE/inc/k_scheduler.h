@@ -1,17 +1,20 @@
 #ifndef K_SCHEDULER_H
 #define K_SCHEDULER_H
 
-#include <setjmp.h>
 #include "k_pcb.h"
 #include "k_queue.h"
 #include "k_priority_queue.h"
-#include "k_globals.h"
-#include "k_defines.h"
-#include <stdio.h>
-#include <string.h>
 #include "k_io_buffer.c"
 #include "api.h"
 #include "k_interrupt_handler.h"
+#include "k_globals.h"
+#include "k_defines.h"
+#include <setjmp.h>
+#include <signal.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
 /****************************************************************
  Scheduler
  ----------------------------------------------------------------

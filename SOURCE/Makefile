@@ -139,25 +139,25 @@ k_tracebuffer.o: k_tracebuffer.h k_defines.h
 k_itable.o: k_itable.c 
 k_io_buffer.o: k_io_buffer.c k_defines.h
 
-k_scheduler: k_scheduler.h k_pcb.h k_queue.h k_priority_queue.h k_globals.h
-k_utility.o: k_utility.h k_pcb.h k_queue.h k_ipc.h k_defines.h k_globals.h
-k_timer.o: k_timer.h k_message.h k_ipc.h k_defines.h
+k_scheduler: k_scheduler.h k_pcb.h k_queue.h k_priority_queue.h k_io_buffer.c api.h k_interrupt_handler.h k_globals.h k_defines.h
+k_utility.o: k_utility.h k_pcb.h k_queue.h k_defines.h k_globals.h
+k_timer.o: k_timer.h k_ipc.h k_defines.h
 k_io.o: k_io.h k_defines.h k_globals.h k_message.h k_ipc.h
-k_ipc.o: k_ipc.h k_scheduler.h k_pcb.h k_message_queue.h k_message.h k_tracebuffer.h k_defines.h k_utility.h
-
-api.o: api.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_scheduler.h k_message.h k_message_queue.h k_tracebuffer.h  
-
-k_system_proc.o: k_system_proc.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_scheduler.h k_message.h k_message_queue.h k_tracebuffer.h api.h 
-k_system_proc.o: k_i_proc.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_scheduler.h k_message.h k_message_queue.h k_tracebuffer.h api.h 
-user_proc.o: user_proc.h api.h
+k_ipc.o: k_ipc.h k_pcb.h k_message.h k_message_queue.h k_tracebuffer.h k_scheduler.h k_utility.h k_defines.h
 k_interrupt_handler.o: k_defines.h k_globals.h k_scheduler.h k_interrupt_handler.h k_timeout_queue.h k_utility.h
-k_i_proc.o: k_pcb.h k_queue.h k_priority_queue.h k_scheduler.h k_message.h k_message_queue.h k_tracebuffer.h api.h k_globals.h k_ipc.h k_init_struct.h k_defines.h k_io_buffer.c k_timeout_queue.h k_utility.h
+
+api.o: api.h k_scheduler.h k_ipc.h k_timer.h k_io.h k_utility.h k_interrupt_handler.h k_globals.h k_defines.h  
+
+k_system_proc.o: k_system_proc.h api.h 
+k_i_proc.o: k_i_proc.h api.h
+k_user_proc.o: k_user_proc.h api.h
+
 
 k_init_struct.o: k_init_struct.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c k_defines.h
-k_init.o: k_init.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c k_init_struct.h k_system_proc.h k_i_proc.h user_proc.h k_defines.h k_globals.h
+k_init.o: k_init.h k_itable.c k_scheduler.h k_ipc.h k_io.h k_utility.h k_interrupt_handler.h api.h k_init_struct.h k_system_proc.h k_i_proc.h user_proc.h
 
-k_globals.o: k_globals.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_init_struct.h
-k_defines.o: k_defines.h k_pcb.h 
+k_globals.o: k_globals.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_io_buffer.c k_init_struct.h
+k_defines.o: k_defines.h 
 
 test_queue.o: k_queue.h k_pcb.h k_init_struct.h
 test_priority_queue.o: test_priority_queue.h k_priority_queue.h k_init_struct.h

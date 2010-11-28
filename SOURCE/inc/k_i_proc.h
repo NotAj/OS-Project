@@ -1,7 +1,7 @@
 #ifndef K_I_PROC_H
 #define K_I_PROC_H
 
-#include "k_pcb.h"
+/*#include "k_pcb.h"
 #include "k_queue.h"
 #include "k_priority_queue.h"
 #include "k_scheduler.h"
@@ -15,6 +15,8 @@
 #include "k_init_struct.h"
 #include "k_defines.h"
 #include "k_io_buffer.c"
+*/
+#include "api.h"
 #include "k_timeout_queue.h"
 #include <stdio.h>
 

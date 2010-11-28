@@ -105,15 +105,6 @@ int get_trace_buffers(MsgEnv *message_envelope)
 	return code;
 }
 
-MsgEnv_queue_ptr MsgEnv_queue_init()
-{
-	MsgEnv_queue_ptr messageQ;
-	k_atomic(1);
-	messageQ = k_message_queue_init();
-	k_atomic(0);
-	return messageQ;
-}
-
 int MsgEnv_queue_is_empty(MsgEnv_queue_ptr MQ)
 {
 	int code;

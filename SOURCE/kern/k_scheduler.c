@@ -37,7 +37,6 @@ void k_process_switch ( )
 	// Since call to context_switch results in transferring control to different process, set status of next process here
 	// Update current_process global inside context_switch since it's integral to it working, and doing that won't conflict with anything
 	next_process->p_status = STATUS_EXECUTING;
-//	printf("SWITCHING TO PROCESS: %d \n", next_process->p_pid);
 	//Perform the context switch
 	k_context_switch(prev_process, next_process);
 	//At this point process has returned from having context restored, so no action necessary. Just exit function.
@@ -65,9 +64,6 @@ void k_context_switch (k_PCB_ptr prev_process, k_PCB_ptr next_process)
 	}
 	// Setting the current_process global here since context_switch won't work the first time unless current_process is set correctly, and don't want to forget it outside
 	k_current_process = next_process;
-//	if (prev_process->p_pid != 0 && next_process->p_pid != 4 && next_process->p_pid != 5 && next_process->p_pid != 6)
-//		printf("Jumping from %d|%d -> %d|%d---> %d\n", prev_process->p_pid,prev_process->p_priority, next_process->p_pid,next_process->p_priority, k_atomic_count);
-
 
 	// Save the context of the previous process.
 	// Status is 0, signifying that context has just been saved

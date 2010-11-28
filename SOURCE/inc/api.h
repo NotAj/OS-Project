@@ -6,10 +6,9 @@
 #include "k_timer.h"
 #include "k_io.h"
 #include "k_utility.h"
-#include "k_init_struct.h"
+#include "k_interrupt_handler.h"
 #include "k_globals.h"
 #include "k_defines.h"
-#include "k_interrupt_handler.h"
 #include <stdio.h>
 /****************************************************************
  User API
@@ -45,8 +44,6 @@ MsgEnv *request_msg_env();
 int release_msg_env(MsgEnv *msg_env_ptr);
 
 int get_trace_buffers(MsgEnv *message_envelope);
-
-MsgEnv_queue_ptr MsgEnv_queue_init();
 
 int MsgEnv_queue_is_empty(MsgEnv_queue_ptr MQ);
 

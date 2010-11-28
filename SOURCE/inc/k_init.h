@@ -1,15 +1,13 @@
 #ifndef K_INIT_H
 #define K_INIT_H
 
+#include "k_itable.c"
 #include "k_scheduler.h"
 #include "k_ipc.h"
 #include "k_utility.h"
-#include "k_itable.c"
-#include "api.h"
 #include "k_interrupt_handler.h"
+#include "api.h"
 #include "k_init_struct.h"
-#include "k_defines.h"
-#include "k_globals.h"
 #include "k_system_proc.h"
 #include "k_i_proc.h"
 #include "user_proc.h"
@@ -17,10 +15,9 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/mman.h>
-#include <signal.h>
 #include <fcntl.h>
 #include <setjmp.h>
-#include <assert.h>
+#include <signal.h>
 
 /****************************************************************
  Struct Initalizations

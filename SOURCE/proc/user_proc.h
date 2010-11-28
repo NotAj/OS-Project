@@ -2,7 +2,6 @@
 #define USER_PROC_H
 
 #include "api.h"
-#include "k_defines.h"
 
 void proc_A();
 

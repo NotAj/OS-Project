@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include "k_system_proc.h"
 #include "api.h"
-#include "k_defines.h"
-#include "k_globals.h"
 
 void proc_null()
 {

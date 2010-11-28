@@ -102,7 +102,6 @@ void k_helper_init()
 	if (mmap_ptr == MAP_FAILED)
 	{
 		k_terminate(ERROR_MMAP_INIT); 
-		assert(mmap_ptr != MAP_FAILED);
 	}
 	
 	k_input_buf = (k_io_buffer_ptr) mmap_ptr;	//Creating pointer to the sharedmem

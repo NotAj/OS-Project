@@ -1,12 +1,6 @@
 #ifndef K_UTILITY_H
 #define K_UTILITY_H
 
-#include <stdlib.h>
-#include <signal.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <string.h>
 #include "k_pcb.h"
 #include "k_queue.h"
 #include "k_io_buffer.c"
