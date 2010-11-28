@@ -135,11 +135,11 @@ int k_release_msg_env (MsgEnv * msg_env_ptr)
  }
 
 /****************************************************************************
-* Function      :  k_request_process_status
+* Function      :  k_get_trace_buffers
 ******************************************************************************
 * Description   : This function accepts a msg env pointer and goes through the queue
-*		: of all PCB's adding the PID, priority, and status of each to the 
-*		: text of the message. 
+*				: of all PCB's adding the PID, priority, and status of each to the 
+*				: text of the message. 
 * 
 * Assumptions   :  
 *****************************************************************************/
@@ -151,7 +151,7 @@ int k_get_trace_buffers(MsgEnv * message_envelope)
 	}
 
 	k_trace_ptr tb;
-	int i,place, offset, spid, rpid, msgtyp, time;
+	int i, offset, spid, rpid, msgtyp, time;
 	i = k_sendTB->head;
 	tb = k_sendTB->buffer[i];  //create a node to traverse k_allQ
 	offset = 0;

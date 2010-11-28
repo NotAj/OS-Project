@@ -28,4 +28,7 @@ MsgEnv* k_request_msg_env ();
 
 int k_release_msg_env (MsgEnv * msg_env_ptr); 
 
+int k_get_trace_buffers(MsgEnv *msg);
+
 #endif
+
