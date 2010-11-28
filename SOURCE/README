@@ -1,7 +1,19 @@
-This is the RTX project for MTE 220. Please follow Policy 71 and don't plagiarize any code you see here
+This is the RTX project final submission for Group 30 for MTE 241. 
+Please follow Policy 71 and don't plagiarize any code you see here.
 
-Group Members:
-Ali Jangda
-Akshya Rampal
-Alroy Almeida
-Sean Walsh
+T-30
+
+Ali Jangda 20305843
+Akshya Rampal 20308495
+Alroy Almeida 20313214
+Sean Walsh 20305824
+
+Directory contents:
+inc/ -> Header files for all source code except for user_processes
+kern/ -> All kernel related sources files
+proc/ -> The user process soruce and header files
+test/ -> Unit testing mains and test functions
+helpers/ -> CRT and KBD helper source and executables, as well as shared mem files
+obj/ -> Temp directory to store all object files
+./ -> Makefile, run_tests sh script to run all unit tests, and main.c for RTX
+
