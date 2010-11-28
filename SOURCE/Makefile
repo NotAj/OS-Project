@@ -154,7 +154,7 @@ user_proc.o: user_proc.h api.h
 k_interrupt_handler.o: k_defines.h k_globals.h k_scheduler.h k_interrupt_handler.h k_timeout_queue.h k_utility.h
 k_i_proc.o: k_pcb.h k_queue.h k_priority_queue.h k_scheduler.h k_message.h k_message_queue.h k_tracebuffer.h api.h k_globals.h k_ipc.h k_init_struct.h k_defines.h k_io_buffer.c k_timeout_queue.h k_utility.h
 
-k_init_struct.o: k_init_struct.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c
+k_init_struct.o: k_init_struct.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c k_defines.h
 k_init.o: k_init.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_itable.c k_init_struct.h k_system_proc.h k_i_proc.h user_proc.h k_defines.h k_globals.h
 
 k_globals.o: k_globals.h k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_tracebuffer.h k_init_struct.h
