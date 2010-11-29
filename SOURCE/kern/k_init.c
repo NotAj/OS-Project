@@ -232,6 +232,7 @@ void k_signal_init()
 	extern k_io_buffer_ptr k_output_buf;
 	// Set up signal handling
 
+	sigset(SIGQUIT, die);
 	sigset(SIGBUS, die); 	// Catch bus errors
 	sigset(SIGHUP, die);
 	sigset(SIGILL, die); 	// Illegal instruction

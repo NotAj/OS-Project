@@ -42,7 +42,7 @@ void proc_wall_clock()
 		if(k_display_clock == 1) // If display flag set, send time to crt
 		{
 			// Constantly output clock to row 0, column 72
-			output_msg->msg_size = sprintf(output_msg->msg_text, "\033[s\033[H\033[K\033[0;72H\033[1;31m%02d\033[1;33m:\033[1;31m%02d\033[1;33m:\033[1;31m%02d\033[u", k_clock_h, k_clock_m, k_clock_s); 
+			output_msg->msg_size = sprintf(output_msg->msg_text, "\033[s\033[0;72H\033[K\033[1;31m%02d\033[1;33m:\033[1;31m%02d\033[1;33m:\033[1;31m%02d\033[u", k_clock_h, k_clock_m, k_clock_s); 
 			send_console_chars(output_msg);
 			while(receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 		}
