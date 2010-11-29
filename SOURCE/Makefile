@@ -5,7 +5,7 @@ LDFLAGS = -g $(INC_DIR)
 INC_DIR = -I./inc/ -I./proc/
 
 SOURCES = k_pcb.h k_message.h k_queue.h k_priority_queue.h k_message_queue.h k_timeout_queue.h k_tracebuffer.h k_itable.c k_io_buffer.c k_utility.h k_scheduler.h k_ipc.h k_timer.h k_io.h k_interrupt_handler.h api.h k_system_proc.h k_i_proc.h user_proc.h k_init_struct.h k_init.h k_globals.h k_defines.h 
-HELPER_SOURCES = k_defines.h k_io_buffer.h k_init_struct.h
+HELPER_SOURCES = k_defines.h k_io_buffer.h k_init_struct.h 
 TEST_SOURCES = test_queue.h test_priority_queue.h test_message_queue.h test_tracebuffer.h test_timeout_queue.h
 
 MEM_FILES = helpers/inputfile helpers/outputfile
