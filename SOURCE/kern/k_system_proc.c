@@ -71,7 +71,7 @@ void proc_CCI()
 		char param2[3];
 		char param3[1];
 		int cmd_no;
-
+		
 		cmd_no = sscanf(key_in->msg_text,"%2s %8s %3s %1s", command, param1, param2, param3);
 		if (key_in->msg_type == MSG_TYPE_CONSOLE_INPUT)	//check whether the received envelope is an input and could succesfully get command
 		{				 			
@@ -207,7 +207,10 @@ void proc_CCI()
 						while (receive_message()->msg_type != MSG_TYPE_DISPLAY_ACK);
 				}			
 			}
-
+			else if (cmd_no == -1) // Only whitespace 	
+			{
+				// Do nothing, prompt user again
+			}
 			else
 			{
 				strcpy(crt_out->msg_text, "INVALID INPUT \n");
