@@ -161,6 +161,7 @@ int k_get_trace_buffers(MsgEnv * message_envelope)
 		i = (i+1)%16;
 	} while(i != k_sendTB->head);
 	
+	i = k_receiveTB->head;	
 	offset += sprintf(message_envelope->msg_text + offset, "\n");
 	offset += sprintf(message_envelope->msg_text + offset, "%30s\n%10s %10s %10s %10s\n","RECEIVED MESSAGES", "Sndr PID",  "Rcvr PID",  "Msg Type",  "Timestamp");
 	do

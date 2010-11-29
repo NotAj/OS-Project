@@ -234,25 +234,25 @@ void k_terminate(int code)
 		switch(code)
 		{
 			case ERROR_MMAP_INIT:
-				sprintf(term_msg->msg_text, "Error setting up shared memory files. Terminating......\n\033[0m"); 
+				sprintf(term_msg->msg_text, "Error setting up shared memory files. Terminating......\033[m\n"); 
 				break;
 			case ERROR_HELPER_INIT:
-				sprintf(term_msg->msg_text, "Error setting up helper processes. Terminating......\n\033[0m"); 
+				sprintf(term_msg->msg_text, "Error setting up helper processes. Terminating......\033[m\n"); 
 				break;
 			case ERROR_CONTEXT_SWITCH:
-				sprintf(term_msg->msg_text, "Context switch to invalid context. Terminating......\n\033[0m"); 
+				sprintf(term_msg->msg_text, "Context switch to invalid context. Terminating......\033[m\n"); 
 				break;
 			case ERROR_ATOMICITY:	 
-				sprintf(term_msg->msg_text, "Invalid atomic state. Terminating......\n\033[0m"); 
+				sprintf(term_msg->msg_text, "Invalid atomic state. Terminating......\033[m\n"); 
 				break;
 			case ERROR_SCHEDULING_QUEUE:	 
-				sprintf(term_msg->msg_text, "Scheduling queues in invalid state. Terminating......\n\033[0m"); 
+				sprintf(term_msg->msg_text, "Scheduling queues in invalid state. Terminating......\033[m\n"); 
 				break;
 			case ERROR_NONE:
-				sprintf(term_msg->msg_text, "Process %d requested a terminate. Terminating......\n\033[0m", k_current_process->p_pid); 
+				sprintf(term_msg->msg_text, "Process %d requested a terminate. Terminating......\033[m\n", k_current_process->p_pid); 
 				break;
 			default:
-				sprintf(term_msg->msg_text, "OS in invalid state. Terminating......\n\033[0m"); 
+				sprintf(term_msg->msg_text, "OS in invalid state. Terminating......\033[m\n"); 
 				break;
 	
 		}
